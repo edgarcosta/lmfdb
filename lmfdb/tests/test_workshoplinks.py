@@ -8,11 +8,6 @@ class HomePageTest(LmfdbTest):
         homepage = self.tc.get("/acknowledgment/activities").get_data(as_text=True)
         self.check_external(
             homepage,
-            "http://people.oregonstate.edu/~swisherh/CRTNTconference/index.html",
-            "Galois",
-        )
-        self.check_external(
-            homepage,
             "http://www2.warwick.ac.uk/fac/sci/maths/research/events/2013-2014/nonsymp/lmfdb/",
             "elliptic curves over number fields",
         )
