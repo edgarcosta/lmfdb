@@ -201,6 +201,9 @@ class SearchWrapper(Wrapper):
                     info["start"] = start
                     info["exact_count"] = True
                 else:
+                    import sys
+                    sys.stderr.write(f"LABEL:{label}\n")
+                    sys.stderr.flush()
                     return redirect(self.url_for_label(label), 307)
             else:
                 res = table.search(
