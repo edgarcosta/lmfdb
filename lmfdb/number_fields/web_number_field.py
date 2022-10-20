@@ -187,7 +187,7 @@ for n, label in list(rcyclolookup.items()):
 def na_text():
     return "not computed"
 
-## Turn a list into a string (without brackets)
+# Turn a list into a string (without brackets)
 
 def list2string(li):
     li2 = [str(x) for x in li]
@@ -226,15 +226,14 @@ def field_pretty(label):
     if d == '4':
         wnf = WebNumberField(label)
         subs = wnf.subfields()
-        if len(subs)==3: # only for V_4 fields
+        if len(subs)==3:  # only for V_4 fields
             subs = [wnf.from_coeffs(string2list(str(z[0]))) for z in subs]
             # Abort if we don't know one of these fields
             if not any(z._data is None for z in subs):
                 labels = [str(z.get_label()) for z in subs]
                 labels = [z.split('.') for z in labels]
                 # extract abs disc and signature to be good for sorting
-                labels = [[integer_squarefree_part(ZZ(z[2])), - int(z[1])] for z in labels]
-                labels.sort()
+                labels = sorted([[integer_squarefree_part(ZZ(z[2])), - int(z[1])] for z in labels])
                 # put in +/- sign
                 labels = [z[0]*(-1)**(1+z[1]/2) for z in labels]
                 labels = ['i' if z == -1 else r'\sqrt{%d}'% z for z in labels]
@@ -333,6 +332,7 @@ class WebNumberField:
     """
      Class for retrieving number field information from the database
     """
+
     def __init__(self, label, data=None, gen_name='a'):
         self.label = label
         self.gen_name = gen_name
@@ -641,7 +641,7 @@ class WebNumberField:
             if self.signature()==[0,2] and self.galois_t() ==2:
                 return [[1,1]]
             # We don't have C_4 classification yet
-            #if self.signature()==[2,0] or self.signature()==[0,2]:
+            # if self.signature()==[2,0] or self.signature()==[0,2]:
             #    return [[1,1]]
             return []
         return self._data['unitsGmodule']
@@ -684,7 +684,7 @@ class WebNumberField:
         return self._data['gpK']
 
     def generator_name(self):
-        #Add special case code for the generator if desired:
+        # Add special case code for the generator if desired:
         if self.gen_name=='phi':
             return r'\phi'
         else:
@@ -818,7 +818,7 @@ class WebNumberField:
             It raises an exception if the field is not abelian.
         """
         cond = self._data['conductor']
-        if cond == 0: # Code for not an abelian field
+        if cond == 0:  # Code for not an abelian field
             raise Exception('Invalid field for conductor')
         return ZZ(cond)
 
@@ -853,8 +853,8 @@ class WebNumberField:
             ccns = [int(x.size()) for x in cc]
             ccreps = [Permutation(x).cycle_string() for x in ccreps]
             ccgen = '['+','.join(ccreps)+']'
-            ar = nfgg.artin_representations() # list of artin reps from db
-            arfull = nfgg.artin_representations_full_characters() # list of artin reps from db
+            ar = nfgg.artin_representations()  # list of artin reps from db
+            arfull = nfgg.artin_representations_full_characters()  # list of artin reps from db
             gap.set('fixed', 'function(a,b) if a*b=a then return 1; else return 0; fi; end;')
             g = gap.Group(ccgen)
             h = g.Stabilizer('1')
@@ -892,8 +892,8 @@ class WebNumberField:
         local_algebra_dict = {}
         R = PolynomialRing(QQ, 'x')
         for lab in local_algs:
-            if lab[0] == 'm': # signals data about field not in lf db
-                lab1 = lab[1:] # deletes marker m
+            if lab[0] == 'm':  # signals data about field not in lf db
+                lab1 = lab[1:]  # deletes marker m
                 p, e, f, c = [int(z) for z in lab1.split('.')]
                 deg = e*f
                 if str(p) not in local_algebra_dict:
@@ -923,7 +923,7 @@ class WebNumberField:
         # read in code.yaml from numberfields directory:
         _curdir = os.path.dirname(os.path.abspath(__file__))
         self.code = yaml.load(open(os.path.join(_curdir, "code.yaml")), Loader=yaml.FullLoader)
-        self.code['show'] = {'sage':'','pari':'', 'magma':''} # use default show names
+        self.code['show'] = {'sage':'','pari':'', 'magma':''}  # use default show names
 
         # Fill in placeholders for this specific field:
         for lang in ['sage', 'pari']:

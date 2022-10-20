@@ -48,7 +48,7 @@ def my_latex(s):
     ss += ""
     return ss
 
-#breadcrumbs and links for data quality entries
+# breadcrumbs and links for data quality entries
 
 def get_bread(tail=[]):
     base = [("Lattice", url_for(".lattice_render_webpage"))]
@@ -136,7 +136,7 @@ def lattice_by_label_or_name(lab):
         flash_error("No integral lattice in the database has label or name %s", lab)
     return redirect(url_for(".lattice_render_webpage"))
 
-#download
+# download
 download_comment_prefix = {'magma':'//','sage':'#','gp':'\\\\'}
 download_assignment_start = {'magma':'data := ','sage':'data = ','gp':'data = '}
 download_assignment_end = {'magma':';','sage':'','gp':''}
@@ -311,13 +311,13 @@ str([1,-2,-2,-2,2,-1,0,2,3,0,0,2,2,-1,-1,-2,2,-1,-1,-2,1,-1,-1,3]), str([1,-2,-2
     else:
         info['name'] == ""
     info['comments']=str(f['comments'])
-    if 'Leech' in info['comments']: # no need to duplicate as it is in the name
+    if 'Leech' in info['comments']:  # no need to duplicate as it is in the name
         info['comments'] = ''
     if info['name'] == "":
         t = "Integral lattice %s" % info['label']
     else:
         t = "Integral lattice "+info['label']+" ("+info['name']+")"
-#This part code was for the dynamic knowl with comments, since the test is displayed this is redundant
+# This part code was for the dynamic knowl with comments, since the test is displayed this is redundant
 #    if info['name'] != "" or info['comments'] !="":
 #        info['knowl_args']= "name=%s&report=%s" %(info['name'], info['comments'].replace(' ', '-space-'))
     info['properties'] = [
@@ -343,7 +343,7 @@ str([1,-2,-2,-2,2,-1,0,2,3,0,0,2,2,-1,-1,-2,2,-1,-1,-2,1,-1,-1,3]), str([1,-2,-2
         downloads=downloads,
         learnmore=learnmore_list(),
         KNOWL_ID="lattice.%s"%info['label'])
-#friends=friends
+# friends=friends
 
 def vect_to_sym(v):
     n = ZZ(round((-1+sqrt(1+8*len(v)))/2))
@@ -364,7 +364,7 @@ def lattice_data(label):
     title = f"Lattice data - {label}"
     return datapage(label, "lat_lattices", title=title, bread=bread)
 
-#auxiliary function for displaying more coefficients of the theta series
+# auxiliary function for displaying more coefficients of the theta series
 @lattice_page.route('/theta_display/<label>/<number>')
 def theta_display(label, number):
     try:
@@ -380,7 +380,7 @@ def theta_display(label, number):
     return print_q_expansion(coeff)
 
 
-#data quality pages
+# data quality pages
 @lattice_page.route("/Source")
 def how_computed_page():
     t = 'Source and acknowledgments for integral lattices'

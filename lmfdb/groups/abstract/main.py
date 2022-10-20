@@ -762,7 +762,7 @@ def show_type(ab, nil, solv, smith, nilcls, dlen, clen):
         return f'Non-Solvable - {clen}'
 
 CYCLIC_PRODUCT_RE = re.compile(r"[Cc][0-9]+(\^[0-9]+)?(\s*[*Xx]\s*[Cc][0-9]+(\^[0-9]+)?)*")
-#### Searching
+# Searching
 def group_jump(info):
     jump = info["jump"]
     # by label
@@ -785,7 +785,7 @@ def group_jump(info):
     for family in db.gps_families.search():
         m = re.fullmatch(family["input"], jump)
         if m:
-            m_dict = dict([a, int(x)] for a, x in m.groupdict().items()) # convert string to int
+            m_dict = dict([a, int(x)] for a, x in m.groupdict().items())  # convert string to int
             lab = db.gps_special_names.lucky({"family":family["family"], "parameters":m_dict}, projection="label")
             if lab:
                 return redirect(url_for(".by_label", label=lab))
@@ -917,7 +917,7 @@ subgroup_columns = SearchColumns([
         CheckCol("perfect", "group.perfect", "perf", default=True, short_title="Sub. perfect"),
         CheckCol("central", "group.central", "cent", default=True, short_title="Sub. central")],
              default=True),
-    SpacerCol("", default=True, th_class=" border-right", td_class=" border-right", td_style="padding:0px;", th_style="padding:0px;"), # Can't put the right border on "subgroup_cols" (since it wouldn't be full height) or "central" (since it might be hidden by the user)
+    SpacerCol("", default=True, th_class=" border-right", td_class=" border-right", td_style="padding:0px;", th_style="padding:0px;"),  # Can't put the right border on "subgroup_cols" (since it wouldn't be full height) or "central" (since it might be hidden by the user)
     ColGroup("ambient_cols", None, "Ambient", [
         MultiProcessedCol("ambient_name", "group.name", "Name",
                           ["ambient", "ambient_tex"],
@@ -1032,7 +1032,7 @@ def render_abstract_group(label, data=None):
     if data is None:
         label = clean_input(label)
         gp = WebAbstractGroup(label)
-    elif isinstance(data, list): # abelian group
+    elif isinstance(data, list):  # abelian group
         gp = WebAbstractGroup(label, data=data)
     if gp.is_null():
         flash_error("No group with label %s was found in the database.", label)
@@ -1058,7 +1058,7 @@ def render_abstract_group(label, data=None):
         ]
 
         info["dojs"], display_opts = diagram_js_string(gp, conj=gp.diagram_ok, aut=True)
-        info["wide"] = display_opts["w"] > 1600 # boolean
+        info["wide"] = display_opts["w"] > 1600  # boolean
 
         info["max_sub_cnt"] = gp.max_sub_cnt
         info["max_quo_cnt"] = gp.max_quo_cnt
@@ -1228,7 +1228,7 @@ def shortsubinfo(ambient, short_label):
     ans += subinfo_getsub("Centralizer", "group.subgroup.centralizer", wsg.centralizer)
     ans += subinfo_getsub("Core", "group.core", wsg.core)
     # ans += '<tr><td>Coset action</td><td>%s</td></tr>\n' % wsg.coset_action_label
-    ## There was a bug in the Magma code computing generators, so we disable this for the moment
+    # There was a bug in the Magma code computing generators, so we disable this for the moment
     # gp = WebAbstractGroup(ambient) # needed for generators
     # if wsg.subgroup_order > 1:
     #    ans += f"<tr><td>{display_knowl('group.generators', 'Generators')}</td><td>${gp.show_subgroup_generators(wsg)}$</td></tr>"
@@ -1723,7 +1723,7 @@ class GroupsSearchArray(SearchArray):
 
 
 class SubgroupSearchArray(SearchArray):
-    null_column_explanations = { # No need to display warnings for these
+    null_column_explanations = {  # No need to display warnings for these
         "quotient": False,
         "quotient_abelian": False,
         "quotient_solvable": False,

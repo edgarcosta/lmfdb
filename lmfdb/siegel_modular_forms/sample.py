@@ -18,6 +18,7 @@ class Sample_class (SageObject):
     A wrapper around a database entry providing various
     properties as a sage object.
     """
+
     def __init__(self, doc):
 
         self.__collection = doc.get('collection')
@@ -25,9 +26,9 @@ class Sample_class (SageObject):
         self.__weight = doc.get('weight')
         self.__degree_of_field = doc.get('fdeg')
         self.__field_poly = PolynomialRing(QQ,'x')(str(doc.get('field_poly')))
-        self.__field = None # created on demand
-        self.__explicit_formula = None # create on demand
-        self.__explicit_formula_set = False # set to true once we try to get it to avoid repeatedly trying to fetch an explicit formula that is not there
+        self.__field = None  # created on demand
+        self.__explicit_formula = None  # create on demand
+        self.__explicit_formula_set = False  # set to true once we try to get it to avoid repeatedly trying to fetch an explicit formula that is not there
         self.__type = doc.get('type')
         self.__is_eigenform = doc.get('is_eigenform')
         self.__is_integral = doc.get('is_integral')

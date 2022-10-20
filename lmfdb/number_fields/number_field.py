@@ -188,7 +188,7 @@ def render_discriminants_page():
 def render_class_group_data():
     info = to_dict(request.args)
     #nf_logger.info('******************* ')
-    #for k in info.keys():
+    # for k in info.keys():
     # nf_logger.info(str(k) + ' ---> ' + str(info[k]))
     #nf_logger.info('******************* ')
     learnmore = learnmore_list_remove('Quadratic imaginary')
@@ -482,11 +482,11 @@ def render_field_webpage(args):
                     else:
                         loc_alg += '<tr>'
                     if len(mm)==4:         # not in database
-                        if mm[1]*mm[2]==1: # Q_p
+                        if mm[1]*mm[2]==1:  # Q_p
                             loc_alg += '<td>$\\Q_{%s}$</td><td>$x$</td><td>$1$</td><td>$1$</td><td>$0$</td><td>%s</td><td>$%s$</td>'%(pcomp,transitive_group_display_knowl("1T1", "Trivial"), show_slope_content([],1,1))
-                        elif mm[1]*mm[2]==2: # quadratic
+                        elif mm[1]*mm[2]==2:  # quadratic
                             loc_alg += '<td></td><td>Deg $2$</td><td>${}$</td><td>${}$</td><td>${}$</td><td>{}</td><td>${}$</td>'.format(mm[1],mm[2],mm[3],transitive_group_display_knowl("2T1", "$C_2$"), show_slope_content([],mm[1],mm[2]))
-                        elif mm[1]==1: # unramified
+                        elif mm[1]==1:  # unramified
                             # nT1 is cyclic except for n = 32
                             cyc = 33 if mm[2] == 32 else 1
                             loc_alg += '<td></td><td>Deg ${}$</td><td>${}$</td><td>${}$</td><td>${}$</td><td>{}</td><td>${}$</td>'.format(mm[1]*mm[2],mm[1],mm[2],mm[3],transitive_group_display_knowl(f"{mm[2]}T{cyc}"), show_slope_content([],mm[1],mm[2]))
@@ -538,7 +538,7 @@ def render_field_webpage(args):
         unit_compress = [compress_poly_Q(x, 'a') for x in myunits]
         unit_compress = ['$%s$' % x for x in unit_compress]
         unit_compress = ', '.join(unit_compress)
-        myunits = str(myunits)[1:-1] # remove brackets
+        myunits = str(myunits)[1:-1]  # remove brackets
         myunits = raw_typeset(myunits, unit_compress)
 
     if ram_primes != 'None':
@@ -657,7 +657,7 @@ def render_field_webpage(args):
     try:
         info["tim_number_field"] = NumberFieldGaloisGroup(nf._data['coeffs'])
         arts = [z.label() for z in info["tim_number_field"].artin_representations()]
-        #print arts
+        # print arts
         for ar in arts:
             info['friends'].append(('Artin representation '+artin_label_pretty(ar),
                 url_for("artin_representations.render_artin_representation_webpage", label=ar)))
@@ -684,7 +684,7 @@ def format_coeffs(coeffs):
     return pol_to_html(str(coeff_to_poly(coeffs)))
 #    return web_latex(coeff_to_poly(coeffs))
 
-#@nf_page.route("/")
+# @nf_page.route("/")
 # def number_fields():
 #    if len(request.args) != 0:
 #        return number_field_search(**request.args)
@@ -698,8 +698,8 @@ def url_for_label(label):
 @nf_page.route("/<label>")
 def by_label(label):
     if label == "random":
-        #This version leaves the word 'random' in the URL:
-        #return render_field_webpage({'label': label})
+        # This version leaves the word 'random' in the URL:
+        # return render_field_webpage({'label': label})
         return redirect(url_for_label(db.nf_fields.random()), 301)
     try:
         nflabel = nf_string_to_label(clean_input(label))
@@ -812,7 +812,7 @@ def number_field_jump(info):
         return redirect(url_for(".number_field_render_webpage"))
 
 # This doesn't seem to be used currently
-#def number_field_algebra(info):
+# def number_field_algebra(info):
 #    fields = info['algebra'].split('_')
 #    fields2 = [WebNumberField.from_coeffs(a) for a in fields]
 #    for j in range(len(fields)):
@@ -859,7 +859,7 @@ def nf_postprocess(res, info, query):
              columns=nf_columns,
              per_page=50,
              shortcuts={'jump':number_field_jump,
-                        #'algebra':number_field_algebra,
+                        # 'algebra':number_field_algebra,
                         'download':download_search},
              url_for_label=url_for_label,
              postprocess=nf_postprocess,

@@ -41,30 +41,30 @@ class AbGpsTest(LmfdbTest):
         self.check_args("/Groups/Abstract/1920.240463", [
             "nonsolvable",
             "10 subgroups in one conjugacy class",
-            "240.190", # socle
-            "960.5735", # max sub
-            "960.5692", # max quo
-            "rgb(20,82,204)", # color in image
+            "240.190",  # socle
+            "960.5735",  # max sub
+            "960.5692",  # max quo
+            "rgb(20,82,204)",  # color in image
         ])
         self.check_args("/Groups/Abstract/1536.123", [
-            r"C_3 \times ((C_2\times C_8) . (C_4\times C_8))", # latex
-            "216", # number of 2-dimensional complex characters
-            "j^{3}", # presentation
-            "metabelian", # boolean quantities
+            r"C_3 \times ((C_2\times C_8) . (C_4\times C_8))",  # latex
+            "216",  # number of 2-dimensional complex characters
+            "j^{3}",  # presentation
+            "metabelian",  # boolean quantities
         ])
         self.check_args("/Groups/Abstract/ab/2.2.3.4.5.6.7.8.9.10", [
-            "7257600", # order
-            "2520", # exponent
-            r"C_{2}^{3} \times C_{6} \times C_{60} \times C_{2520}", # latex
-            r"2^{40} \cdot 3^{10} \cdot 5^{2} \cdot 7", # order of automorphism group
-            "1990656", # number of elements of order 2520
-            r"C_2\times C_{12}", # Frattini
+            "7257600",  # order
+            "2520",  # exponent
+            r"C_{2}^{3} \times C_{6} \times C_{60} \times C_{2520}",  # latex
+            r"2^{40} \cdot 3^{10} \cdot 5^{2} \cdot 7",  # order of automorphism group
+            "1990656",  # number of elements of order 2520
+            r"C_2\times C_{12}",  # Frattini
         ])
-        self.check_args("/Groups/Abstract/ab/2_50", [ # large elementary abelian 2-group
-            "4432676798593", # factor of aut_order
+        self.check_args("/Groups/Abstract/ab/2_50", [  # large elementary abelian 2-group
+            "4432676798593",  # factor of aut_order
         ])
-        self.check_args("/Groups/Abstract/ab/3000", [ # large cyclic group
-            r"C_{2}^{3} \times C_{100}", # automorphism group structure
+        self.check_args("/Groups/Abstract/ab/3000", [  # large cyclic group
+            r"C_{2}^{3} \times C_{100}",  # automorphism group structure
         ])
 
     def test_underlying_data(self):
@@ -76,6 +76,6 @@ class AbGpsTest(LmfdbTest):
             "gps_subgroups", "mobius_sub"])
         self.check_args("/Groups/Abstract/sdata/16.8.2.b1.a1", [
             "gps_subgroups", "16.8.2.b1.a1",
-            "gps_groups", "[28776, 16577, 5167]", # perm_gens
-            "[16582, 136, 5167, 40176]", # perm_gens
-            "[[1, 1, 1]]"]) # faithful_reps
+            "gps_groups", "[28776, 16577, 5167]",  # perm_gens
+            "[16582, 136, 5167, 40176]",  # perm_gens
+            "[[1, 1, 1]]"])  # faithful_reps

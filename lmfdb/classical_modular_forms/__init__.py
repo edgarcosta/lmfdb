@@ -9,6 +9,6 @@ cmf = cmf_page
 cmf_logger = make_logger(cmf_page)
 
 from . import main
-assert main # silence pyflakes
+assert main  # silence pyflakes
 
 app.register_blueprint(cmf_page, url_prefix="/ModularForm/GL2/Q/holomorphic")

@@ -12,6 +12,7 @@ class ECisog_class():
     """
     Class for an isogeny class of elliptic curves over Q
     """
+
     def __init__(self, dbdata):
         """
         Arguments:
@@ -50,11 +51,11 @@ class ECisog_class():
                 data['iso_label'] = iso
                 data['class_label'] = label
             except AttributeError:
-                return "Invalid label" # caller must catch this and raise an error
+                return "Invalid label"  # caller must catch this and raise an error
 
         if data:
             return ECisog_class(data)
-        return "Class not found" # caller must catch this and raise an error
+        return "Class not found"  # caller must catch this and raise an error
 
     def make_class(self):
         # Extract the size of the isogeny class from the database
@@ -88,8 +89,8 @@ class ECisog_class():
                 c['optimality_known'] = True
         elif self.conductor < CREMONA_BOUND:
             for c in self.curves:
-                c['optimal'] = (c['optimality']>0) # this curve possibly optimal
-                c['optimality_known'] = (c['optimality']==1) # this curve certainly optimal
+                c['optimal'] = (c['optimality']>0)  # this curve possibly optimal
+                c['optimality_known'] = (c['optimality']==1)  # this curve certainly optimal
         else:
             for c in self.curves:
                 c['optimal'] = None
@@ -106,7 +107,7 @@ class ECisog_class():
                 _, c_iso, c_number = split_lmfdb_label(c['lmfdb_label'])
             c['short_label'] = "{}{}".format(c_iso,c_number)
             c['FH'] = RealField(20)(c['faltings_height'])
-            c['j_inv'] = QQ(tuple(c['jinv'])) # convert [num,den] to rational for display
+            c['j_inv'] = QQ(tuple(c['jinv']))  # convert [num,den] to rational for display
             c['disc'] = c['signD'] * c['absD']
 
         from sage.matrix.all import Matrix
@@ -179,7 +180,7 @@ class ECisog_class():
                       ('%s' % self.conductor, url_for(".by_conductor", conductor=self.conductor)),
                       ('%s' % self.iso_label, ' ')]
         self.code = {}
-        self.code['show'] = {'sage':''} # use default show names
+        self.code['show'] = {'sage':''}  # use default show names
         self.code['class'] = {'sage':'E = EllipticCurve("%s1")\n'%(self.iso_label) + 'E.isogeny_class()\n'}
         self.code['curves'] = {'sage':'E.isogeny_class().curves'}
         self.code['rank'] = {'sage':'E.rank()'}
@@ -194,7 +195,7 @@ def make_graph(M, vertex_labels=None):
     """
     from sage.schemes.elliptic_curves.ell_curve_isogeny import fill_isogeny_matrix, unfill_isogeny_matrix
     from sage.graphs.graph import Graph
-    n = M.nrows() # = M.ncols()
+    n = M.nrows()  # = M.ncols()
     G = Graph(unfill_isogeny_matrix(M), format='weighted_adjacency_matrix')
     MM = fill_isogeny_matrix(M)
     # The maximum degree classifies the shape of the isogeny

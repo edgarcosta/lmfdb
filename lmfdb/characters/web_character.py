@@ -68,12 +68,13 @@ def bool_string(b):
 
 #############################################################################
 ###
-###    Class for Web objects
+# Class for Web objects
 ###
 #############################################################################
 
 class WebCharObject():
     """ class for all characters and character groups """
+
     def __init__(self, **args):
         self.type = args.get('type',None)
         self.nflabel = args.get('number_field',None)
@@ -131,7 +132,7 @@ class WebCharObject():
         return [ self.texlogvalue(chi.conreyangle(x), tag=True) for x in self.Gelts() ]
 
 #############################################################################
-###  Dirichlet type
+# Dirichlet type
 
 class WebDirichlet(WebCharObject):
     """
@@ -265,7 +266,7 @@ class WebDirichlet(WebCharObject):
     def nextprimchar(m, n):
         if m < 3:
             return 3, 2
-        while 1:
+        while True:
             n += 1
             if n >= m:
                 m, n = m + 1, 2
@@ -399,7 +400,7 @@ class WebDirichlet(WebCharObject):
 
 
 #############################################################################
-###  Characters
+# Characters
 
 class WebChar(WebCharObject):
     """
@@ -543,13 +544,14 @@ class WebChar(WebCharObject):
         return f
 
 #############################################################################
-###  Actual web objects used in lmfdb
+# Actual web objects used in lmfdb
 
 class WebDBDirichlet(WebDirichlet):
     """
     A base class using data stored in the database. Currently this is all
     Dirichlet characters with modulus up to 10000.
     """
+
     def __init__(self, **kwargs):
         self.type = "Dirichlet"
         self.modulus = kwargs.get('modulus', None)
@@ -721,8 +723,7 @@ class WebCharGroup(WebCharObject):
     def structure(self):
         inv = self.H.invariants()
         if inv:
-            inv_list = list(inv)
-            inv_list.sort()
+            inv_list = sorted(inv)
             return r"\(%s\)" % ("\\times ".join("C_{%s}" % d for d in inv_list))
         else:
             return r"\(C_1\)"

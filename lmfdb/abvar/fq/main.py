@@ -338,14 +338,14 @@ class AbvarSearchArray(SearchArray):
             short_width=160,
             advanced=True,
         )
-        #size = TextBox(
+        # size = TextBox(
         #    "size",
         #    label="Isogeny class size",
         #    knowl="av.fq.isogeny_class_size",
         #    example="1",
         #    example_col=False,
         #    advanced=True,
-        #)
+        # )
         gdshort = display_knowl("av.endomorphism_field", "End.") + " degree"
         gdlong = "Degree of " + display_knowl("av.endomorphism_field", "endomorphism_field")
         geom_deg = TextBox(
@@ -630,7 +630,7 @@ def common_parse(info, query):
             query['is_geometrically_squarefree'] = False
 
 def jump(info):
-    jump_box = info["jump"].strip() # only called when this present
+    jump_box = info["jump"].strip()  # only called when this present
     try:
         validate_label(jump_box)
     except ValueError:
@@ -646,7 +646,7 @@ def jump(info):
             return redirect(url_for(".abelian_varieties"))
         g = deg//2
         lead = cdict[deg]
-        if lead == 1: # accept monic normalization
+        if lead == 1:  # accept monic normalization
             lead = cdict[0]
             cdict = {deg-exp: coeff for (exp, coeff) in cdict.items()}
         if cdict.get(0) != 1:

@@ -373,7 +373,7 @@ def end_statement(factorsQQ, factorsRR, field='', ring=None):
                         statement += r"\(\mathrm{M}_2 (\Z)\)"
                     # TODO: Add flag that indicates whether we are over a PID, in
                     # which case we can use the following lines:
-                    #if factorsQQ[0][2] == 1:
+                    # if factorsQQ[0][2] == 1:
                     #    statement += (r"\(\mathrm{M}_2 (%s)\)"
                     #        % ring_pretty(factorsQQ[0][1], 1))
                     else:
@@ -719,7 +719,7 @@ def ratpts_table(pts, pts_v):
         ptstab.append('<tr>')
         ptstab.extend([td_wrapc(P) for P in spts[i:i+6]])
         if i+6 > len(pts):
-            ptstab.extend(['<td></td>' for i in range(i+6-len(pts))]) # pad last line
+            ptstab.extend(['<td></td>' for i in range(i+6-len(pts))])  # pad last line
         ptstab.append('</tr>')
     ptstab.extend(['</tbody>', '</table>'])
     return '\n'.join(ptstab)
@@ -745,6 +745,7 @@ class WebG2C():
         bread -- bread crumbs for home page (conductor, isogeny class id, discriminant, curve id)
         title -- title to display on home page
     """
+
     def __init__(self, curve, endo, tama, ratpts, clus, galrep, is_curve=True):
         self.make_object(curve, endo, tama, ratpts, clus, galrep, is_curve)
 
@@ -813,7 +814,7 @@ class WebG2C():
         data['cond'] = ZZ(curve['cond'])
         data['cond_factor_latex'] = web_latex_factored_integer(data['cond'])
         data['analytic_rank'] = ZZ(curve['analytic_rank'])
-        data['mw_rank'] = ZZ(0) if curve.get('mw_rank') is None else ZZ(curve['mw_rank']) # 0 will be marked as a lower bound
+        data['mw_rank'] = ZZ(0) if curve.get('mw_rank') is None else ZZ(curve['mw_rank'])  # 0 will be marked as a lower bound
         data['mw_rank_proved'] = curve['mw_rank_proved']
         data['analytic_rank_proved'] = curve['analytic_rank_proved']
         data['hasse_weil_proved'] = curve['hasse_weil_proved']
@@ -861,7 +862,7 @@ class WebG2C():
             data['real_period'] = decimal_pretty(str(curve['real_period']))
             data['regulator'] = decimal_pretty(str(curve['regulator'])) if curve['regulator'] > -0.5 else 'unknown'
             if data['mw_rank'] == 0 and data['mw_rank_proved']:
-                data['regulator'] = '1' # display an exact 1 when we know this
+                data['regulator'] = '1'  # display an exact 1 when we know this
 
             data['tamagawa_product'] = ZZ(curve['tamagawa_product']) if curve.get('tamagawa_product') else 0
             data['analytic_sha'] = ZZ(curve['analytic_sha']) if curve.get('analytic_sha') else 0
@@ -896,13 +897,13 @@ class WebG2C():
 
             lmfdb_label = data['label']
             cond, alpha, disc, num = split_g2c_lmfdb_label(lmfdb_label)
-            self.downloads = [#('Frobenius eigenvalues to text', url_for(".download_G2C_fouriercoeffs", label=self.lmfdb_label, limit=1000)),
+            self.downloads = [  # ('Frobenius eigenvalues to text', url_for(".download_G2C_fouriercoeffs", label=self.lmfdb_label, limit=1000)),
                           ('All stored data to text', url_for(".download_G2C_all", label=lmfdb_label)),
-                          ('Code to Magma', url_for(".g2c_code_download", conductor=cond, iso=alpha, discriminant=disc, number=num, label=lmfdb_label, download_type='magma'))#,
+                          ('Code to Magma', url_for(".g2c_code_download", conductor=cond, iso=alpha, discriminant=disc, number=num, label=lmfdb_label, download_type='magma'))  # ,
                           #('Code to SageMath', url_for(".g2c_code_download", conductor=cond, iso=alpha, discriminant=disc, number=num, label=lmfdb_label, download_type='sage')),
                           #('Code to GP', url_for(".g2c_code_download", conductor=cond, iso=alpha, discriminant=disc, number=num, label=lmfdb_label, download_type='gp'))
             ]
-            #TODO (?) also for the isogeny class
+            # TODO (?) also for the isogeny class
         else:
             # invariants specific to isogeny class
             curves_data = list(db.g2c_curves.search({"class": curve['class']}, ['label', 'eqn']))
@@ -1066,7 +1067,7 @@ class WebG2C():
         if not is_curve:
             return
         self.code = code = {}
-        code['show'] = {'sage':'', 'magma':''} # use default show names
+        code['show'] = {'sage':'', 'magma':''}  # use default show names
         f,h = fh = data['min_eqn']
         g = simplify_hyperelliptic(fh)
         code['curve'] = {'sage':'R.<x> = PolynomialRing(QQ); C = HyperellipticCurve(R(%s), R(%s));' % (f, h),
@@ -1104,7 +1105,7 @@ class WebG2C():
             self._code = yaml.load(open(os.path.join(_curdir, "code.yaml")), Loader=yaml.FullLoader)
 
             # Fill in placeholders for this specific curve:
-            for lang in ['magma']: #TODO: 'sage', 'pari',
+            for lang in ['magma']:  # TODO: 'sage', 'pari',
                 self._code['curve'][lang] = self._code['curve'][lang] % (self.data['min_eqn'])
 
         return self._code

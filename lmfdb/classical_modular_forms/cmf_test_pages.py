@@ -134,7 +134,7 @@ class CMFTest(LmfdbTest):
                 errors.append(url)
                 res.append((None, url))
 
-        #test wrong parity newspaces
+        # test wrong parity newspaces
         for ns in list(db.mf_newspaces.search({'level':level,'weight':weight, 'char_parity':1 if bool(weight % 2) else -1}, ['label', 'dim'])):
             label = ns['label']
             dim = ns['dim']

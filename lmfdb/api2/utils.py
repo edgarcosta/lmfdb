@@ -211,9 +211,9 @@ def get_filtered_fields(coll_pair):
 
     #data = inventory.retrieve_description(coll_pair[0], coll_pair[1])
     #field_list = data['data']
-    #if not field_list : return None
+    # if not field_list : return None
 
-    #return field_list
+    # return field_list
 
 def get_cname_list(info):
     """
@@ -343,7 +343,7 @@ def interpret(query, qkey, qval, type_info):
 
         try:
             if type_info == 'string':
-                pass #Already a string
+                pass  # Already a string
             elif type_info == 'integer':
                 try:
                     qval = int(qval)

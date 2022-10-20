@@ -58,7 +58,7 @@ def ctx_proc_userdata():
         userdata['user_is_admin'] = False
         userdata['user_is_authenticated'] = False
         userdata['user_can_review_knowls'] = False
-        userdata['get_username'] = LmfdbAnonymousUser().name # this is a function
+        userdata['get_username'] = LmfdbAnonymousUser().name  # this is a function
 
     else:
         userdata['userid'] = 'anon' if current_user.is_anonymous() else current_user._uid
@@ -251,7 +251,7 @@ def register_token(token):
     bread = base_bread() + [('Register', url_for(".register_new"))]
     if request.method != 'POST':
         return render_template("register.html", title="Register", bread=bread, next=request.referrer or "/", token=token)
-    else: # must be post
+    else:  # must be post
         name = request.form['name']
         if not allowed_usernames.match(name):
             flash_error("""Oops, usename '%s' is not allowed.
@@ -279,7 +279,7 @@ def register_token(token):
         newuser = userdb.new_user(name, pwd=pw1, full_name=full_name)
         userdb.delete_token(token)
         #newuser.full_name = full_name
-        #newuser.save()
+        # newuser.save()
         login_user(newuser, remember=True)
         flask.flash(Markup("Hello %s! Congratulations, you are a new user!" % newuser.name))
         logger.debug("removed login token '%s'" % token)

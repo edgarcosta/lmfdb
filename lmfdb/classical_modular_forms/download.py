@@ -369,6 +369,7 @@ class CMF_download(Downloader):
       return N;
     end function;
     """
+
     def _magma_ConvertToHeckeField(self, newform, hecke_nf):
         begin = ['function ConvertToHeckeField(input: pass_field := false, Kf := [])',
                  '    if not pass_field then']
@@ -427,9 +428,9 @@ class CMF_download(Downloader):
         out = [
                 explain,
                 'function MakeCharacter_%d_%s()' % (newform.level, newform.char_orbit_label),
-                '    ' + self.assign('magma', 'N', level).rstrip('\n'), # level
-                '    ' + self.assign('magma', 'order', order).rstrip('\n'), # order of the character
-                '    ' + self.assign('magma', 'char_gens', char_gens, level=1).rstrip('\n'), # generators
+                '    ' + self.assign('magma', 'N', level).rstrip('\n'),  # level
+                '    ' + self.assign('magma', 'order', order).rstrip('\n'),  # order of the character
+                '    ' + self.assign('magma', 'char_gens', char_gens, level=1).rstrip('\n'),  # generators
                 '    ' + self.assign('magma', 'v', newform.char_values[3]).rstrip('\n'),
                 '    // chi(gens[i]) = zeta^v[i]',
                 '    assert SequenceToList(UnitGenerators(DirichletGroup(N))) eq char_gens;',
@@ -458,10 +459,10 @@ class CMF_download(Downloader):
             out += [
                 explain,
                 'function MakeCharacter_%d_%s_Hecke(Kf)' % (newform.level, newform.char_orbit_label),
-                    '    ' + self.assign('magma', 'N', level).rstrip('\n'), # level
-                    '    ' + self.assign('magma', 'order', order).rstrip('\n'), # order of the character
-                    '    ' + self.assign('magma', 'char_gens', char_gens, level=1).rstrip('\n'), # generators
-                    '    ' + self.assign('magma', 'char_values', char_values, level=1).rstrip('\n'), # chi(gens[i]) = zeta_n^exp[i]
+                    '    ' + self.assign('magma', 'N', level).rstrip('\n'),  # level
+                    '    ' + self.assign('magma', 'order', order).rstrip('\n'),  # order of the character
+                    '    ' + self.assign('magma', 'char_gens', char_gens, level=1).rstrip('\n'),  # generators
+                    '    ' + self.assign('magma', 'char_values', char_values, level=1).rstrip('\n'),  # chi(gens[i]) = zeta_n^exp[i]
                     '    assert SequenceToList(UnitGenerators(DirichletGroup(N))) eq char_gens;',
                     '    values := ConvertToHeckeField(char_values : pass_field := true, Kf := Kf); // the value of chi on the gens as elements in the Hecke field',
                     '    F := Universe(values);// the Hecke field',

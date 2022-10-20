@@ -13,6 +13,6 @@ def body_class():
     return {'body_class': 'motive'}
 
 from . import main
-assert main # silence pyflakes
+assert main  # silence pyflakes
 
 app.register_blueprint(motive_page, url_prefix="/Motive")

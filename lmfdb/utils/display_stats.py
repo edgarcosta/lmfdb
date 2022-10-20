@@ -155,7 +155,7 @@ class proportioners():
         A function for use as a proportioner.
         """
         attr = dict(attr)
-        attr['base_url'] = '' # urls aren't used below
+        attr['base_url'] = ''  # urls aren't used below
         attr['constraint'] = {}
         attr['proportioner'] = False
         attr['totaler'] = False
@@ -307,7 +307,7 @@ class totaler():
                     query = None
                 else:
                     query = self.common_link([elt['query'] for elt in col if elt['count'] > 0]) if include_links else '?'
-                    if query[-1] == '?': # no common search queries
+                    if query[-1] == '?':  # no common search queries
                         query = None
                 if recursive_prop:
                     overall = sum(D['count'] for D in total_grid_cols[i])
@@ -315,7 +315,7 @@ class totaler():
                 D = {'count':total, 'query':query, 'proportion':proportion}
                 row.append(D)
             grid.append(row)
-        #if corner_count and row_counts and not col_counts:
+        # if corner_count and row_counts and not col_counts:
         #    # Have to add the corner specially
         #    row_headers.append(col_total_label)
         #    row = [{'count':'', 'query':None, 'proportion':''} for _ in range(num_cols)]
@@ -567,7 +567,7 @@ class StatsDisplay(UniqueRepresentation):
                 total = {'count': total,
                          'query':"{0}{1}".format(base_url, cols[0]),
                          'proportion':_format_percentage(total, self._overall, show_zero=True)}
-                if avg is False: # Want to show avg even if 0
+                if avg is False:  # Want to show avg even if 0
                     total['value'] = 'Total'
                 else:
                     total['value'] = r'\(\mathrm{avg}\ %.2f\)'%avg

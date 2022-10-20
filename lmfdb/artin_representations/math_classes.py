@@ -610,9 +610,9 @@ class ArtinRepresentation():
         else:
             return self.nf().from_prime_to_conjugacy_class_index(p)
 
-    ### if p is good: NumberFieldGaloisGroup.frobenius_cycle_type :     p -> Frob --NF---> cycle type
-    ###               NumberFieldGaloisGroup.from_cycle_type_to_conjugacy_class_index : Uses data stored in the number field originally, but allows
-    ###                                                                 cycle type ---> conjugacy_class_index
+    # if p is good: NumberFieldGaloisGroup.frobenius_cycle_type :     p -> Frob --NF---> cycle type
+    # NumberFieldGaloisGroup.from_cycle_type_to_conjugacy_class_index : Uses data stored in the number field originally, but allows
+    # cycle type ---> conjugacy_class_index
     ###
     # if p is hard:  ArtinRepresentation.hard_prime_to_conjugacy_class_index :
     # p --Artin-> conjugacy_class_index

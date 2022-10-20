@@ -134,9 +134,9 @@ def common_latex(level, weight, conrey=None, S="S", t=0, typ="", symbolic_chi=Fa
     # symbolic_chi is currently ignored: we always use a symbolic chi
     if conrey is None:
         char = ""
-    #elif symbolic_chi is True:
+    # elif symbolic_chi is True:
     #    char = r", \chi"
-    #elif symbolic_chi:
+    # elif symbolic_chi:
     #    char = ", " + symbolic_chi
     elif conrey == 1:
         char = ""
@@ -180,7 +180,7 @@ class DimGrid():
         return self._grid[X]
 
     def __add__(self, other):
-        if isinstance(other,int) and other == 0: # So that we can do sum(grids)
+        if isinstance(other,int) and other == 0:  # So that we can do sum(grids)
             return self
         elif isinstance(other,DimGrid):
             grid = {}

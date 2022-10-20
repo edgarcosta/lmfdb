@@ -94,7 +94,7 @@ def list_zeros(filename,
     N = Nt0     # the index of the next zero
 
     # FIXME THIS VARIABLE IS NEVER USED
-    #L = []      # the zeros we have found so far
+    # L = []      # the zeros we have found so far
 
     # now we start finding zeros
     while count < number_of_zeros:

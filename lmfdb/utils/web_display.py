@@ -168,7 +168,7 @@ def bigpoly_knowl(f, nterms_cutoff=8, bigint_cutoff=12, var='x'):
         i = len(f) - 2
         while i >= 0 and f[i] == 0:
             i -= 1
-        if i >= 0: # nonzero terms
+        if i >= 0:  # nonzero terms
             if f[i] > 0:
                 short += r" + \cdots"
             else:
@@ -207,7 +207,7 @@ def polyquo_knowl(f, disc=None, unit=1, cutoff=None):
     i = len(f) - 2
     while i >= 0 and f[i] == 0:
         i -= 1
-    if i >= 0: # nonzero terms
+    if i >= 0:  # nonzero terms
         if f[i] > 0:
             quo += r" + \cdots"
         else:
@@ -373,7 +373,7 @@ def compress_polynomial(poly, threshold, decreasing=True):
 
     d = 0 if decreasing else poly.degree()
     assert poly[d] != 0 or decreasing
-    while poly[d]  == 0: # we only enter the loop if decreasing=True
+    while poly[d]  == 0:  # we only enter the loop if decreasing=True
         d += 1
     lastc = poly[d]
     cdots = r" + \cdots "
@@ -401,7 +401,7 @@ def compress_polynomial(poly, threshold, decreasing=True):
             break
 
         if c > 0:
-            if tset: # don't need the + for the leading coefficient
+            if tset:  # don't need the + for the leading coefficient
                 tset += plus
         elif c < 0:
             tset += minus
@@ -419,7 +419,7 @@ def compress_polynomial(poly, threshold, decreasing=True):
         tset += monomial
 
     tset += tsetend
-    if tset.startswith(plus): # single monomial polynomials
+    if tset.startswith(plus):  # single monomial polynomials
         tset = tset[len(plus):]
     return tset
 
@@ -502,8 +502,8 @@ def raw_typeset_poly(coeffs,
 
     return raw_typeset(raw, rf'\( {tset} \)', compressed=r'\cdots' in tset, **kwargs)
 
-def raw_typeset_poly_factor(factors, # list of pairs (f,e)
-                            compress_threshold=20, # this is per factor
+def raw_typeset_poly_factor(factors,  # list of pairs (f,e)
+                            compress_threshold=20,  # this is per factor
                             decreasing=True,
                             **kwargs):
     if len(factors) == 0:

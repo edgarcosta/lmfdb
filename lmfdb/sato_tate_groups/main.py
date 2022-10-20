@@ -391,7 +391,7 @@ def st_knowl(label):
             raise ValueError
     except ValueError:
         return "Unable to locate data for Sato-Tate group with label %s" % label
-    label = data['label'] # label might have been converted
+    label = data['label']  # label might have been converted
     row_wrap = lambda cap, val: "<tr><td>%s: </td><td>%s</td></tr>\n" % (cap, val)
     math_mode = lambda s: '$%s$'%s
     info = '<table>\n'
@@ -877,7 +877,7 @@ def render_by_label(label):
         info['abelian']=boolean_name(G['abelian'])
         info['solvable']=boolean_name(G['solvable'])
     if data.get('gens'):
-        info['gens'] = comma_separated_list([string_matrix(m) for m in data['gens']]) if type(data['gens']) == list else data['gens']
+        info['gens'] = comma_separated_list([string_matrix(m) for m in data['gens']]) if isinstance(data['gens'], list) else data['gens']
         info['numgens'] = len(info['gens'])
     else:
         info['numgens'] = 0
@@ -1051,7 +1051,7 @@ class STSearchArray(SearchArray):
     jump_egspan = "e.g. 0.1.3 or 0.1.mu(3), or 1.2.B.2.1a or N(U(1)), or 1.4.A.1.1a or 1.4.USp(4)"
     jump_knowl = "st_group.search_input"
     jump_prompt = "Label or name"
-    null_column_explanations = { # No need to display warnings for these
+    null_column_explanations = {  # No need to display warnings for these
         'trace_histogram': False,
         'first_a2_moment': False,
         'simplex': False,

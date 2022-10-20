@@ -28,6 +28,7 @@ class WebHMF():
     """
     Class for an Hilbert Modular Newform
     """
+
     def __init__(self, dbdata=None, label_or_field=None, L=None):
         """Arguments:
 
@@ -81,7 +82,7 @@ class WebHMF():
                 raise ValueError("No Hilbert number field with label %s is in the database" % label)
         elif label_or_field is None:
             raise ValueError("Must specify a valid field label")
-        else: # we were passed a HilbertNumberField already
+        else:  # we were passed a HilbertNumberField already
             F = label_or_field
             data['field_label'] = F.label
         #print("data['field_label'] = %s" % data['field_label'])

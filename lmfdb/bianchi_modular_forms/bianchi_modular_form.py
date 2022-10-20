@@ -108,9 +108,9 @@ def statistics():
 def bianchi_modular_form_jump(info):
     label = info['jump'].strip()
     dat = label.split("-")
-    if len(dat)==2: # assume field & level, display space
+    if len(dat)==2:  # assume field & level, display space
         return render_bmf_space_webpage(dat[0], dat[1])
-    else: # assume single newform label; will display an error if invalid
+    else:  # assume single newform label; will display an error if invalid
         return bianchi_modular_form_by_label(label)
 
 def bianchi_modular_form_postprocess(res, info, query):
@@ -138,7 +138,7 @@ bmf_columns = SearchColumns([
                                   field_label=fld,
                                   level_label=lvl),
                           lvl),
-                      default=True), # teXify_pol(v['level_ideal'])
+                      default=True),  # teXify_pol(v['level_ideal'])
     MultiProcessedCol("label", "mf.bianchi.labels", "Label", ["field_label", "level_label", "label_suffix", "short_label"],
                       lambda fld, lvl, suff, short: '<a href="{}">{}</a>'.format(
                           url_for("bmf.render_bmf_webpage",
@@ -186,9 +186,9 @@ def bianchi_modular_form_search(info, query):
         query['sfe'] = int(info['sfe'])
     if 'include_cm' in info:
         if info['include_cm'] in ['exclude', 'off']:
-            query['CM'] = 0 # will exclude NULL values
+            query['CM'] = 0  # will exclude NULL values
         elif info['include_cm'] == 'only':
-            query['CM'] = {'$ne': 0} # will exclude NULL values
+            query['CM'] = {'$ne': 0}  # will exclude NULL values
     if info.get('include_base_change') =='exclude':
         query['bc'] = 0
     elif info.get('include_base_change') == 'only':
@@ -283,8 +283,7 @@ def bmf_field_dim_table(**args):
     weights = set()
     for dat in data:
         weights = weights.union(set(dat[gl_or_sl].keys()))
-    weights = [int(w) for w in weights]
-    weights.sort()
+    weights = sorted([int(w) for w in weights])
     info['weights'] = weights
     info['nweights'] = len(weights)
 
@@ -370,7 +369,7 @@ def render_bmf_space_webpage(field_label, level_label):
                 # but the dimension 2 data is untrustworthy so is ignored here
                 info['nnf1'] = sum(1 for f in info['nfdata'] if f['dim']==1)
                 #info['nnf2'] = sum(1 for f in info['nfdata'] if f['dim']==2)
-                info['nnf_missing'] = dim_data['2']['new_dim'] - info['nnf1'] # - 2*info['nnf2']
+                info['nnf_missing'] = dim_data['2']['new_dim'] - info['nnf1']  # - 2*info['nnf2']
                 properties = [('Base field', pretty_field_label), ('Level',info['level_label']), ('Norm',str(info['level_norm'])), ('New dimension',str(newdim))]
                 friends = [('Newform {}'.format(f['label']), f['url']) for f in info['nfdata'] ]
                 downloads = [('Underlying data', url_for(".bmf_data", label=info['label']))]

@@ -14,6 +14,6 @@ def body_class():
     return {'body_class': 'smf'}
 
 from . import siegel_modular_form
-assert siegel_modular_form #silence pyflakes
+assert siegel_modular_form  # silence pyflakes
 
 app.register_blueprint(smf_page, url_prefix='/ModularForm/GSp/Q')

@@ -8,9 +8,9 @@ from sage.all import ZZ, conway_polynomial
 
 from lmfdb import db
 from lmfdb.utils import flash_error, parse_ints, parse_list, search_wrap, redirect_no_cache
-#should these functions be defined in lattices or somewhere else?
+# should these functions be defined in lattices or somewhere else?
 from lmfdb.lattice.main import vect_to_sym, vect_to_matrix
-from lmfdb.rep_galois_modl import rep_galois_modl_page #, rep_galois_modl_logger
+from lmfdb.rep_galois_modl import rep_galois_modl_page  # , rep_galois_modl_logger
 from lmfdb.rep_galois_modl.rep_galois_modl_stats import get_stats
 
 rep_galois_modl_credit = 'Samuele Anni, Anna Medvedovsky, Bartosz Naskrecki, David Roberts'
@@ -29,7 +29,7 @@ def my_latex(s):
     ss += ""
     return ss
 
-#breadcrumbs and links for data quality entries
+# breadcrumbs and links for data quality entries
 
 def get_bread(breads=[]):
     bc = [('Representations', "/Representation"),("mod &#x2113;", url_for(".index"))]
@@ -95,7 +95,7 @@ def rep_galois_modl_by_label_or_name(lab):
         flash_error("No integral rep_galois_modl in the database has label or name %s", lab)
     return redirect(url_for(".rep_galois_modl_render_webpage"))
 
-#download
+# download
 download_comment_prefix = {'magma':'//','sage':'#','gp':'\\\\'}
 download_assignment_start = {'magma':'data := ','sage':'data = ','gp':'data = '}
 download_assignment_end = {'magma':';','sage':'','gp':''}
@@ -223,10 +223,10 @@ def render_rep_galois_modl_webpage(**args):
         ('Field characteristic', '%s' %info['field_char']),
         ('Conductor', '%s' %info['conductor']),]
     return render_template("rep_galois_modl-single.html", info=info, credit=credit, title=t, bread=bread, properties=info['properties'], learnmore=learnmore_list(), KNOWL_ID='gal.modl.%s'%info['label'])
-#friends=friends
+# friends=friends
 
 
-#data quality pages
+# data quality pages
 @rep_galois_modl_page.route("/Completeness")
 def completeness_page():
     t = 'Completeness of integral rep_galois_modl data'

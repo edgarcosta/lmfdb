@@ -30,7 +30,7 @@ class RayClassGroup(AbelianGroup_class):
         self.__mod_arch = mod_archimedean
         self.__generators = generators
 
-    #def __call__(self, *args, **kwargs):
+    # def __call__(self, *args, **kwargs):
     #    return group.Group.__call__(self, *args, **kwargs)
 
     def log(self, I):
@@ -101,7 +101,7 @@ class HeckeCharGroup(DualAbelianGroup_class):
     def __repr__(self):
         return "Group of Hecke characters on %s"%self.group()
 
-    #def list(self):
+    # def list(self):
     #    return [ HeckeChar(self, c.list()) for c in DualAbelianGroup_class.list(self) ]
 
     def list_primitive(self):
@@ -117,7 +117,7 @@ class HeckeChar(DualAbelianGroupElement):
         self.__repr = None
         self.__element_vector = x
 
-    #def __repr__(self):
+    # def __repr__(self):
     #    #return "Hecke character of index %s over %s" \
     #    #    %(self.list(),self.parent().group())
     #    return str(self.list())

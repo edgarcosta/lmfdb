@@ -7,6 +7,6 @@ glnQ_page = Blueprint("glnQ", __name__, template_folder='templates', static_fold
 glnQ_logger = make_logger(glnQ_page)
 
 from . import main
-assert main # silence pyflakes
+assert main  # silence pyflakes
 
 app.register_blueprint(glnQ_page, url_prefix="/Groups/GLnQ")

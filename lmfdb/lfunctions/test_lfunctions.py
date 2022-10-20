@@ -6,9 +6,9 @@ class LfunctionTest(LmfdbTest):
 
     # All tests should pass
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Testing at least one example of each type of L-function page
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     def test_LDirichlet(self):
         L = self.tc.get('/L/Character/Dirichlet/19/9/', follow_redirects=True)
@@ -155,17 +155,17 @@ class LfunctionTest(LmfdbTest):
         assert "Modular form 11.2.a.a.1.1" in L.get_data(as_text=True)
 
         L = self.tc.get('/L/ModularForm/GL2/Q/holomorphic/13/12/a/a/1/1/', follow_redirects=True)
-        assert '4.84e4' in L.get_data(as_text=True) # a_7
-        assert '71.7' in L.get_data(as_text=True) # a_2
-        assert '1.51472556377341264746894823521' in L.get_data(as_text=True) # first zero
+        assert '4.84e4' in L.get_data(as_text=True)  # a_7
+        assert '71.7' in L.get_data(as_text=True)  # a_2
+        assert '1.51472556377341264746894823521' in L.get_data(as_text=True)  # first zero
 
         L = self.tc.get('/L/ModularForm/GL2/Q/holomorphic/13/12/a/a/', follow_redirects=True)
-        assert '1.51472556377341264746894823521' in L.get_data(as_text=True) # first zero
+        assert '1.51472556377341264746894823521' in L.get_data(as_text=True)  # first zero
         assert 'Origins of factors' in L.get_data(as_text=True)
         for i in range(1,6):
             assert 'Modular form 13.12.a.a.1.%d' % i in L.get_data(as_text=True)
-        assert '371293' in L.get_data(as_text=True) # L_3 root
-        assert '2.54e3' in L.get_data(as_text=True) # a_13
+        assert '371293' in L.get_data(as_text=True)  # L_3 root
+        assert '2.54e3' in L.get_data(as_text=True)  # a_13
 
         L = self.tc.get('/L/ModularForm/GL2/Q/holomorphic/7/3/b/a/', follow_redirects=True)
         assert '0.332981' in L.get_data(as_text=True)
@@ -174,7 +174,7 @@ class LfunctionTest(LmfdbTest):
         assert '7.21458918128718444354242474222' in L.get_data(as_text=True)
 
         L = self.tc.get('/L/ModularForm/GL2/Q/holomorphic/1/18/a/a/', follow_redirects=True)
-        assert '1.34e12' in L.get_data(as_text=True) # a26
+        assert '1.34e12' in L.get_data(as_text=True)  # a26
         assert '2-1-1.1-c17-0-0' in L.get_data(as_text=True)
         L = self.tc.get('/L/Zeros/2/1/1.1/c17/0/0/')
         assert '18.17341115038590061946085869072' in L.get_data(as_text=True)
@@ -191,7 +191,7 @@ class LfunctionTest(LmfdbTest):
         assert '0.253841' in L.get_data(as_text=True)
         assert 'Elliptic curve 11.a' in L.get_data(as_text=True)
         assert 'Modular form 11.2.a.a' in L.get_data(as_text=True)
-        #FIXME fill ST info in origins = CMFs
+        # FIXME fill ST info in origins = CMFs
         #assert '/SatoTateGroup/1.2.' in L.get_data(as_text=True)
 
         L = self.tc.get('/L/ModularForm/GL2/Q/holomorphic/13/2/e/a/', follow_redirects=True)
@@ -515,9 +515,9 @@ class LfunctionTest(LmfdbTest):
         self.check_args('/L/?jump=2-1.2.1-r0e2-0-4', 'Malformed L-function label')
         self.check_args('/L/?jump=2-1-2.1-r0e2-0-4', 'not found')
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Testing plots and zeros of L-functions
-    #------------------------------------------------------
+    # ------------------------------------------------------
 
     def test_LDirichletZeros(self):
         L = self.tc.get('/L/Character/Dirichlet/5/2/', follow_redirects=True)

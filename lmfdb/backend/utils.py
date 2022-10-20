@@ -260,6 +260,7 @@ class KeyedDefaultDict(defaultdict):
     """
     A defaultdict where the default value takes the key as input.
     """
+
     def __missing__(self, key):
         if self.default_factory is None:
             raise KeyError((key,))

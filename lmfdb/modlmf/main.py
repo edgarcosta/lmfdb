@@ -36,7 +36,7 @@ def my_latex(s):
     ss += ""
     return ss
 
-#breadcrumbs and links for data quality entries
+# breadcrumbs and links for data quality entries
 
 def get_bread(breads=[]):
     bc = [("mod &#x2113; modular forms", url_for(".index"))]
@@ -98,7 +98,7 @@ def modlmf_by_label(lab):
         flash_error("No mod &#x2113; modular form in the database has label %s", lab)
     return redirect(url_for(".modlmf_render_webpage"))
 
-#download
+# download
 download_comment_prefix = {'magma':'//','sage':'#','gp':'\\\\'}
 download_assignment_start = {'magma':'data := ','sage':'data = ','gp':'data = '}
 download_assignment_end = {'magma':';','sage':'','gp':''}
@@ -220,7 +220,7 @@ def render_modlmf_webpage(**args):
     return render_template("modlmf-single.html", info=info, credit=credit, title=t, bread=bread, properties=info['properties'], learnmore=learnmore_list(), KNOWL_ID='modlmf.%s'%info['label'])
 
 
-#auxiliary function for displaying more coefficients of the theta series
+# auxiliary function for displaying more coefficients of the theta series
 @modlmf_page.route('/q_exp_display/<label>/<number>')
 def q_exp_display(label, number):
     try:
@@ -235,7 +235,7 @@ def q_exp_display(label, number):
     return print_q_expansion(coeffs)
 
 
-#data quality pages
+# data quality pages
 @modlmf_page.route("/Completeness")
 def completeness_page():
     t = 'Completeness of mod &#8467; modular form data'

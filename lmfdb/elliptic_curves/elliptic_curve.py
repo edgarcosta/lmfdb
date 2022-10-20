@@ -275,7 +275,7 @@ def ec_parse_coeff_vec(label, info):
     lab = re.sub(r']$','',lab)
     try:
         labvec = lab.split(',')
-        labvec = [QQ(str(z)) for z in labvec] # Rationals allowed
+        labvec = [QQ(str(z)) for z in labvec]  # Rationals allowed
         E = EllipticCurve(labvec).minimal_model()
         # Now we do have a valid curve over Q, but it might
         # not be in the database.
@@ -382,7 +382,7 @@ class EC_download(Downloader):
     data_description = "defining the elliptic curve y^2 + a1xy + a3y = x^3 + a2x^2 + a4x + a6."
     function_body = {
         "magma": [
-            "return [EllipticCurve([a:a in ai]):ai in data];", # convert ai from list to sequence
+            "return [EllipticCurve([a:a in ai]):ai in data];",  # convert ai from list to sequence
         ],
         "sage": [
             "return [EllipticCurve(ai) for ai in data]",
@@ -498,7 +498,7 @@ def elliptic_curve_search(info, query):
         else:
             parse_ints(info,query,'torsion')
     # speed up slow torsion_structure searches by also setting torsion
-    #if 'torsion_structure' in query and not 'torsion' in query:
+    # if 'torsion_structure' in query and not 'torsion' in query:
     #    query['torsion'] = reduce(mul,[int(n) for n in query['torsion_structure']],1)
     if 'cm' in info:
         if info['cm'] == 'noCM':
@@ -616,7 +616,7 @@ def by_ec_label(label):
             else:
                 return elliptic_curve_jump_error(label, {})
 
-        if number: # it's a curve
+        if number:  # it's a curve
             label_type = 'Clabel'
         else:
             label_type = 'Ciso'
@@ -702,7 +702,7 @@ def render_curve_webpage_by_label(label):
     data.modform_display = url_for(".modular_form_display", label=lmfdb_label, number="")
 
     code = data.code()
-    code['show'] = {'magma':'','pari':'','sage':''} # use default show names
+    code['show'] = {'magma':'','pari':'','sage':''}  # use default show names
     T = render_template("ec-curve.html",
                         properties=data.properties,
                         data=data,
@@ -723,7 +723,7 @@ def EC_data(label):
     bread = get_bread([(label, url_for_label(label)), ("Data", " ")])
     if match_lmfdb_label(label):
         conductor, iso_class, number = split_lmfdb_label(label)
-        if not number: # isogeny class
+        if not number:  # isogeny class
             return datapage(label, ["ec_classdata", "ec_padic"], bread=bread, label_col="lmfdb_iso", sorts=[[], ["p"]])
         iso_label = class_lmfdb_label(conductor, iso_class)
         labels = [label] * 8
@@ -776,7 +776,7 @@ def download_EC_qexp(label, limit):
     response.headers['Content-type'] = 'text/plain'
     return response
 
-#TODO: get all the data from all the relevant tables, not just the search table.
+# TODO: get all the data from all the relevant tables, not just the search table.
 
 @ec_page.route("/download_all/<label>")
 def download_EC_all(label):
@@ -931,7 +931,7 @@ app.jinja_env.globals.update(tor_struct_search_Q=tor_struct_search_Q)
 class ECSearchArray(SearchArray):
     noun = "curve"
     sorts = [("", "conductor", ["conductor", "iso_nlabel", "lmfdb_number"]),
-             #("cremona_label", "cremona label", ["conductor", "Ciso", "Cnumber"]), # Ciso is text so this doesn't sort correctly
+             # ("cremona_label", "cremona label", ["conductor", "Ciso", "Cnumber"]), # Ciso is text so this doesn't sort correctly
              ("rank", "rank", ["rank", "conductor", "iso_nlabel", "lmfdb_number"]),
              ("torsion", "torsion", ["torsion", "conductor", "iso_nlabel", "lmfdb_number"]),
              ("cm_discriminant", "CM discriminant", [("cm", -1), "conductor", "iso_nlabel", "lmfdb_number"]),

@@ -73,7 +73,7 @@ class SymmetricPowerLFunction(SageObject):
         return F.coefficients(sparse=False)
 
     def an_list(self, upperbound=100000):
-        #from sage.rings.fast_arith import prime_range # imported but unused
+        # from sage.rings.fast_arith import prime_range # imported but unused
         from lmfdb.utils import an_list
         return an_list(self.eulerFactor, upperbound=upperbound,
                        base_field=sage.rings.all.RationalField())
@@ -175,5 +175,5 @@ def symmetricPowerLfunction(E, n):
     """gives lcalc version of symmetric power L function"""
     bad_primes, conductor, root_number = sympowlmfdb.local_data(E, n)
 
-#What is the point of this last line?
+# What is the point of this last line?
 sympowlmfdb

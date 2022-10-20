@@ -347,7 +347,7 @@ class PostgresStatsTable(PostgresBase):
         data = [count, cols, vals, split_list]
         if self.quick_count(query, suffix=suffix) is None:
             if count == 0 and not nullrec:
-                return # we don't want to store 0 counts since it can break stats
+                return  # we don't want to store 0 counts since it can break stats
             updater = SQL("INSERT INTO {0} (count, cols, values, split, extra) VALUES (%s, %s, %s, %s, %s)")
             data.append(extra)
         else:

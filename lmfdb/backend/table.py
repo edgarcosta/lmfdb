@@ -1193,7 +1193,7 @@ class PostgresTable(PostgresBase):
                     "WITH deleted_ids AS ({0} RETURNING id) DELETE FROM {1} WHERE id IN (SELECT id FROM deleted_ids)"
                 ).format(deleter, Identifier(self.extra_table))
             cur = self._execute(deleter, values)
-            #self._break_order()
+            # self._break_order()
             self._break_stats()
             nrows = cur.rowcount
             if self.stats.saving:
@@ -1751,7 +1751,7 @@ class PostgresTable(PostgresBase):
                                 )
                         resort = line["id_ordered"] == 't' and line["out_of_order"] == 'f'
                 else:
-                    if not self._id_ordered: # this table doesn't need to be sorted
+                    if not self._id_ordered:  # this table doesn't need to be sorted
                         resort = False
                 # tracks the success of resort
                 ordered = self.resort(suffix=suffix)
@@ -2171,7 +2171,7 @@ class PostgresTable(PostgresBase):
             self._execute(SQL(
                 "UPDATE meta_tables SET (sort, id_ordered) = (%s, %s) WHERE name = %s"),
                           [sort_json, self._id_ordered, self.search_table])
-            self._break_order() # set out_order = False
+            self._break_order()  # set out_order = False
 
             if sort:
                 # add an index for the default sort

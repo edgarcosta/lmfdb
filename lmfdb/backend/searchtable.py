@@ -402,7 +402,7 @@ class PostgresSearchTable(PostgresTable):
         """
         The list of columns included in a search query
         """
-        if isinstance(D, list): # can happen recursively in $or queries
+        if isinstance(D, list):  # can happen recursively in $or queries
             return sum((self._columns_searched(part) for part in D), [])
         L = []
         for key, value in D.items():
@@ -554,8 +554,8 @@ class PostgresSearchTable(PostgresTable):
             if isinstance(cur, pg_cursor):
                 cur.close()
                 if (
-                    cur.withhold # to assure that it is a buffered cursor
-                    and self._db._nocommit_stack == 0 # and there is nothing to commit
+                    cur.withhold  # to assure that it is a buffered cursor
+                    and self._db._nocommit_stack == 0  # and there is nothing to commit
                 ):
                     cur.connection.commit()
 
@@ -808,7 +808,7 @@ class PostgresSearchTable(PostgresTable):
             else:
                 built = self._build_query(Q, lim, off, sort, raw=raw, one_per=one_per, raw_values=raw_values)
             if one_per:
-#SELECT lmfdb_label FROM (SELECT lmfdb_label, conductor, iso_nlabel, lmfdb_number, row_number() OVER (PARTITION BY lmfdb_iso ORDER BY conductor, iso_nlabel, lmfdb_number) as row_number FROM ec_curvedata WHERE jinv = '{-4096, 11}') temp WHERE row_number = 1 ORDER BY conductor, iso_nlabel, lmfdb_number
+# SELECT lmfdb_label FROM (SELECT lmfdb_label, conductor, iso_nlabel, lmfdb_number, row_number() OVER (PARTITION BY lmfdb_iso ORDER BY conductor, iso_nlabel, lmfdb_number) as row_number FROM ec_curvedata WHERE jinv = '{-4096, 11}') temp WHERE row_number = 1 ORDER BY conductor, iso_nlabel, lmfdb_number
                 where, olo, values = built
                 inner_cols = SQL(", ").join(map(IdentifierWrapper, set(search_cols + extra_cols + tuple(sort_cols))))
                 op = SQL(", ").join(map(IdentifierWrapper, one_per))
@@ -850,7 +850,7 @@ class PostgresSearchTable(PostgresTable):
                     if nres is None
                     else limit + offset
                 )
-                exact_count = True # updated below if we have a subquery hitting the prelimit
+                exact_count = True  # updated below if we have a subquery hitting the prelimit
                 for Q in queries:
                     cur = run_one_query(Q, prelimit, 0)
                     if cur.rowcount == prelimit and nres is None:
@@ -1077,15 +1077,15 @@ class PostgresSearchTable(PostgresTable):
                 if res:
                     return res
             raise RuntimeError("Random selection failed!")
-        ### This code was used when not every table had an id.
-        ## Get the number of pages occupied by the search_table
+        # This code was used when not every table had an id.
+        # Get the number of pages occupied by the search_table
         # cur = self._execute(SQL("SELECT relpages FROM pg_class WHERE relname = %s"), [self.search_table])
         # num_pages = cur.fetchone()[0]
-        ## extra_cols will be () since there is no id
+        # extra_cols will be () since there is no id
         # search_cols, extra_cols = self._parse_projection(projection)
         # vars = SQL(", ").join(map(Identifier, search_cols + extra_cols))
         # selecter = SQL("SELECT {0} FROM {1} TABLESAMPLE SYSTEM(%s)").format(vars, Identifier(self.search_table))
-        ## We select 3 pages in an attempt to not accidentally get nothing.
+        # We select 3 pages in an attempt to not accidentally get nothing.
         # percentage = min(float(300) / num_pages, 100)
         # for _ in range(maxtries):
         #    cur = self._execute(selecter, [percentage])

@@ -22,7 +22,7 @@ def elist_qformatter(elist):
     if M is None:
         raise ValueError(elist)
     L = []
-    if M.group(1) is not None: # nontrivial group
+    if M.group(1) is not None:  # nontrivial group
         for i in range(2, len(M.groups()), 3):
             if M.group(i) is not None:
                 L.append(1 if M.group(i+1) is None else int(M.group(i+2)))
@@ -177,8 +177,8 @@ class GroupStats(StatsDisplay):
 
     @lazy_attribute
     def short_summary(self):
-        return fr'The database currently contains {comma(db.gps_groups.count())} {display_knowl("group", "groups")} of {display_knowl("group.order", "order")} $n\leq {db.gps_groups.max("order")}$ together with {comma(db.gps_subgroups.count())} of their {display_knowl("group.subgroup", "subgroups")} and {comma(db.gps_char.count())} of their {display_knowl("group.representation.character", "irreducible complex characters")}.  You can <a href="{url_for(".statistics")}">browse further statistics</a>.'# or <a href="{url_for(".dynamic_statistics")}">create your own</a>.'
+        return fr'The database currently contains {comma(db.gps_groups.count())} {display_knowl("group", "groups")} of {display_knowl("group.order", "order")} $n\leq {db.gps_groups.max("order")}$ together with {comma(db.gps_subgroups.count())} of their {display_knowl("group.subgroup", "subgroups")} and {comma(db.gps_char.count())} of their {display_knowl("group.representation.character", "irreducible complex characters")}.  You can <a href="{url_for(".statistics")}">browse further statistics</a>.'  # or <a href="{url_for(".dynamic_statistics")}">create your own</a>.'
 
     @lazy_attribute
     def summary(self):
-        return fr'The database currently contains {comma(db.gps_groups.count())} {display_knowl("group", "groups")} of {display_knowl("group.order", "order")} $n\leq {db.gps_groups.max("order")}$ together with {comma(db.gps_subgroups.count())} of their {display_knowl("group.subgroup", "subgroups")} and {comma(db.gps_char.count())} of their {display_knowl("group.representation.character", "irreducible complex characters")}.' #  In addition to the statistics below, you can also <a href="{url_for(".dynamic_statistics")}">create your own</a>.'
+        return fr'The database currently contains {comma(db.gps_groups.count())} {display_knowl("group", "groups")} of {display_knowl("group.order", "order")} $n\leq {db.gps_groups.max("order")}$ together with {comma(db.gps_subgroups.count())} of their {display_knowl("group.subgroup", "subgroups")} and {comma(db.gps_char.count())} of their {display_knowl("group.representation.character", "irreducible complex characters")}.'  # In addition to the statistics below, you can also <a href="{url_for(".dynamic_statistics")}">create your own</a>.'

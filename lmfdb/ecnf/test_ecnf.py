@@ -60,7 +60,7 @@ class EllCurveTest(LmfdbTest):
         L = self.tc.get('/EllipticCurve/2.0.4.1/5525.5/b/9')
         assert '226834389543384' in L.get_data(as_text=True)
         assert '1490902050625' in L.get_data(as_text=True)
-        L = self.tc.get('EllipticCurve/2.2.89.1/81.1/a/1') # Test factorisation
+        L = self.tc.get('EllipticCurve/2.2.89.1/81.1/a/1')  # Test factorisation
         assert '8798344145175011328000' in L.get_data(as_text=True)
 
     def test_download(self):
@@ -92,7 +92,7 @@ class EllCurveTest(LmfdbTest):
         L = self.tc.get('/EllipticCurve/?torsion=13')
         assert '2745' in L.get_data(as_text=True)
         assert '3.3.49.1' in L.get_data(as_text=True)
-        #field (see what I did here?)
+        # field (see what I did here?)
         L = self.tc.get('/EllipticCurve/?field=Qsqrt-11&include_base_change=on&conductor_norm=&include_isogenous=on&torsion=&torsion_structure=&count=')
         assert '2.0.11.1' in L.get_data(as_text=True)
         assert '1681' in L.get_data(as_text=True)

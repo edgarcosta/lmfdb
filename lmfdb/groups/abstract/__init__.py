@@ -10,6 +10,6 @@ abstract_logger = make_logger(abstract_page)
 
 
 from . import main
-assert main # silence pyflakes
+assert main  # silence pyflakes
 
 app.register_blueprint(abstract_page, url_prefix="/Groups/Abstract")

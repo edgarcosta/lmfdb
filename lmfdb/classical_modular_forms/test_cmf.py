@@ -198,7 +198,7 @@ class CmfTest(LmfdbTest):
         assert r'0.957427' in page.get_data(as_text=True)
         assert r'0.223607' in page.get_data(as_text=True)
         assert r'0.974679' in page.get_data(as_text=True)
-        ## We also check that the L-function works
+        # We also check that the L-function works
         page = self.tc.get('/L/ModularForm/GL2/Q/holomorphic/11/2/a/a/', follow_redirects=True)
         assert '0.253841' in page.get_data(as_text=True)
 
@@ -278,26 +278,26 @@ class CmfTest(LmfdbTest):
     def test_dim_table(self):
         page = self.tc.get("/ModularForm/GL2/Q/holomorphic/?weight=12&level=23&search_type=Dimensions", follow_redirects=True)
         assert 'Dimension search results' in page.get_data(as_text=True)
-        assert '229' in page.get_data(as_text=True) # Level 23, Weight 12
+        assert '229' in page.get_data(as_text=True)  # Level 23, Weight 12
 
         page = self.tc.get("/ModularForm/GL2/Q/holomorphic/?weight=12&level=1-100&search_type=Dimensions", follow_redirects=True)
         assert 'Dimension search results' in page.get_data(as_text=True)
-        assert '229' in page.get_data(as_text=True) # Level 23, Weight 12
+        assert '229' in page.get_data(as_text=True)  # Level 23, Weight 12
 
         page = self.tc.get("/ModularForm/GL2/Q/holomorphic/?search_type=Dimensions", follow_redirects=True)
         assert 'Dimension search results' in page.get_data(as_text=True)
         assert '1-12' in page.get_data(as_text=True)
         assert '1-24' in page.get_data(as_text=True)
-        assert '229' in page.get_data(as_text=True) # Level 23, Weight 12
+        assert '229' in page.get_data(as_text=True)  # Level 23, Weight 12
 
         page = self.tc.get('/ModularForm/GL2/Q/holomorphic/?level=1-100&weight=1-20&search_type=Dimensions', follow_redirects=True)
-        assert '253' in page.get_data(as_text=True) # Level 23, Weight 13
-        assert '229' in page.get_data(as_text=True) # Level 23, Weight 12
+        assert '253' in page.get_data(as_text=True)  # Level 23, Weight 13
+        assert '229' in page.get_data(as_text=True)  # Level 23, Weight 12
         assert 'Dimension search results' in page.get_data(as_text=True)
 
         page = self.tc.get("/ModularForm/GL2/Q/holomorphic/?level=3900-4100&weight=1-12&char_order=2-&search_type=Dimensions", follow_redirects=True)
-        assert '426' in page.get_data(as_text=True) # Level 3999, Weight 1
-        assert '128' in page.get_data(as_text=True) # Level 4000, Weight 1
+        assert '426' in page.get_data(as_text=True)  # Level 3999, Weight 1
+        assert '128' in page.get_data(as_text=True)  # Level 4000, Weight 1
 
         page = self.tc.get("/ModularForm/GL2/Q/holomorphic/?level=3900-4100&weight=1-12&char_order=1&search_type=Dimensions", follow_redirects=True)
         assert 'Dimension search results' in page.get_data(as_text=True)
@@ -315,7 +315,7 @@ class CmfTest(LmfdbTest):
         page = self.tc.get('/ModularForm/GL2/Q/holomorphic/?weight_parity=odd&level=1-1000&weight=1-100&search_type=Dimensions')
         assert 'Error: Table too large: must have at most 10000 entries' in page.get_data(as_text=True)
 
-        #the other dim table
+        # the other dim table
         page = self.tc.get("/ModularForm/GL2/Q/holomorphic/10/2/")
         assert '7' in page.get_data(as_text=True)
         page = self.tc.get("/ModularForm/GL2/Q/holomorphic/12/2/")
@@ -458,7 +458,7 @@ class CmfTest(LmfdbTest):
             assert r'0.984139\pi' in page.get_data(as_text=True)
             assert r'0.317472\pi' in page.get_data(as_text=True)
 
-        #test large floats
+        # test large floats
         for url in ['/ModularForm/GL2/Q/holomorphic/1/36/a/a/?m=1-3&n=695-696&prec=6&format=embed',
                     '/ModularForm/GL2/Q/holomorphic/1/36/a/a/1/1/']:
             page = self.tc.get(url)
