@@ -920,8 +920,8 @@ class WebG2C():
         data['gl2_statement_base'] = gl2_statement_base(endo['factorsRR_base'], r'\(\Q\)')
         data['factorsQQ_base'] = endo['factorsQQ_base']
         data['factorsRR_base'] = endo['factorsRR_base']
-        data['end_statement_base'] = (r"Endomorphism %s over \(\Q\):<br>" % ("ring" if is_curve else "algebra") +
-            end_statement(data['factorsQQ_base'], endo['factorsRR_base'], ring=data['end_ring_base'] if is_curve else None))
+        data['end_statement_base'] = (r"Endomorphism %s over \(\Q\):<br>" % ("ring" if is_curve else "algebra")
+            + end_statement(data['factorsQQ_base'], endo['factorsRR_base'], ring=data['end_ring_base'] if is_curve else None))
 
         # Field over which all endomorphisms are defined
         data['end_field_label'] = endo['fod_label']
@@ -933,8 +933,8 @@ class WebG2C():
         data['factorsRR_geom'] = endo['factorsRR_geom']
         if data['end_field_label'] != '1.1.1.1':
             data['gl2_statement_geom'] = gl2_statement_base(data['factorsRR_geom'], r'\(\overline{\Q}\)')
-            data['end_statement_geom'] = (r"Endomorphism %s over \(\overline{\Q}\):" % ("ring" if is_curve else "algebra") +
-                end_statement(data['factorsQQ_geom'], data['factorsRR_geom'], field=r'\overline{\Q}', ring=data['end_ring_geom'] if is_curve else None))
+            data['end_statement_geom'] = (r"Endomorphism %s over \(\overline{\Q}\):" % ("ring" if is_curve else "algebra")
+                + end_statement(data['factorsQQ_geom'], data['factorsRR_geom'], field=r'\overline{\Q}', ring=data['end_ring_geom'] if is_curve else None))
         data['real_geom_end_alg_name'] = real_geom_end_alg_name(curve['real_geom_end_alg'])
         data['geom_end_alg_name'] = geom_end_alg_name(curve['geom_end_alg'])
         data['end_alg_name'] = end_alg_name(curve['end_alg'])
