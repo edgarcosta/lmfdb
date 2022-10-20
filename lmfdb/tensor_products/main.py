@@ -42,7 +42,7 @@ def navigate():
 def show():
     args = request.args
 
-    objLinks = args # an immutable dict of links to objects to tp
+    objLinks = args  # an immutable dict of links to objects to tp
 
     objPaths = []
     for _, v in objLinks.items():
@@ -147,9 +147,9 @@ def galois_rep_from_path(p):
     elif (p[0]=='ModularForm'):
         level = int(p[4])
         weight = int(p[5])
-        conrey_label = p[6] # this should be zero; TODO check this is the case
-        hecke_orbit = p[7] # this is a, b, c, etc.; chooses the galois orbit
-        embedding = p[8] # this is the embedding of that galois orbit
+        conrey_label = p[6]  # this should be zero; TODO check this is the case
+        hecke_orbit = p[7]  # this is a, b, c, etc.; chooses the galois orbit
+        embedding = p[8]  # this is the embedding of that galois orbit
         label = convert_newformlabel_from_conrey(str(level)+"."+str(weight)+"."+str(conrey_label)+"."+hecke_orbit)
         form = WebNewform(label)
         return GaloisRepresentation([form, ZZ(embedding)])

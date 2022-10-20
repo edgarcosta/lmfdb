@@ -238,7 +238,7 @@ def interesting():
         "ec",
         db.ec_nfcurves,
         url_for_label=url_for_label,
-        regex=LABEL_RE, # include so that we don't catch elliptic curves over Q also
+        regex=LABEL_RE,  # include so that we don't catch elliptic curves over Q also
         title="Some interesting elliptic curves over number fields",
         bread=get_bread("Interesting"),
         learnmore=learnmore_list()
@@ -362,7 +362,7 @@ def show_ecnf(nf, conductor_label, class_label, number):
     bread.append((ec.iso_label, ec.urls['class']))
     bread.append((ec.number, ec.urls['curve']))
     code = ec.code()
-    code['show'] = {'magma':'','pari':'','sage':''} # use default show names
+    code['show'] = {'magma':'','pari':'','sage':''}  # use default show names
     info = {}
     return render_template("ecnf-curve.html",
                            title=title,
@@ -588,7 +588,7 @@ def elliptic_curve_search(info, query):
 
     # Keep include_base_change/include_Q_curves options for backward compat with URLs
     if 'include_base_change' in info:
-        if info['include_base_change'] in ['exclude', 'off']: # off for backward compat
+        if info['include_base_change'] in ['exclude', 'off']:  # off for backward compat
             query['base_change'] = []
         if info['include_base_change'] == 'only':
             query['base_change'] = {'$ne':[]}

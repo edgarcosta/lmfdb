@@ -77,7 +77,7 @@ if __name__ == '__main__':
         options['parallel'] = False
         db[tablename].verify(**options)
     else:
-        #use parallel to loop over all options
+        # use parallel to loop over all options
         tables = validated_tables if tablename == 'all' else [tablename]
         types = speedtypes if options['speedtype'] == 'all' else [options['speedtype']]
 
@@ -88,7 +88,7 @@ if __name__ == '__main__':
                 types_file.write('\n'.join(types) + '\n')
                 types_file.flush()
                 cmd = ['parallel'] + parallel_args
-                cmd += ['-a', tables_file.name, '-a', types_file.name] # inputs
+                cmd += ['-a', tables_file.name, '-a', types_file.name]  # inputs
                 cmd += ['sage', '-python', os.path.realpath(__file__), options['logdir'] ]
                 print("Running: {0}".format(subprocess.list2cmdline(cmd)))
                 exitcode = subprocess.call(cmd)

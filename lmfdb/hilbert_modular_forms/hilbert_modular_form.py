@@ -479,8 +479,8 @@ def render_hmf_webpage(**args):
 
     info['hecke_polynomial'] = r"\(" + teXify_pol(hecke_pol) + r"\)"
 
-    if not AL_eigs: # empty list
-        if data['level_norm'] == 1: # OK, no bad primes
+    if not AL_eigs:  # empty list
+        if data['level_norm'] == 1:  # OK, no bad primes
             info['AL_eigs'] = 'none'
         else:                     # not OK, AL eigs are missing
             info['AL_eigs'] = 'missing'
@@ -546,7 +546,7 @@ def hmf_data(label):
     bread = get_bread([(label, url_for_label(label)), ("Data", " ")])
     return datapage([label, label, field_label, field_label], ["hmf_forms", "hmf_hecke", "hmf_fields", "nf_fields"], title=title, bread=bread)
 
-#data quality pages
+# data quality pages
 @hmf_page.route("/Source")
 def how_computed_page():
     t = 'Source and acknowledgments for Hilbert modular form data'

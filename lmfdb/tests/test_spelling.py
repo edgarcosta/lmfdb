@@ -27,7 +27,7 @@ class SpellingTest(LmfdbTest):
     # If someone wants it to work correctly, they are going to have
     # to write it better.
 
-    #def test_maass_spelling(self):
+    # def test_maass_spelling(self):
     #    """
     #        'Maass', not anything else
     #    """

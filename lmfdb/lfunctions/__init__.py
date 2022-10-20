@@ -13,6 +13,6 @@ def body_class():
     return {'body_class': 'l_functions'}
 
 from . import main
-assert main # silence pyflakes
+assert main  # silence pyflakes
 
 app.register_blueprint(l_function_page, url_prefix="/L")

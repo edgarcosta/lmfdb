@@ -10,13 +10,13 @@ class HMFTest(LmfdbTest):
         assert 'Browse' in L.get_data(as_text=True)
         assert 'Search' in L.get_data(as_text=True)
         assert 'Find' in L.get_data(as_text=True)
-        assert r'\sqrt{2}' in L.get_data(as_text=True) #552
+        assert r'\sqrt{2}' in L.get_data(as_text=True)  # 552
 
-    def test_random(self): #993
+    def test_random(self):  # 993
         L = self.tc.get('/ModularForm/GL2/TotallyReal/random')
         assert 'edirect' in L.get_data(as_text=True)
 
-    def test_EC(self): #778
+    def test_EC(self):  # 778
         L = self.tc.get('ModularForm/GL2/TotallyReal/5.5.126032.1/holomorphic/5.5.126032.1-82.1-b')
         assert 'EllipticCurve/5.5.126032.1/82.1/b/' in L.get_data(as_text=True)
 
@@ -24,20 +24,20 @@ class HMFTest(LmfdbTest):
         assert 'Elliptic curve' in L.get_data(as_text=True)
         assert 'EllipticCurve/2.2.89.1/2.1/a' in L.get_data(as_text=True)
 
-    def test_typo(self): #771
+    def test_typo(self):  # 771
         L = self.tc.get('/ModularForm/GL2/TotallyReal/?field_label=2.2.5.1')
         assert 'Search again' in L.get_data(as_text=True)
 
-    def test_large(self): #616
+    def test_large(self):  # 616
         L = self.tc.get('/ModularForm/GL2/TotallyReal/?field_label=4.4.2000.1&count=1200')
         assert '719.2-c' in L.get_data(as_text=True)
 
-    def test_range_search(self): #547
+    def test_range_search(self):  # 547
         L = self.tc.get('/ModularForm/GL2/TotallyReal/?disc=1..100&count=100')
         assert '209.1-b' in L.get_data(as_text=True)
-        assert 'Next' in L.get_data(as_text=True) #435
+        assert 'Next' in L.get_data(as_text=True)  # 435
 
-    def test_bad_input_search(self): #547
+    def test_bad_input_search(self):  # 547
         L = self.tc.get('/ModularForm/GL2/TotallyReal/?field_label=hello&count=100')
         assert 'not a valid input' in L.get_data(as_text=True)
 

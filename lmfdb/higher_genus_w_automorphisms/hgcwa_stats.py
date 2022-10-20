@@ -15,7 +15,7 @@ class HGCWAstats(StatsDisplay):
     """
     Class for creating and displaying statistics for higher genus curves with automorphisms
     """
-    #TODO provide getter for subset of stats (e.g. for top matter)
+    # TODO provide getter for subset of stats (e.g. for top matter)
 
     def __init__(self):
         self.genus_max = db.hgcwa_passports.max('genus')

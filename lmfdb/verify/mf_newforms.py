@@ -407,7 +407,7 @@ class mf_newforms(MfChecker):
         """
         # TIME about 3600s for full table
         N = rec['level']
-        traces = [0] + rec['traces'] # shift so indexing correct
+        traces = [0] + rec['traces']  # shift so indexing correct
         primes = [p for p in prime_range(len(traces)) if N % p != 0]
         for D in rec['self_twist_discs']:
             for p in primes:
@@ -536,8 +536,8 @@ class mf_newforms(MfChecker):
 
     #### char_dir_orbits ####
 
-    #@slow(disabled = True)
-    #def check_inner_twist_character(self, rec, verbose=False):
+    # @slow(disabled = True)
+    # def check_inner_twist_character(self, rec, verbose=False):
     #    # TODO - use zipped table
     #    # check that each level M in inner twists divides the level and that M.o identifies a character orbit in char_dir_orbits with the listed parity
     #    return True
@@ -648,8 +648,8 @@ class mf_newforms(MfChecker):
             dbroots.pop(best_i)
         return True
 
-    #@slow(disabled=True)
-    #def check_an_embedding(self, rec, verbose=False):
+    # @slow(disabled=True)
+    # def check_an_embedding(self, rec, verbose=False):
     #    # TODO - zipped table
     #    # When we have exact an, check that the inexact values are correct
     #    pass

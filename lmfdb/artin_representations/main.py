@@ -120,7 +120,7 @@ def add_lfunction_friends(friends, label):
     for label in both_labels(label):
         rec = db.lfunc_instances.lucky({'type':'Artin','url':'ArtinRepresentation/'+label})
         if rec:
-            num = 10 if 'c' in label.split('.')[-1] else 8 # number of components of CMF label based on artin label (rep or orbit)
+            num = 10 if 'c' in label.split('.')[-1] else 8  # number of components of CMF label based on artin label (rep or orbit)
             for r in db.lfunc_instances.search({'Lhash':rec["Lhash"]}):
                 s = r['url'].split('/')
                 if r['type'] == 'CMF' and len(s) == num:
@@ -187,7 +187,7 @@ def parse_projective_group(inp, query, qfield):
         if n>=0 and n<len(dihedrals):
             query[qfield] = dihedrals[n]
         elif n>=0:
-            query[qfield] = [-1,-2] # we don't have it
+            query[qfield] = [-1,-2]  # we don't have it
     else:
         try:
             mycode = complete_group_code(inp.upper())[0]
@@ -197,7 +197,7 @@ def parse_projective_group(inp, query, qfield):
 
 @search_parser(clean_info=True)
 def parse_projective_type(inp, query, qfield):
-    #Deal with that we may have already set this field
+    # Deal with that we may have already set this field
     current = None
     if qfield in query:
         current = query[qfield]
@@ -313,7 +313,7 @@ def render_artin_representation_webpage(label):
             newlabel = parse_artin_label(label)
             flash_error("Artin representation %s is not in database", label)
             return redirect(url_for(".index"))
-    else: # it is an orbit
+    else:  # it is an orbit
         try:
             the_rep = ArtinRepresentation(newlabel+'.a')
         except Exception:
@@ -374,7 +374,7 @@ def render_artin_representation_webpage(label):
         add_lfunction_friends(friends,label)
 
         # once the L-functions are in the database, the link can always be shown
-        #if the_rep.dimension() <= 6:
+        # if the_rep.dimension() <= 6:
         if the_rep.dimension() == 1:
             # Zeta is loaded differently
             if cc.modulus == 1 and cc.number == 1:
@@ -401,7 +401,7 @@ def render_artin_representation_webpage(label):
             friends.append(("Artin representation " + artin_label_pretty(newlabel),
                 url_for(".render_artin_representation_webpage", label=newlabel)))
 
-    info={} # for testing
+    info={}  # for testing
 
     if case == 'rep':
         return render_template(
@@ -685,7 +685,7 @@ def contcache():
     return knowl_cache([label for label in db.artin_reps.distinct("Container") if "T" in label])
 def contformatter(cont):
     n, t = galdata(cont)
-    if t == 0: # no T number
+    if t == 0:  # no T number
         return cont
     return group_pretty_and_nTj(n, t, True, cache=contcache())
 

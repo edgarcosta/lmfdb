@@ -57,9 +57,9 @@ class Outside:
 
 class Circle:
     def __init__(self, r, o, x=None, y=None, R=None, theta=None, touching=[]):
-        self.r = r # radius of circle
-        self.o = o # order of corresponding conjugacy classe (for eventually determining color)
-        self.touching = touching # the touching objects used to construct the center
+        self.r = r  # radius of circle
+        self.o = o  # order of corresponding conjugacy classe (for eventually determining color)
+        self.touching = touching  # the touching objects used to construct the center
         assert (x is not None and y is not None) or (R is not None and theta is not None)
         if x is not None:
             self.x = x
@@ -107,8 +107,8 @@ class Circle:
         return hash((self.R, self.theta, self.o))
 
     def __eq__(self, C):
-        #### Better to use R,theta or x,y?
-        #### Probably need to set a threshold since these are floats
+        # Better to use R,theta or x,y?
+        # Probably need to set a threshold since these are floats
         return (self.R, self.theta, self.r, self.o) == (C.R, C.theta, C.r, C.o)
 
     def in_annulus(self, R0, R1):
@@ -155,23 +155,23 @@ class Circle:
                 continue
             d = self.distance(C)
             dmin = d if dmin is None else min(d, dmin)
-            if dmin < -eps: # short circuit since we'll be throwing this circle away
-                return 2 # anything bigger than 1 will delete the circle
+            if dmin < -eps:  # short circuit since we'll be throwing this circle away
+                return 2  # anything bigger than 1 will delete the circle
         return 1 - dmin / self.r
 
 # Most common orders below 512: 4 (2384226 ccs), 2, 8, 12, 6, 24, 1, 16, 20, 28, 3, 10, 14, 56, 30, 18, 40, 9, 48, 60, 5, 36, 15, 7, 26, 52, 32, 22, 44, 42, 21, 120, 27 (5046 ccs)
 # We color based on 2-adic valuation and odd part.  Generally, a higher valuation is coded as darker, and we use the odd part to select a hue.
 # The HSV color coordinates are obtained from the following dictionary: the odd part gives the key, and the valuation is used to index into each list.
 hsv = {
-    1: (0, 95, [None, 100, 82, 66, 52, 40, 30, 22, 16]), # red; 1 is handled separately
-    3: (220, 90, [90, 80, 70, 60, 50, 40, 30, 20]), # blue
-    5: (30, 100, [100, 90, 80, 70, 60, 50, 40]), # orange
-    7: (150, 65, [90, 80, 70, 60, 50, 40, 30]), # muddy green
-    9: (280, 90, [90, 80, 70, 60, 50, 40, 30]), # violet
-    11: (320, 90, [100, 82, 66, 52, 40, 30]), # purple
-    13: (60, 80, [80, 70, 60, 50, 40, 30]), # yellow
-    15: (175, 90, [90, 80, 70, 60, 50, 40]), # teal
-    21: (90, 50, [80, 70, 60, 50, 40]), # chartreuse
+    1: (0, 95, [None, 100, 82, 66, 52, 40, 30, 22, 16]),  # red; 1 is handled separately
+    3: (220, 90, [90, 80, 70, 60, 50, 40, 30, 20]),  # blue
+    5: (30, 100, [100, 90, 80, 70, 60, 50, 40]),  # orange
+    7: (150, 65, [90, 80, 70, 60, 50, 40, 30]),  # muddy green
+    9: (280, 90, [90, 80, 70, 60, 50, 40, 30]),  # violet
+    11: (320, 90, [100, 82, 66, 52, 40, 30]),  # purple
+    13: (60, 80, [80, 70, 60, 50, 40, 30]),  # yellow
+    15: (175, 90, [90, 80, 70, 60, 50, 40]),  # teal
+    21: (90, 50, [80, 70, 60, 50, 40]),  # chartreuse
 }
 
 @cached_function
@@ -343,7 +343,7 @@ def place_segment(segment, R0, R1, thetamin, placed, last):
                 if C.ok(avoid, thetaray):
                     assert C.R > R0
                     corners.append(C)
-    fixed = [] # this list stores the placements that have been made
+    fixed = []  # this list stores the placements that have been made
     while corners:
         tophd = None
         for C in corners:
@@ -407,7 +407,7 @@ def pack(rdata, R0, rmax):
         pos = [(Rc * theta.cos(), Rc * theta.sin()) for theta in thetas]
         if all(distxy(pos[i], pos[(i+1) % len(pos)]) >= radii[i] + radii[(i+1) % len(pos)] for i in range(len(pos))):
             return [(x, y, r, get_color(o)) for ((r, o), (x, y)) in zip(rdata, pos)], R0 + 2*rmax
-    area = sum(r**2 for r in radii) # actually area/pi
+    area = sum(r**2 for r in radii)  # actually area/pi
     density = 0.86
     segments = []
     for i, (r, o) in enumerate(rdata):
@@ -419,7 +419,7 @@ def pack(rdata, R0, rmax):
         R1 = (R0**2 + area / density).sqrt()
         squeezed = (R1 < R0 + 2*rmax)
         if squeezed:
-            R1 = R0 + 2*rmax # 4*R0*rmax + 4*rmax^2 = area/density
+            R1 = R0 + 2*rmax  # 4*R0*rmax + 4*rmax^2 = area/density
         #print("Looping", density, R1, R0+2*rmax)
         placed = []
         thetamin = RR(0)
@@ -455,7 +455,7 @@ def arrange_ring(radii, colors, R0, rmax):
     # First attempt: arrange the discs with equally spaced centers
     n = sum(radii.values())
     thetadiff = (2*pi / n)
-    dist = Rc*(2 - 2*thetadiff.cos()).sqrt() # distance between centers in equal space case
+    dist = Rc*(2 - 2*thetadiff.cos()).sqrt()  # distance between centers in equal space case
     if len(radii) == 1:
         r = next(iter(radii))
         placed = [r for i in range(n)]
@@ -477,7 +477,7 @@ def arrange_ring(radii, colors, R0, rmax):
             cur = heapq.heappushpop(remaining, (cur[0] + invcnt[srad[cur[1]]], cur[1]))
     #print("radii", radii)
     #print("colors", colors)
-    #print(placed)
+    # print(placed)
     # Now assign colors in a similar way
     color_placed = {}
     for r in radii:
@@ -493,7 +493,7 @@ def arrange_ring(radii, colors, R0, rmax):
             while len(color_placed[r]) < radii[r]:
                 cur = heapq.heappushpop(remaining, (cur[0] + invcnt[cur[1]], cur[1]))
                 color_placed[r].append(cur[1])
-    #print(color_placed)
+    # print(color_placed)
     if len(radii) == 1 or len(radii) == 2 and len(set(radii.values())) == 2:
         # There will be two circles of max radii adjacent
         equal_centers = (2*rmax < dist + eps)
@@ -521,8 +521,8 @@ def arrange_ring(radii, colors, R0, rmax):
             thetadiff = theta_diffs[i] + thetaspace
             #nextr = placed[(i+1)%len(placed)]
             #thetadiff = (r + nextr)/Rc + thetaspace
-            ## d^2 = 2Rc^2(1-cos(thetadiff))
-            #if 2 * Rc**2 * (1 - thetadiff.cos()) > (r + nextr)**2 + eps:
+            # d^2 = 2Rc^2(1-cos(thetadiff))
+            # if 2 * Rc**2 * (1 - thetadiff.cos()) > (r + nextr)**2 + eps:
             #    # need to use more than one ring
             #    print(f"{i}/{len(placed)}", thetaspace, thetadiff, 2 * Rc**2 * (1 - thetadiff.cos()), (r + nextr)**2)
             #    return False, None
@@ -583,7 +583,7 @@ def arrange_rings(radii, colors, R0, rmax):
         if len(rings) == num_rings or utilization == 1:
             rings = [arrange_ring(*ring)[0] for ring in rings]
             #print("rings2", rings)
-            if all(isinstance(ring, list) for ring in rings): # all succeeded
+            if all(isinstance(ring, list) for ring in rings):  # all succeeded
                 return sum(rings, []), Rc + rmax
         # If we require inner rings to not be fully utilized,
         # that might not leave enough space in outer rings
@@ -609,7 +609,7 @@ def arrange(rdata, R0, rmax):
     if circles:
         return circles, R1
     #rmin = min(radii)
-    if True: #rmax < 3 * rmin:
+    if True:  # rmax < 3 * rmin:
         # the circles are close to the same size.  We divide them up into concentric rings greedily
         return arrange_rings(radii, colors, R0, rmax)
     # Fall back for now; look at 310.4 for an example

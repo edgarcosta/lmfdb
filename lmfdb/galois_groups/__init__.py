@@ -19,9 +19,9 @@ app.register_blueprint(galois_groups_page, url_prefix="/GaloisGroup")
 
 # API2 has been disabled for now
 #from lmfdb.api2.searchers import register_search_function
-#register_search_function(
+# register_search_function(
 #    "transitive_groups",
 #    "Galois groups",
 #    "Search over Galois groups",
 #    auto_search = 'gps_transitive'
-#)
+# )

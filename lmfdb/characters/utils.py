@@ -3,7 +3,7 @@ from sage.misc.functional import round
 
 #############################################################################
 ###
-###    small utilities to be removed one day
+# small utilities to be removed one day
 ###
 #############################################################################
 
@@ -46,7 +46,7 @@ def complex2str(g, digits=10):
         return str(real) + '+' + str(imag) + 'i'
 
 ###############################################################################
-## url_for modified for characters
+# url_for modified for characters
 from flask import url_for
 def url_character(**kwargs):
     if 'type' not in kwargs:

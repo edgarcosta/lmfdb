@@ -399,7 +399,7 @@ def G2C_data(label):
 # Searching
 ################################################################################
 
-### Regex patterns used in lookup
+# Regex patterns used in lookup
 LABEL_RE = re.compile(r"\d+\.[a-z]+\.\d+\.\d+")
 ISOGENY_LABEL_RE = re.compile(r"\d+\.[a-z]+")
 LHASH_RE = re.compile(r"\#\d+")
@@ -430,7 +430,7 @@ def genus2_lookup_equation(input_str):
     if len(fg) == 1:
         fg.append(R(0))
 
-    magma.quit() # force a new magma session
+    magma.quit()  # force a new magma session
     C_str_latex = fr"\({latex(y**2 + y*fg[1])} = {latex(fg[0])}\)"
     try:
         C = magma.HyperellipticCurve(fg)
@@ -817,7 +817,7 @@ def statistics():
         learnmore=learnmore_list(),
     )
 
-#TODO: get all the data from all the relevant tables, not just the search table.
+# TODO: get all the data from all the relevant tables, not just the search table.
 
 @g2c_page.route("/download_all/<label>")
 def download_G2C_all(label):

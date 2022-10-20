@@ -66,6 +66,7 @@ class SympowLMFDB(SageObject):
     this class. Type ``sympow.help()`` for a list of
     commands and how to call them.
     """
+
     def _repr_(self):
         """
         Returns a string describing this calculator module

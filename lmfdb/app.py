@@ -757,7 +757,7 @@ def WhiteListedRoutes():
         'Field',
         'GaloisGroup',
         'Genus2Curve/Q',
-        'Group/foo', # allows /Group but not /Groups/*
+        'Group/foo',  # allows /Group but not /Groups/*
         'HigherGenus/C/Aut',
         'L/Completeness',
         'L/CuspForms',
@@ -789,7 +789,7 @@ def WhiteListedRoutes():
         'acknowledgment',
         'alive',
         'api',
-        #'api2',
+        # 'api2',
         'bigpicture',
         'callback_ajax',
         'citation',
@@ -862,7 +862,7 @@ def NotWhiteListedBreads():
     for _, endpoint in routes():
         if not white_listed(endpoint):
             res.add(endpoint.lstrip("/").split('/', 1)[0])
-    res.remove('L') # all the valid breads are whitelisted
+    res.remove('L')  # all the valid breads are whitelisted
     return res
 
 

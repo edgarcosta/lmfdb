@@ -1078,7 +1078,7 @@ function switch_basis(btype) {
         if not self.embedded_twists:
             return '<p>Twists of this newform have not been computed.</p>'
         if not self.embedding_label:
-            return '' # we should only be called when embedding_label is set
+            return ''  # we should only be called when embedding_label is set
 
         def twist_type(r):
             if r['target_hecke_orbit_code'] != self.hecke_orbit_code:
@@ -1283,7 +1283,7 @@ function switch_basis(btype) {
         if n is None:
             x = self.cc_data[m].get('embedding_root_real', None)
             if x is None:
-                return '' # we should never see this if we have an exact qexp
+                return ''  # we should never see this if we have an exact qexp
         else:
             x, y = self.cc_data[m]['an_normalized'][n]
             if format == 'embed':
@@ -1294,19 +1294,19 @@ function switch_basis(btype) {
         if n is None:
             y = self.cc_data[m].get('embedding_root_imag', None)
             if y is None:
-                return '' # we should never see this if we have an exact qexp
+                return ''  # we should never see this if we have an exact qexp
         else:
             x, y = self.cc_data[m]['an_normalized'][n]
             if format == 'embed':
                 y *= self.analytic_shift[n]
-        return self._display_im(abs(y), prec, method='round') # sign is handled in embedding_op
+        return self._display_im(abs(y), prec, method='round')  # sign is handled in embedding_op
 
     def embedding_op(self, m, n=None, prec=6, format='embed'):
         if n is None:
             x = self.cc_data[m].get('embedding_root_real', None)
             y = self.cc_data[m].get('embedding_root_imag', None)
             if x is None or y is None:
-                return '?' # we should never see this if we have an exact qexp
+                return '?'  # we should never see this if we have an exact qexp
         else:
             x, y = self.cc_data[m]['an_normalized'][n]
             # we might decide to not display an operator if normalized value is too small

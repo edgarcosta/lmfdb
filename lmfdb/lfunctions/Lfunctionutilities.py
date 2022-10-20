@@ -57,7 +57,7 @@ def string2number(s):
                 return CDF(exp(2*pi*I*q))
         if 'I' in strs:
             return CDF(strs)
-        elif (type(s) is list or type(s) is tuple) and len(s) == 2:
+        elif (isinstance(s, list) or isinstance(s, tuple)) and len(s) == 2:
             return CDF(tuple(s))
         elif '/' in strs:
             return Rational(strs)
@@ -98,7 +98,7 @@ def seriescoeff(coeff, index, seriescoefftype, seriestype, digits):
                 coeff = CDF(-I)
             else:
                 coeff = string2number(coeff)
-        if type(coeff) == complex:
+        if isinstance(coeff, complex):
             rp = coeff.real
             ip = coeff.imag
         else:
@@ -132,7 +132,7 @@ def seriescoeff(coeff, index, seriescoefftype, seriestype, digits):
         elif coeff_display == "-1":
             return "-"
 
-    #add signs and fix spacing
+    # add signs and fix spacing
     if seriescoefftype in ["series", "serieshtml"]:
         if coeff_display == "1":
             coeff_display = " + "
@@ -482,7 +482,7 @@ def lfuncEpSymPower(L):
     ans += r'{p^{s}} \right)^{-1}'
     return ans
 
-#---------
+# ---------
 
 def lfuncFEtex(L, fmt):
     """
@@ -664,7 +664,7 @@ def specialValueTriple(L, s, sLatex_analytic, sLatex_arithmetic):
     '''
     number_of_decimals = 10
     val = None
-    if L.fromDB: #getattr(L, 'fromDB', False):
+    if L.fromDB:  # getattr(L, 'fromDB', False):
         s_alg = s + L.analytic_normalization
         for x in L.values:
             # the numbers here are always half integers
@@ -703,7 +703,7 @@ def specialValueTriple(L, s, sLatex_analytic, sLatex_arithmetic):
 
 
 ##################################################################
-#Function to help display Lvalues when scientific notation is used
+# Function to help display Lvalues when scientific notation is used
 ##################################################################
 
 def scientific_notation_helper(lval_string):
@@ -819,7 +819,7 @@ def signOfEmfLfunction(level, weight, coefs, tol=10 ** (-7), num=1.3):
     if abs(abs(sign) - 1) > tol:
         logger.critical("Not enough coefficients to compute the sign of the L-function.")
         sign = "Not able to compute."
-        sign = 1 # wrong, but we need some type of error handling here.
+        sign = 1  # wrong, but we need some type of error handling here.
     return sign
 
 ###############################################################
@@ -833,7 +833,7 @@ def getConductorIsogenyFromLabel(label):
     '''
     try:
         if '.' in label:
-            #LMFDB label
+            # LMFDB label
             cond, iso = label.split('.')
         else:
             # Cremona label

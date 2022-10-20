@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import re #, StringIO, yaml, ast, os
+import re  # , StringIO, yaml, ast, os
 
-from flask import render_template, request, url_for, redirect #, send_file, abort
+from flask import render_template, request, url_for, redirect  # , send_file, abort
 #from sage.all import ZZ, latex, Permutation
 
 from lmfdb import db
@@ -67,7 +67,7 @@ def by_label(label):
     else:
         flash_error( "No group with label %s was found in the database.", label)
         return redirect(url_for(".index"))
-#Should this be "Bad label instead?"
+# Should this be "Bad label instead?"
 
 
 # Take a list of list of integers and make a latex matrix
@@ -80,7 +80,7 @@ def dispmat(mat):
     return s
 
 
-#### Searching
+# Searching
 def group_jump(info):
     return redirect(url_for('.by_label', label=info['jump']))
 
@@ -132,7 +132,7 @@ def group_search(info, query):
     parse_ints(info, query, 'order', 'order')
     parse_ints(info, query, 'dim', 'dim')
 
-#Writes individual pages
+# Writes individual pages
 def render_glnQ_group(args):
     info = {}
     if 'label' in args:
@@ -156,9 +156,9 @@ def render_glnQ_group(args):
         return render_template("glnQ-show-group.html",
                                title=title, bread=bread, info=info,
                                properties=prop,
-                               #friends=friends,
+                               # friends=friends,
                                learnmore=learnmore_list(),
-                               #downloads=downloads,
+                               # downloads=downloads,
                                credit=credit_string)
 
 def make_knowl(title, knowlid):

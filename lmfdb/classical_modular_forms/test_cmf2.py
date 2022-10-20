@@ -56,10 +56,10 @@ class CmfTest(LmfdbTest):
 
         page = self.tc.get('/ModularForm/GL2/Q/holomorphic/download_newform/27.2.e.a', follow_redirects=True)
         assert '"analytic_rank_proved": true' in page.get_data(as_text=True)
-        assert '[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]' in page.get_data(as_text=True) # a1 (make sure qexp is there)
-        assert '[1, 1, 27, 5, 1, 9, 0]' in page.get_data(as_text=True) # non-trivial inner twist
+        assert '[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]' in page.get_data(as_text=True)  # a1 (make sure qexp is there)
+        assert '[1, 1, 27, 5, 1, 9, 0]' in page.get_data(as_text=True)  # non-trivial inner twist
         assert '[0, 12, -6, -6, -6, -3, 0, -6, 6, 0, -3, 3, 12, -6, 15, 9, 0, 9, 9, -3, -3, -12, 3, -12, -18, 3, -30' in page.get_data(as_text=True)
-        assert '1.2.3.c9' in page.get_data(as_text=True) # Sato-Tate group
+        assert '1.2.3.c9' in page.get_data(as_text=True)  # Sato-Tate group
 
         page = self.tc.get('/ModularForm/GL2/Q/holomorphic/download_full_space/20.5', follow_redirects=True)
         assert r"""["20.5.b.a", "20.5.d.a", "20.5.d.b", "20.5.d.c", "20.5.f.a"]""" in page.get_data(as_text=True)
@@ -125,7 +125,7 @@ class CmfTest(LmfdbTest):
 
         page = self.tc.get('/ModularForm/GL2/Q/holomorphic/?Submit=sage&download=1&query=%7B%27level_radical%27%3A+5%2C+%27dim%27%3A+%7B%27%24lte%27%3A+10%2C+%27%24gte%27%3A+1%7D%2C+%27weight%27%3A+10%7D&search_type=List', follow_redirects=True)
         assert '5.10.a.a' in page.get_data(as_text=True)
-        assert ('[5, 10, 1, 2.5751791808193656, [0, 1], "1.1.1.1", [], [], [-8, -114, -625, 4242]]' in page.get_data(as_text=True)) or ('[5, 10, 1, 2.57517918082, [0, 1], "1.1.1.1", [], [], [-8, -114, -625, 4242]]' in page.get_data(as_text=True)) # Different tests for py2 and py3 due to different number of digits being returned.
+        assert ('[5, 10, 1, 2.5751791808193656, [0, 1], "1.1.1.1", [], [], [-8, -114, -625, 4242]]' in page.get_data(as_text=True)) or ('[5, 10, 1, 2.57517918082, [0, 1], "1.1.1.1", [], [], [-8, -114, -625, 4242]]' in page.get_data(as_text=True))  # Different tests for py2 and py3 due to different number of digits being returned.
 
         page = self.tc.get('/ModularForm/GL2/Q/holomorphic/?Submit=gp&download=1&query=%7B%27num_forms%27%3A+%7B%27%24gte%27%3A+1%7D%2C+%27weight%27%3A+5%2C+%27level%27%3A+20%7D&search_type=Spaces')
         for elt in ["20.5.b", "20.5.d", "20.5.f"]:
@@ -362,7 +362,7 @@ class CmfTest(LmfdbTest):
         have been chosen to be readily verifiable from the displayed
         Fourier coefficients of each respective homepage."""
 
-        test_data = {# Dimension 1
+        test_data = {  # Dimension 1
                     '11/2/a/a': {2: r'\( T + 2 \)',
                                  17: r'\( T + 2 \)',
                                  29: r'\( T \)'},

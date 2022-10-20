@@ -119,7 +119,7 @@ def display_Fricke(info):
 # For spaces
 def display_decomp(level, weight, char_orbit_label, hecke_orbit_dims):
     # input: ['level', 'weight', 'char_orbit_label', 'hecke_orbit_dims']
-    if hecke_orbit_dims is None: # shouldn't happen
+    if hecke_orbit_dims is None:  # shouldn't happen
         return 'unknown'
     dim_dict = defaultdict(int)
     terms = []
@@ -417,7 +417,7 @@ def render_space_webpage(label):
         space = WebNewformSpace.by_label(label)
     except (TypeError,KeyError,ValueError) as err:
         return abort(404, err.args)
-    info = {'results':space.newforms, # so we can reuse search result code
+    info = {'results':space.newforms,  # so we can reuse search result code
             'columns':newform_columns}
     set_info_funcs(info)
     return render_template("cmf_space.html",
@@ -584,7 +584,7 @@ def jump_box(info):
     errmsg = None
     if OLD_SPACE_LABEL_RE.match(jump):
         jump = convert_spacelabel_from_conrey(jump)
-    #handle direct trace_hash search
+    # handle direct trace_hash search
     if re.match(r'^\#\d+$', jump) and ZZ(jump[1:]) < 2**61:
         label = db.mf_newforms.lucky({'trace_hash': ZZ(jump[1:].strip())}, projection="label")
         if label:
@@ -643,7 +643,7 @@ def download_newspace(label):
 def download_full_space(label):
     return CMF_download().download_full_space(label)
 
-@search_parser # see SearchParser.__call__ for actual arguments when calling
+@search_parser  # see SearchParser.__call__ for actual arguments when calling
 def parse_character(inp, query, qfield, prim=False):
     # qfield will be set to something by the logic in SearchParser.__call__, but we want it determined by prim
     if prim:
@@ -676,7 +676,7 @@ def parse_character(inp, query, qfield, prim=False):
             raise ValueError("Inconsistent level")
     query[level_field] = level
     if orbit.isalpha():
-        orbit = class_to_int(orbit) + 1 # we don't store the prim_orbit_label
+        orbit = class_to_int(orbit) + 1  # we don't store the prim_orbit_label
         if prim:
             if level > 10000:
                 raise ValueError("The level is too large.")
@@ -852,8 +852,8 @@ newform_columns = SearchColumns([
              columns=newform_columns,
              shortcuts={'jump':jump_box,
                         'download':CMF_download(),
-                        #'download_exact':download_exact,
-                        #'download_complex':download_complex
+                        # 'download_exact':download_exact,
+                        # 'download_complex':download_complex
              },
              url_for_label=url_for_label,
              bread=get_search_bread,
@@ -984,9 +984,9 @@ def set_rows_cols(info, query):
         if primes:
             try:
                 rad = prod(ZZ(p) for p in primes.split(','))
-                if info.get('prime_quantifier') in ['subset', 'subsets']: # subsets for backward compat in urls
+                if info.get('prime_quantifier') in ['subset', 'subsets']:  # subsets for backward compat in urls
                     info['level_list'] = [N for N in info['level_list'] if (rad % ZZ(N).radical()) == 0]
-                elif info.get('prime_quantifier') in ['supset', 'append']: # append for backward compat in urls
+                elif info.get('prime_quantifier') in ['supset', 'append']:  # append for backward compat in urls
                     info['level_list'] = [N for N in info['level_list'] if (N % rad) == 0]
                 elif info.get('prime_quantifier') in ['complement']:
                     info['level_list'] = [N for N in info['level_list'] if gcd(N,rad) == 1]
@@ -1014,10 +1014,10 @@ def dimension_common_postprocess(info, query, cusp_types, newness_types, url_gen
     info['url_generator'] = url_generator
     if switch_text:
         info['switch_text'] = switch_text
-    info['count'] = 50 # put count back in so that it doesn't show up as none in url
+    info['count'] = 50  # put count back in so that it doesn't show up as none in url
 
 def delete_false(D):
-    for key, val in list(D.items()): # for py3 compat: can't iterate over items while deleting
+    for key, val in list(D.items()):  # for py3 compat: can't iterate over items while deleting
         if val is False:
             del D[key]
 
@@ -1126,7 +1126,7 @@ def dimension_form_postprocess(res, info, query):
              bread=get_dim_bread,
              learnmore=learnmore_list)
 def dimension_form_search(info, query):
-    info.pop('count',None) # remove per_page so that we get all results
+    info.pop('count',None)  # remove per_page so that we get all results
     if 'weight' not in info:
         info['weight'] = '1-12'
     if 'level' not in info:
@@ -1145,7 +1145,7 @@ def dimension_form_search(info, query):
              bread=get_dim_bread,
              learnmore=learnmore_list)
 def dimension_space_search(info, query):
-    info.pop('count',None) # remove per_page so that we get all results
+    info.pop('count',None)  # remove per_page so that we get all results
     if 'weight' not in info:
         info['weight'] = '1-12'
     if 'level' not in info:
@@ -1230,7 +1230,7 @@ def self_twist_type_formatter(x):
         return 'RM only'
     if x == 3:
         return 'both'
-    return x # c = 'neither', 'CM only', 'RM only' or 'both'
+    return x  # c = 'neither', 'CM only', 'RM only' or 'both'
 
 def rel_dim_formatter(x):
     return 'dim=%s&dim_type=rel' % range_formatter(x)
@@ -1263,6 +1263,7 @@ class CMF_stats(StatsDisplay):
     """
     Class for creating and displaying statistics for classical modular forms
     """
+
     def __init__(self):
         self.nforms = comma(db.mf_newforms.count())
         self.nspaces = comma(db.mf_newspaces.count({'num_forms':{'$gt':0}}))
@@ -1409,7 +1410,7 @@ class CMFSearchArray(SearchArray):
     jump_egspan="e.g. 3.6.a.a, 55.3.d or 20.5"
     jump_knowl="cmf.search_input"
     jump_prompt="Label"
-    null_column_explanations = { # No need to display warnings for these
+    null_column_explanations = {  # No need to display warnings for these
         'is_polredabs': False,
         'projective_image': False,
         'projective_image_type': False,

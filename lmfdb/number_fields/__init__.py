@@ -18,9 +18,9 @@ app.register_blueprint(nf_page, url_prefix="/NumberField")
 
 # API2 has been disabled for now
 #from lmfdb.api2.searchers import register_search_function
-#register_search_function(
+# register_search_function(
 #    "number_fields",
 #    "Number fields",
 #    "Search over number fields",
 #    auto_search = 'nf_fields'
-#)
+# )

@@ -30,7 +30,7 @@ from collections import defaultdict
 
 logger = make_logger("hgcwa")
 
-#Parsing group order
+# Parsing group order
 LIST_RE = re.compile(r'^(\d+|(\d*-(\d+)?)|((\d*)\**(g((\+|\-)(\d*))*|\(g(\+|\-)(\d+)\))))(,(\d+|(\d*-(\d+)?)|((\d*)\**(g((\+|\-)(\d*))*|\(g(\+|\-)(\d+)\)))))*$')
 GENUS_RE = re.compile(r'^(\d*)\**(g((\+|\-)(\d*))*|\(g(\+|\-)(\d+)\))$')
 
@@ -126,8 +126,7 @@ def split_perm(strg):
             startpoint = i+1
 
 def sort_sign(L):
-    L1 = L[1:]
-    L1.sort()
+    L1 = sorted(L[1:])
     return [L[0]] + L1
 
 def label_to_breadcrumbs(L):
@@ -280,7 +279,7 @@ def by_passport_label(label):
 
 cur_expr = None
 cur_index = 0
-#FIXME all these err is None should be done through raising exceptions
+# FIXME all these err is None should be done through raising exceptions
 
 def is_letter(char):
     return (ord(char) >= ord('a') and ord(char) <= ord('z')) or (ord(char) >= ord('A') and ord(char) <= ord('Z'))
@@ -500,14 +499,14 @@ def hgcwa_code_download_search(info):
                      as_attachment=True)
 
 
-#Similar to parse_ints in lmfdb/utils
-#Add searching with genus variable for group orders
+# Similar to parse_ints in lmfdb/utils
+# Add searching with genus variable for group orders
 def parse_range2_extend(arg, key, parse_singleton=int, parse_endpoint=None, instance=1):
     if parse_endpoint is None:
         parse_endpoint = parse_singleton
-    if type(arg) == str:
+    if isinstance(arg, str):
         arg = arg.replace(' ', '')
-    if type(arg) == parse_singleton:
+    if isinstance(arg, parse_singleton):
         return [key, arg]
     if ',' in arg:
         instance = len(arg.split(','))
@@ -523,11 +522,10 @@ def parse_range2_extend(arg, key, parse_singleton=int, parse_endpoint=None, inst
                 for i in range(0, len(a)):
                     ret.append({a[i][0]: a[i][1], 'genus': a[i][2]})
         return ['$or', ret]
-    elif 'g' in arg: # linear function of variable g (ax+b)
+    elif 'g' in arg:  # linear function of variable g (ax+b)
         if GENUS_RE.match(arg):
             a = GENUS_RE.match(arg).groups()[0]
-            genus_list = db.hgcwa_passports.distinct('genus')
-            genus_list.sort()
+            genus_list = sorted(db.hgcwa_passports.distinct('genus'))
             min_genus = genus_list[0]
             max_genus = genus_list[-1]
             queries = []
@@ -535,34 +533,34 @@ def parse_range2_extend(arg, key, parse_singleton=int, parse_endpoint=None, inst
             for g in range(min_genus,max_genus+1):
                 if '(' in arg:
                     b = int(GENUS_RE.match(arg).groups()[6])
-                    if '+' in arg: #a(g+b)
+                    if '+' in arg:  # a(g+b)
                         group_order = int(a)*(g+b)
-                    elif '-' in arg: #a(g-b)
+                    elif '-' in arg:  # a(g-b)
                         group_order = int(a)*(g-b)
                 else:
                     if '+' in arg:
                         b = int(GENUS_RE.match(arg).groups()[4])
-                        if a == '': #g+b
+                        if a == '':  # g+b
                             group_order = g+b
-                        else: #ag+b
+                        else:  # ag+b
                             group_order = int(a)*g+b
                     elif '-' in arg:
                         b = int(GENUS_RE.match(arg).groups()[4])
-                        if a == '': #g-b
+                        if a == '':  # g-b
                             group_order = g-b
-                        else: #ag-b
+                        else:  # ag-b
                             group_order = int(a)*g-b
                     elif a== '':
                         group_order = g
-                    else: #ag
+                    else:  # ag
                         group_order = int(a)*g
 
                 queries.append((group_order, g))
 
-            if instance == 1: #If there is only one linear function
+            if instance == 1:  # If there is only one linear function
                 return ['$or', [{key: gp_ord, 'genus': g} for (gp_ord,g) in queries]]
             else:
-                return [[key, gp_ord, g] for (gp_ord,g) in queries] #Nested list
+                return [[key, gp_ord, g] for (gp_ord,g) in queries]  # Nested list
 
         else:
             raise ValueError("It needs to be an integer (such as 25), \
@@ -699,7 +697,7 @@ def render_family(args):
 
         Lcc=[]
         Lall=[]
-        Ltopo_rep=[] #List of topological representatives
+        Ltopo_rep=[]  # List of topological representatives
         for dat in dataz:
             if ast.literal_eval(dat['con']) not in Lcc:
                 urlstrng = dat['passport_label']
@@ -707,19 +705,19 @@ def render_family(args):
                 Lall.append([cc_display(ast.literal_eval(dat['con'])),dat['passport_label'],
                              urlstrng,dat['cc']])
 
-            #Topological equivalence
+            # Topological equivalence
             if 'topological' in dat:
                 if dat['topological'] == dat['cc']:
-                    x1 = [] #A list of permutations of generating vectors of topo_rep
+                    x1 = []  # A list of permutations of generating vectors of topo_rep
                     for perm in dat['gen_vectors']:
                         x1.append(sep.join(split_perm(Permutation(perm).cycle_string())))
                     Ltopo_rep.append([dat['total_label'],
                                       x1,
                                       dat['label'],
                                       'T.' + '.'.join(str(x) for x in dat['cc']),
-                                      dat['cc']]) #2nd to last element is used for webpage tag
+                                      dat['cc']])  # 2nd to last element is used for webpage tag
 
-        #Add topological equivalence to info
+        # Add topological equivalence to info
         info.update({'topological_rep': Ltopo_rep})
         info.update({'topological_num': len(Ltopo_rep)})
 
@@ -863,7 +861,7 @@ def render_passport(args):
             elif dat['g0'] > 0:
                 for perm in dat['gen_vectors']:
                     cycperm = Permutation(perm).cycle_string()
-                    #if display_perm == '()':
+                    # if display_perm == '()':
                     if cycperm == '()':
                         x4.append('Id(G)')
                     else:
@@ -873,7 +871,7 @@ def render_passport(args):
         info.update({'genvects': Ldata, 'HypColumn': HypColumn})
         info.update({'passport_cc': cc_display(ast.literal_eval(data['con']))})
 
-        #Generate braid representatives
+        # Generate braid representatives
         if 'braid' in dataz[0]:
             braid_data = [entry for entry in dataz if entry['braid'] == entry['cc']]
             for dat in braid_data:
@@ -884,7 +882,7 @@ def render_passport(args):
 
         braid_length = len(Lbraid)
 
-        #Add braid equivalence into info
+        # Add braid equivalence into info
         info.update({'braid': Lbraid,
                     'braid_numb': braid_length,
                     'braid_disp_numb': min(braid_length, numbraidreps)})
@@ -1101,7 +1099,7 @@ def hgcwa_code_download(**args):
     import time
     label = args['label']
 
-    #Choose language
+    # Choose language
     if args['download_type'] == 'topo_magma' or args['download_type'] == 'braid_magma' or args['download_type']=='rep_magma':
         lang = 'magma'
     elif args['download_type'] == 'topo_gap' or args['download_type'] == 'braid_gap' or args['download_type']=='rep_gap':
@@ -1111,7 +1109,7 @@ def hgcwa_code_download(**args):
 
     s = Comment[lang]
 
-    #Choose filename
+    # Choose filename
     if lang == args['download_type']:
         filename= 'HigherGenusData_' + str(label) + FileSuffix[lang]
     elif args['download_type']=='topo_magma' or args['download_type']=='topo_gap':
@@ -1198,7 +1196,7 @@ def hgcwa_code_download(**args):
     nhypcycstr = code_list['hyp'][lang] + code_list['fal'][lang] + ';\n'
     nhypcycstr += code_list['cyc'][lang] + code_list['fal'][lang] + ';\n'
 
-    #Action for all vectors and action for just representatives
+    # Action for all vectors and action for just representatives
     if lang == args['download_type'] or \
         args['download_type'] == 'rep_magma' or \
         args['download_type'] == 'rep_gap':

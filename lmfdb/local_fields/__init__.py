@@ -30,9 +30,9 @@ app.register_blueprint(local_fields_page, url_prefix="/padicField")
 
 # API2 has been disabled for now
 #from lmfdb.api2.searchers import register_search_function
-#register_search_function(
+# register_search_function(
 #    "$p$-adic_fields",
 #    "$p$-adic fields",
 #    "Search over $p$-adic fields",
 #    auto_search = 'lf_fields'
-#)
+# )

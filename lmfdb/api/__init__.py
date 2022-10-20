@@ -12,7 +12,7 @@ def body_class():
     return {'body_class': 'api'}
 
 from . import api
-assert api # silence pyflakes
+assert api  # silence pyflakes
 
 from .api import datapage
 assert datapage

@@ -39,7 +39,7 @@ def hidden_collection(c):
     """
     return c.startswith("test") or c.endswith(".rand") or c.endswith(".stats") or c.endswith(".chunks") or c.endswith(".new") or c.endswith(".old")
 
-#def collection_indexed_keys(collection):
+# def collection_indexed_keys(collection):
 #    """
 #    input: cursor for the collection
 #    output: a set with all the keys indexed
@@ -162,7 +162,7 @@ def api_query_id(table, id):
 @api_page.route("/<table>")
 @api_page.route("/<table>/")
 def api_query(table, id=None):
-    #if censored_table(table):
+    # if censored_table(table):
     #    return abort(404)
 
     # parsing the meta parameters _format and _offset
@@ -251,7 +251,7 @@ def api_query(table, id=None):
 
         # assure that one of the keys of the query is indexed
         # however, this doesn't assure that the query will be fast...
-        #if q != {} and len(set(q.keys()).intersection(collection_indexed_keys(coll))) == 0:
+        # if q != {} and len(set(q.keys()).intersection(collection_indexed_keys(coll))) == 0:
         #    flash_error("no key in the query %s is indexed.", q)
         #    return redirect(url_for(".api_query", table=table))
 
@@ -289,7 +289,7 @@ def api_query(table, id=None):
     if 'bytea' in coll.col_type.values():
         for row in data:
             for key, val in row.items():
-                if type(val) == buffer:
+                if isinstance(val, buffer):
                     row[key] = "[binary data]"
         #data = [ dict([ (key, val if coll.col_type[key] != 'bytea' else "binary data") for key, val in row.items() ]) for row in data]
     data = Json.prep(data)
@@ -317,7 +317,7 @@ def api_query(table, id=None):
     }
 
     if format.lower() == "json":
-        #return flask.jsonify(**data) # can't handle binary data
+        # return flask.jsonify(**data) # can't handle binary data
         return current_app.response_class(json.dumps(data, indent=2), mimetype='application/json')
     elif format.lower() == "yaml":
         y = yaml.dump(data,

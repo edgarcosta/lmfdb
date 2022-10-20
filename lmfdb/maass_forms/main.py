@@ -3,7 +3,7 @@
 import re
 from lmfdb import db
 from flask import render_template, request, url_for, abort
-from lmfdb.maass_forms import maass_page #, logger
+from lmfdb.maass_forms import maass_page  # , logger
 from lmfdb.utils import (
     SearchArray, search_wrap, TextBox, SelectBox, CountBox, to_dict, comma,
     parse_ints, parse_floats, rgbtohex, signtocolour, flash_error, redirect_no_cache)
@@ -176,7 +176,7 @@ class MaassSearchArray(SearchArray):
 
         self.refine_array = [[level, weight, character, spectral_parameter, symmetry]]
 
-@search_parser # see SearchParser.__call__ for actual arguments when calling
+@search_parser  # see SearchParser.__call__ for actual arguments when calling
 def parse_character(inp, query, qfield):
     if not CHARACTER_LABEL_RE.match(inp):
         raise ValueError("Character labels must be of the form q.n, where q and n are positive integers.")

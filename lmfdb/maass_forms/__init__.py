@@ -12,15 +12,15 @@ def body_class():
     return {'body_class': 'maass'}
 
 from . import main
-assert main # silence pyflakes
+assert main  # silence pyflakes
 
 app.register_blueprint(maass_page, url_prefix="/ModularForm/GL2/Q/Maass")
 
 # API2 has been disabled for now
 #from lmfdb.api2.searchers import register_search_function
-#register_search_function(
+# register_search_function(
 #    "gl2_maass_forms",
 #    "GL2 Maass forms",
 #    "Search over GL2 Maass forms",
 #    auto_search = 'maass_newforms'
-#)
+# )

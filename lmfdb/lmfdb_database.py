@@ -428,7 +428,7 @@ class LMFDBDatabase(PostgresDatabase):
         """
         This function clears all stats and counts (extra=False) from tables where statistics have been added, then adds all relevant statistics.
         """
-        from . import website # loads all the modules
+        from . import website  # loads all the modules
         assert website
         from lmfdb.utils.display_stats import StatsDisplay
 

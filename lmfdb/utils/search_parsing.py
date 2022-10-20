@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-## parse_newton_polygon and parse_abvar_decomp are defined in lmfdb.abvar.fq.search_parsing
+# parse_newton_polygon and parse_abvar_decomp are defined in lmfdb.abvar.fq.search_parsing
 import re
 import sys
 from collections import Counter
@@ -31,7 +31,7 @@ LIST_RAT_RE = re.compile(r"^((\d+((\.\d+)|(/\d+))?)|((\d+((\.\d+)|(/\d+))?)-((\d
 # to check if a string is comprised of just multiplication and exponentiation symbols
 MULT_PARSE = re.compile(r"^[0-9()*^]*$")
 SIGNED_LIST_RE = re.compile(r"^(-?\d+|(-?\d+--?\d+))(,(-?\d+|(-?\d+--?\d+)))*$")
-## RE from number_field.py
+# RE from number_field.py
 # LIST_SIMPLE_RE = re.compile(r'^(-?\d+)(,-?\d+)*$'
 # PAIR_RE = re.compile(r'^\[\d+,\d+\]$')
 # IF_RE = re.compile(r'^\[\]|(\[\d+(,\d+)*\])$')  # invariant factors
@@ -190,7 +190,7 @@ def prep_raw(inp, names={}):
     This function will raise a SearchParsingError if there is a syntax error or if there is a variable that's not in the names list
     """
     # level = 10 includes (a+b)(c+d) -> (a+b)*(c+d) which isn't safe in Sage
-    #but should be okay for us
+    # but should be okay for us
     inp = implicit_mul(inp, level=10)
 
     def filtered_var(s):
@@ -301,7 +301,7 @@ def parse_multiset(inp, query, qfield):
 
 def parse_range(arg, parse_singleton=int, use_dollar_vars=True):
     # TODO: graceful errors
-    if type(arg) == parse_singleton:
+    if isinstance(arg, parse_singleton):
         return arg
     if "," in arg:
         if use_dollar_vars:
@@ -325,9 +325,9 @@ def parse_range(arg, parse_singleton=int, use_dollar_vars=True):
 def parse_range2(arg, key, parse_singleton=int, parse_endpoint=None, split_minus=True):
     if parse_endpoint is None:
         parse_endpoint = parse_singleton
-    if type(arg) == str:
+    if isinstance(arg, str):
         arg = arg.replace(" ", "")
-    if type(arg) == parse_singleton:
+    if isinstance(arg, parse_singleton):
         return [key, arg]
     if "," in arg:
         tmp = [
@@ -356,7 +356,7 @@ def parse_range2(arg, key, parse_singleton=int, parse_endpoint=None, split_minus
 # Like parse_range2, but to deal with strings which could be rational numbers
 # process is a function to apply to arguments after they have been parsed
 def parse_range2rat(arg, key, process):
-    if type(arg) == str:
+    if isinstance(arg, str):
         arg = arg.replace(" ", "")
     if QQ_DEC_RE.match(arg):
         return [key, process(arg)]
@@ -379,7 +379,7 @@ def parse_range2rat(arg, key, process):
 # We parse into a list of singletons and pairs, like [[-5,-2], 10, 11, [16,100]]
 # If split0, we split ranges [-a,b] that cross 0 into [-a, -1], [1, b]
 def parse_range3(arg, split0=False):
-    if type(arg) == str:
+    if isinstance(arg, str):
         arg = arg.replace(" ", "")
     if "," in arg:
         return sum([parse_range3(a, split0) for a in arg.split(",")], [])
@@ -705,7 +705,7 @@ def parse_signed_ints(inp, query, qfield, parse_one=None):
         # if there is only one part, we don't need an $or
         if len(parsed) == 1:
             parsed = parsed[0]
-            if type(parsed) == list:
+            if isinstance(parsed, list):
                 s0, d0 = parse_one(parsed[0])
                 s1, d1 = parse_one(parsed[1])
                 if s0 < 0:
@@ -720,7 +720,7 @@ def parse_signed_ints(inp, query, qfield, parse_one=None):
         else:
             iquery = []
             for x in parsed:
-                if type(x) == list:
+                if isinstance(x, list):
                     if len(x) == 1:
                         s0, abs_D = parse_one(x[0])
                     else:
@@ -1174,7 +1174,7 @@ def nf_string_to_label(FF):  # parse Q, Qsqrt2, Qsqrt-4, Qzeta5, etc
     F1, F, FF = input_string_to_poly(FF)
     if len(F) == 0:
         raise SearchParsingError("Entry for the field was left blank.  You need to enter a field label, field name, or a polynomial.")
-    if F1 and len(str(F1.parent().gen())) == 1: # we only support single-letter variable names
+    if F1 and len(str(F1.parent().gen())) == 1:  # we only support single-letter variable names
         from lmfdb.number_fields.number_field import poly_to_field_label
 
         F1 = poly_to_field_label(F1)
@@ -1613,9 +1613,9 @@ def parse_list_start(inp, query, qfield, index_shift=0, parse_singleton=int):
             # asking for each value to be in the array
             if parse_singleton is str:
                 all_operand = [val for val in parsed_values
-                               if type(val) == parse_singleton and "-" not in val and "," not in val]
+                               if isinstance(val, parse_singleton) and "-" not in val and "," not in val]
             else:
-                all_operand = [val for val in parsed_values if type(val) == parse_singleton]
+                all_operand = [val for val in parsed_values if isinstance(val, parse_singleton)]
 
             if all_operand:
                 sub_query[qfield] = {"$all": all_operand}
@@ -1623,7 +1623,7 @@ def parse_list_start(inp, query, qfield, index_shift=0, parse_singleton=int):
             # if there are other condition, we can add the first of those
             # conditions the query, in the hope of reducing the search space
             elemMatch_operand = [val for val in parsed_values
-                                 if type(val) != parse_singleton and type(val) is dict]
+                                 if not isinstance(val, parse_singleton) and isinstance(val, dict)]
             if elemMatch_operand:
                 if qfield in sub_query:
                     sub_query[qfield]["$elemMatch"] = elemMatch_operand[0]
@@ -1655,7 +1655,7 @@ def parse_string_start(
     names={},
 ):
     def parse_one(x):
-        ## Remember to add clean_spaces=True
+        # Remember to add clean_spaces=True
         # if re.search(r'[A-Za-z]', x):
         #    return parse_range2(x, first_field, lambda inp: prep_raw(inp, names), split_minus=False)
         # else:

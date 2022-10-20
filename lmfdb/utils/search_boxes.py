@@ -52,7 +52,7 @@ class RowSpacer(Spacer):
         self.rowheight = rowheight
         self.advanced = advanced
 
-    def tr(self, rowspan=0, **kwds): # used for row spacers
+    def tr(self, rowspan=0, **kwds):  # used for row spacers
         if rowspan is not None:
             kwds['style'] = "height:%spx" % rowspan
         return self._wrap("tr", **kwds)
@@ -518,20 +518,20 @@ class ColumnController(SelectBox):
             style += f'width: {self.short_width}px;'
         keys.append(f'style="{style}"')
         options = [("none", " selected", "columns to display")]
-        use_rank = 0 # which rank to iterate over in determining the columns listed in the select
+        use_rank = 0  # which rank to iterate over in determining the columns listed in the select
         for col in C.columns_shown(info, 0):
             if col.height > 1 and any(sub.name != col.name for sub in col.show(info, 1)):
                 # A ColGroup with columns that should be shown/hidden individually
                 use_rank = 1
                 break
         for col in C.columns_shown(info, use_rank):
-            if col.short_title is None: # probably a spacer column:
+            if col.short_title is None:  # probably a spacer column:
                 continue
             title = col.short_title.replace("$", "").replace(r"\(", "").replace(r"\)", "").replace("\\", "")
             if col.default(info):
-                disp = "✓ " + title # The space is a unicode space the size of an emdash
+                disp = "✓ " + title  # The space is a unicode space the size of an emdash
             else:
-                disp = "  " + title # The spaces are unicode, the sizes of an endash and a thinspace
+                disp = "  " + title  # The spaces are unicode, the sizes of an endash and a thinspace
             options.append((col.name, "", disp))
         # options.append(("done", "", "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;done"))
         options = [f'<option value="{name}"{selected}>{disp}</option>' for name,selected,disp in options]
@@ -563,17 +563,17 @@ class SortController(SelectBox):
             extra=extra,
         )
 
-    #sort_box = SelectBox(
+    # sort_box = SelectBox(
     #    name='sort_order',
     #    options=list(sort),
     #    width=130)
-    #sort_dir = SelectBox(
+    # sort_dir = SelectBox(
     #    name='sort_dir',
     #    options=[('', '&#9650;'), ('op', '&#9660;')],
     #    width=None,
     #    extra=['style="min-width: 40px; max-width: 40px; padding: 0px;"'],
-    #)
-    #sort_ord = DoubleSelectBox(
+    # )
+    # sort_ord = DoubleSelectBox(
     #    name='sort_combo',
     #    label='Sort order',
     #    knowl=self.sort_knowl,
@@ -640,10 +640,10 @@ class SearchArray(UniqueRepresentation):
         for the search buttons
     - ``hidden`` -- returns a list of pairs giving the name and info key for the hidden inputs
     """
-    _ex_col_width = 170 # only used for box layout
+    _ex_col_width = 170  # only used for box layout
     sort_knowl = None
-    sorts = None # Provides an easy way to implement sort_order: a list of triples (name, display, sort -- as a list of columns or pairs (col, +-1)), or a dictionary indexed on the value of self._st()
-    null_column_explanations = {} # Can override the null warnings for a column by including False as a value, or customize the error message by giving a formatting string (see search_wrapper.py)
+    sorts = None  # Provides an easy way to implement sort_order: a list of triples (name, display, sort -- as a list of columns or pairs (col, +-1)), or a dictionary indexed on the value of self._st()
+    null_column_explanations = {}  # Can override the null warnings for a column by including False as a value, or customize the error message by giving a formatting string (see search_wrapper.py)
     noun = "result"
     plural_noun = "results"
 
@@ -652,7 +652,7 @@ class SearchArray(UniqueRepresentation):
         if self.sorts is not None:
             sorts = self.sorts if isinstance(self.sorts, list) else self.sorts.get(self._st(info))
             if sorts is not None:
-                #for name, display, prefix in self.sorts:
+                # for name, display, prefix in self.sorts:
                 #    yield (name, display + " &#9650;")
                 #    yield (name + "op", display + " &#9660;")
                 return [(name, display) for (name, display, sort_order) in sorts]
@@ -817,11 +817,11 @@ class SearchArray(UniqueRepresentation):
                     for name, disp in sort:
                         if name == cur_sort:
                             if cur_dir == 'op':
-                                options.append((name, '▼ ' + disp)) # the space is U+2006, a 1/6 em space
+                                options.append((name, '▼ ' + disp))  # the space is U+2006, a 1/6 em space
                             else:
-                                options.append((name, '▲ ' + disp)) # the space is U+2006, a 1/6 em space
+                                options.append((name, '▲ ' + disp))  # the space is U+2006, a 1/6 em space
                         else:
-                            options.append((name, '  ' + disp)) # the spaces are U+2006 and U+2003, totaling 7/6 em
+                            options.append((name, '  ' + disp))  # the spaces are U+2006 and U+2003, totaling 7/6 em
                     buttons.append(SortController(options, self.sort_knowl))
                 buttons.append(ColumnController())
         return self._print_table([spacer,buttons], info, layout_type="vertical")

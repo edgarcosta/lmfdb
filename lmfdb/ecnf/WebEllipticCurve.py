@@ -79,7 +79,7 @@ def latex_factorization(plist, exponents, sign=+1):
 
     """
     factors = ["{}^{{{}}}".format(q,n) if n>1 else "{}".format(q) if n>0 else "" for q,n in zip(plist, exponents)]
-    factors = [f for f in factors if f] # exclude any factors with exponent 0
+    factors = [f for f in factors if f]  # exclude any factors with exponent 0
     return r"\({}{}\)".format("-" if sign==-1 else "", r"\cdot".join(factors))
 
 def parse_point(K, s):
@@ -87,7 +87,7 @@ def parse_point(K, s):
     '[x,y,z]' where x, y, z have the form '[c0,c1,..]' with each ci
     representing a rational number.
     """
-    #print("parse_point({})".format(s))
+    # print("parse_point({})".format(s))
     cc = s[2:-2].replace("],[",":").split(":")
     return [K([QQ(ci.encode()) for ci in c.split(",")]) for c in cc]
 
@@ -157,7 +157,7 @@ def EC_nf_plot(K, ainvs, base_field_gen_name):
         xmax = max([r[1] for r in R])
         ymin = min([r[2] for r in R])
         ymax = max([r[3] for r in R])
-        cols = rainbow(n1) # Default choice of n colours
+        cols = rainbow(n1)  # Default choice of n colours
         # However, these tend to be too pale, so we preset them for small values of n
         if n1==1:
             cols=["blue"]
@@ -253,11 +253,11 @@ class ECNF():
         data = db.ec_nfcurves.lookup(label)
         if data:
             return ECNF(data)
-        return "Elliptic curve not found: %s" % label # caller must check for this
+        return "Elliptic curve not found: %s" % label  # caller must check for this
 
     def make_E(self):
         #print("Creating ECNF object for {}".format(self.label))
-        #sys.stdout.flush()
+        # sys.stdout.flush()
         K = self.field.K()
         Kgen = str(K.gen())
 
@@ -356,7 +356,7 @@ class ECNF():
         # Images of Galois representations
 
         if not hasattr(self,'galois_images'):
-            #print "No Galois image data"
+            # print "No Galois image data"
             self.galois_images = "?"
             self.nonmax_primes = "?"
             self.galois_data = []
@@ -397,7 +397,7 @@ class ECNF():
                 self.qc = "yes"
             elif qc is False:
                 self.qc = "no"
-            else: # just in case
+            else:  # just in case
                 self.qc = "not determined"
         except AttributeError:
             self.qc = "not determined"
@@ -629,7 +629,7 @@ class ECNF():
         for E0 in self.base_change:
             self.friends += [(r'Base change of %s /\(\Q\)' % E0, url_for("ec.by_ec_label", label=E0))]
 
-        self._code = None # will be set if needed by get_code()
+        self._code = None  # will be set if needed by get_code()
 
         self.downloads = [('All stored data to text', url_for(".download_ECNF_all", nf=self.field_label, conductor_label=quote(self.conductor_label), class_label=self.iso_label, number=self.number))]
         for lang in [["Magma","magma"], ["GP", "gp"], ["SageMath","sage"]]:

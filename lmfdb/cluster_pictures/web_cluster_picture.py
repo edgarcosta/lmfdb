@@ -43,6 +43,7 @@ class WebClusterPicture:
     """
      Class for retrieving cluster picture information from the database
     """
+
     def __init__(self, label, data=None):
         self.label = label
         if data is None:

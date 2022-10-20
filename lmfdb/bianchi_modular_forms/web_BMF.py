@@ -89,6 +89,7 @@ class WebBMF():
     """
     Class for a Bianchi Newform
     """
+
     def __init__(self, dbdata, max_eigs=50):
         """Arguments:
 

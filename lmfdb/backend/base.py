@@ -330,7 +330,7 @@ class PostgresBase():
                             query = query + str(values)
                     else:
                         query = query.as_string(self.conn)
-                    if isinstance(query, bytes): # PY3 compatibility
+                    if isinstance(query, bytes):  # PY3 compatibility
                         query = query.decode("utf-8")
                     self.logger.info(query + " ran in \033[91m {0!s}s \033[0m".format(t))
                     if slow_note is not None:

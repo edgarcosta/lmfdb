@@ -46,7 +46,7 @@ class Downloader():
     decorator on your search function.
     """
     # defaults, edit as desired in inherited class
-    lang_key = 'Submit' # name of the HTML button/link starting the download
+    lang_key = 'Submit'  # name of the HTML button/link starting the download
     languages = ['magma', 'sage', 'gp', 'text']
     comment_prefix = {
             'magma':'//',

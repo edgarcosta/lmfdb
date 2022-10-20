@@ -39,13 +39,13 @@ def str2ideal(F,strg):
     strg is a string representing an ideal of F in the form '[N,n,gen]'
     """
     idlstr = strg[1:-1].replace(' ','').split(',')
-    N = ZZ(idlstr[0]) #norm
-    n = ZZ(idlstr[1]) #smallest integer
-    gen = str2fieldelt(F,idlstr[2]) #other generator
+    N = ZZ(idlstr[0])  # norm
+    n = ZZ(idlstr[1])  # smallest integer
+    gen = str2fieldelt(F,idlstr[2])  # other generator
     idl = F.ideal(n,gen)
     return N,n,idl,gen
 
-def niceideals(F, ideals): #HNF + sage ideal + label
+def niceideals(F, ideals):  # HNF + sage ideal + label
     """Convert a list of ideas from strongs to actual NumberField ideals
 
     F is a Sage NumberField
@@ -73,11 +73,10 @@ def niceideals(F, ideals): #HNF + sage ideal + label
         ilabel += 1
     return nideals
 
-def conjideals(ideals, auts): #(label,g) -> label
+def conjideals(ideals, auts):  # (label,g) -> label
     cideals = {}
     from copy import copy
-    ideals = copy(ideals)
-    ideals.sort()
+    ideals = sorted(copy(ideals))
     for ig,g in enumerate(auts):
         gideals = copy(ideals)
         for I in gideals:
@@ -93,6 +92,7 @@ class HilbertNumberField(WebNumberField):
     Subclass of WebNumberField which also facilitates extraction of
     the number field data stored in the Hilbert modular forms database.
     """
+
     def __init__(self, label):
         self.Fdata = db.hmf_fields.lookup(label)
         self.ideals = self.Fdata['ideals']

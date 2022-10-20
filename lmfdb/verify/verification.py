@@ -42,9 +42,9 @@ class speed_decorator():
     """
     Transparently wraps a function, so that functions can be classified by "isinstance".  Allow keyword arguments
     """
-    disabled = False # set to True to skip this check
-    max_failures = 1 # maximum number of failures to show
-    ratio = 1 # ratio of rows to run this test on
+    disabled = False  # set to True to skip this check
+    max_failures = 1  # maximum number of failures to show
+    ratio = 1  # ratio of rows to run this test on
 
     def __init__(self, f=None, **kwds):
         self._kwds = kwds
@@ -73,9 +73,9 @@ class per_row(speed_decorator):
 
     The wrapped function should take a row (dictionary) as input and return True if everything is okay, False otherwise.
     """
-    progress_interval = None # set to override the default interval for printing to the progress file
-    constraint = {} # this test is only run on rows satisfying this constraint
-    projection = 1 # default projection; override in order to not fetch large columns.  label_col is appended
+    progress_interval = None  # set to override the default interval for printing to the progress file
+    constraint = {}  # this test is only run on rows satisfying this constraint
+    projection = 1  # default projection; override in order to not fetch large columns.  label_col is appended
     report_slow = 0.1
     max_slow = 100
 
@@ -93,7 +93,7 @@ class slow(per_row):
     A per-row check that is slow to run
     """
     shortname = "slow"
-    ratio = 0.1 # slow tests are by default run on 10% of rows
+    ratio = 0.1  # slow tests are by default run on 10% of rows
     timeout = 3600
 
 class fast(per_row):
@@ -118,7 +118,7 @@ class overall_long(one_query):
     timeout = 3600
 
 class TableChecker():
-    label_col = 'label' # default
+    label_col = 'label'  # default
 
     @staticmethod
     def speedtype(typ):
@@ -286,7 +286,7 @@ class TableChecker():
         logfile, errfile, progfile, startfile, donefile = files
         checks = self.get_checks(typ)
         # status = failures, errors, timeouts, aborts
-        status = vector(ZZ, 4) # excludes disabled
+        status = vector(ZZ, 4)  # excludes disabled
         disabled = 0
         with open(startfile, 'w') as startf:
             startf.write("%s.%s started (pid %s)\n"%(self.__class__.__name__, typ.__name__, os.getpid()))
@@ -585,7 +585,7 @@ class TableChecker():
         oc_converted = [SQL('to_base26({0} + {1})').format(Identifier(col), Literal(int(convert_to_base26[col])))
                 if col in convert_to_base26
                 else Identifier(col) for col in other_columns]
-        #intertwine the separator
+        # intertwine the separator
         oc = [oc_converted[i//2] if i%2 == 0 else Literal(sep) for i in range(2*len(oc_converted)-1)]
 
         return self._run_query(SQL(" != ").join([SQL(" || ").join(oc), Identifier(label_col)]), constraint)

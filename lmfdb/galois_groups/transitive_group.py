@@ -65,13 +65,14 @@ def cyclestrings(perm):
     a = ['('+','.join([str(u) for u in v])+')' for v in perm]
     return ''.join(a)
 
-############  Galois group object
+# Galois group object
 
 
 class WebGaloisGroup:
     """
       Class for retrieving transitive group information from the database
     """
+
     def __init__(self, label, data=None):
         self.label = label
         if data is None:
@@ -184,7 +185,7 @@ class WebGaloisGroup:
         return self._data['bound_quotients']
 
 
-############  Misc Functions
+# Misc Functions
 
 def base_label(n, t):
     return str(n) + "T" + str(t)
@@ -477,8 +478,7 @@ def subfield_display(n, subs):
 def otherrep_display(n, t, reps):
     reps = [(j[0], j[1]) for j in reps]
     me = (n, t)
-    difreps = list(set(reps))
-    difreps.sort()
+    difreps = sorted(set(reps))
     ans = ''
     for k in difreps:
         if ans != '':

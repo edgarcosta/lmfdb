@@ -18,34 +18,34 @@ class NumberFieldTest(LmfdbTest):
         self.check_args('/NumberField/?degree=5&class_group=[2%2C2]&ur_primes=7&discriminant=&ram_quantifier=exactly&ram_primes=2%2C3%2C5', '5.1.27000000000.8')
 
     def test_abelian_conductor(self):
-        self.check_args('/NumberField/5.5.5719140625.2', '275') # conductor
+        self.check_args('/NumberField/5.5.5719140625.2', '275')  # conductor
 
     def test_stuff_not_computed(self):
         self.check_args('/NumberField/23.23.931347256889446325436632107655346061164193665348344821578377438399536607931200329.1', 'ot computed')
 
     def test_search_poly_mean2parser(self):
         # X^3-4x+2
-        self.check_args('/NumberField/?jump=X**3-4x%2B2&search=Go', '3.3.148.1') # label
+        self.check_args('/NumberField/?jump=X**3-4x%2B2&search=Go', '3.3.148.1')  # label
         # z^3 - 4*z + 2
-        self.check_args('/NumberField/?jump=z%5E3+-+4*z%2B2', '3.3.148.1') # label
+        self.check_args('/NumberField/?jump=z%5E3+-+4*z%2B2', '3.3.148.1')  # label
 
     def test_search_zeta(self):
-        self.check_args('/NumberField/?jump=Qzeta23&search=Go', '[3]') # class group
+        self.check_args('/NumberField/?jump=Qzeta23&search=Go', '[3]')  # class group
 
     def test_search_sqrt(self):
-        self.check_args('/NumberField/?jump=Qsqrt-163&search=Go', '41') # minpoly
+        self.check_args('/NumberField/?jump=Qsqrt-163&search=Go', '41')  # minpoly
 
     def test_search_disc(self):
-        self.check_args('/NumberField/?discriminant=1988-2014', '401') # factor of one of the discriminants
+        self.check_args('/NumberField/?discriminant=1988-2014', '401')  # factor of one of the discriminants
 
     def test_url_label(self):
-        self.check_args('/NumberField/2.2.5.1', '0.481211825') # regulator
+        self.check_args('/NumberField/2.2.5.1', '0.481211825')  # regulator
 
     def test_url_naturallabel(self):
-        self.check_args('/NumberField/Qsqrt5', '0.481211825') # regulator
+        self.check_args('/NumberField/Qsqrt5', '0.481211825')  # regulator
 
     def test_arith_equiv(self):
-        self.check_args('/NumberField/7.3.6431296.1', '7.3.6431296.2') # arith equiv field
+        self.check_args('/NumberField/7.3.6431296.1', '7.3.6431296.2')  # arith equiv field
 
     def test_sextic_twin(self):
         self.check_args('/NumberField/6.0.10816.1', 'Twin sextic algebra')

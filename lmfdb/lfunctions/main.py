@@ -159,7 +159,7 @@ def process_search(res, info, query):
         nus = [latex(nu_real_doubled*0.5 + L['analytic_normalization']) if nu_imag == 0 else
                display_complex(nu_real_doubled*0.5 + L['analytic_normalization'], nu_imag, 3)
                for nu_real_doubled, nu_imag in zip(L['nu_real_doubled'], L['nu_imag'])]
-        if len(mus) > 4 and len(set(mus)) == 1: # >4 so this case only happens for imprimitive
+        if len(mus) > 4 and len(set(mus)) == 1:  # >4 so this case only happens for imprimitive
             mus = ["[%s]^{%s}" % (mus[0], len(mus))]
         if len(nus) > 4 and len(set(nus)) == 1:
             nus = ["[%s]^{%s}" % (nus[0], len(nus))]
@@ -231,7 +231,7 @@ def jump_box(info):
     flash_error(errmsg, jump)
     return redirect(url_for(".index"))
 
-@search_parser # see SearchParser.__call__ for actual arguments when calling
+@search_parser  # see SearchParser.__call__ for actual arguments when calling
 def parse_spectral(inp, query, qfield):
     if '-' not in inp:
         inp = inp + '-0'
@@ -245,7 +245,7 @@ def parse_spectral(inp, query, qfield):
     def extract(t, x):
         return Counter(list(map(int, re.findall(t + r'([0-9.]+)', x))))
 
-    if imags == '0': # algebraic
+    if imags == '0':  # algebraic
         GRcount = extract('r', reals)
         # We store the real parts of nu doubled
         GCcount = extract('c', reals)
@@ -439,7 +439,7 @@ class LFunctionSearchArray(SearchArray):
     jump_egspan="e.g. 2-1-1.1-c11-0-0 or 4-1-1.1-r0e4-c4.72c12.47-0"
     jump_knowl="lfunction.search_input"
     jump_prompt="Label"
-    null_column_explanations = { # No need to display warnings for these
+    null_column_explanations = {  # No need to display warnings for these
         'dirichlet_coefficients': False,
         'euler_factors': False,
     }
@@ -544,7 +544,7 @@ class LFunctionSearchArray(SearchArray):
 
         origins_list = [('', ''),
                         ('DIR', 'Dirichlet character'),
-                        #('NF', 'Dedekind zeta function'), # The only example currently is the Riemann zeta function
+                        # ('NF', 'Dedekind zeta function'), # The only example currently is the Riemann zeta function
                         ('Artin', 'Artin representation'),
                         ('ECQ', 'Elliptic curve/Q'),
                         ('ECNF', 'Elliptic curve/NF'),
@@ -552,7 +552,7 @@ class LFunctionSearchArray(SearchArray):
                         ('CMF', 'Classical modular form'),
                         ('HMF', 'Hilbert modular form'),
                         ('BMF', 'Bianchi modular form'),
-                        #('MaassGL2', 'GL2 Maass form'), # We seem to have no examples of this
+                        # ('MaassGL2', 'GL2 Maass form'), # We seem to have no examples of this
                         ('MaassGL3', 'GL3 Maass form'),
                         ('MaassGL4', 'GL4 Maass form'),
                         ('MaassGSp4', 'GSp4 Maass form')]
@@ -697,7 +697,7 @@ def interesting():
         learnmore=learnmore_list()
     )
 
-#@l_function_page.route("/history")
+# @l_function_page.route("/history")
 def l_function_history():
     t = "A Brief History of L-functions"
     bc = get_bread(breads=[(t, url_for(' '))])
@@ -968,7 +968,7 @@ def l_function_cmf_old(level, weight, character, hecke_orbit, number):
     char_orbit_label = db.mf_newspaces.lucky({'conrey_indexes': {'$contains': character}, 'level': level, 'weight': weight}, projection='char_orbit_label')
     if char_orbit_label is None:
         return abort(404, 'Invalid character label')
-    number += 1 # There was a shift from 0-based to 1-based in the new label scheme
+    number += 1  # There was a shift from 0-based to 1-based in the new label scheme
     return redirect(url_for('.l_function_cmf_page',
                                     level=level,
                                     weight=weight,
@@ -1036,7 +1036,7 @@ def l_function_bmf_page(field, level, suffix):
 # L-function of Hilbert modular form ###########################################
 @l_function_page.route("/ModularForm/GL2/TotallyReal/<field>/holomorphic/<label>/<character>/<number>/")
 def l_function_hmf_page(field, label, character, number):
-    #FIXME this feels so wrong...
+    # FIXME this feels so wrong...
     if (not character and not number) or (character == '0' and number == '0'):
         url = "ModularForm/GL2/TotallyReal/" + label.split("-")[0] + "/holomorphic/" + label
         lfun_label = db.lfunc_instances.lucky({'url': url}, 'label')
@@ -1075,7 +1075,7 @@ def l_function_maass_gln_page(group, level, char, R, ap_id):
     # if it passed the label_redirect_wrapper, then the url is not in the database
     maass_id = "ModularForm/%s/Q/Maass/%s/%s/%s/%s/" % (group, level, char, R, ap_id)
     return abort(404, '"L-function for modular form %s not found' % maass_id)
-    #HERE
+    # HERE
 
 
 # L-function of Siegel modular form    #########################################
@@ -1229,7 +1229,7 @@ def set_gaga_properties(L):
         ans.append(('Analytic cond.', '$%s$' % display_float(L.analytic_conductor, 6, extra_truncation_digits=40, latex=True)))
         ans.append(('Root an. cond.', '$%s$' % display_float(L.root_analytic_conductor, 6, extra_truncation_digits=40, latex=True)))
 
-    if L.algebraic: # always set
+    if L.algebraic:  # always set
         ans.append(('Motivic weight', prop_int_pretty(L.motivic_weight)))
     ans.append(('Arithmetic', 'yes' if L.arithmetic else 'no'))
     if L.rational is not None:
@@ -1557,25 +1557,25 @@ def download_route_wrapper(f):
 
 @l_function_page.route("/download_euler/<path:label>")
 @download_route_wrapper
-def download_euler_factors(label, L=None): # the wrapper populates the L
+def download_euler_factors(label, L=None):  # the wrapper populates the L
     assert label
     return L.download_euler_factors()
 
 @l_function_page.route("/download_zeros/<path:label>")
 @download_route_wrapper
-def download_zeros(label, L=None): # the wrapper populates the L
+def download_zeros(label, L=None):  # the wrapper populates the L
     assert label
     return L.download_zeros()
 
 @l_function_page.route("/download_dirichlet_coeff/<path:label>")
 @download_route_wrapper
-def download_dirichlet_coeff(label, L=None): # the wrapper populates the L
+def download_dirichlet_coeff(label, L=None):  # the wrapper populates the L
     assert label
     return L.download_dirichlet_coeff()
 
 @l_function_page.route("/download/<path:label>")
 @download_route_wrapper
-def download(label, L=None): # the wrapper populates the L
+def download(label, L=None):  # the wrapper populates the L
     assert label
     return L.download()
 
@@ -1596,7 +1596,7 @@ def lfunc_data(label):
 def render_plotLfunction(request, *args):
     try:
         data = getLfunctionPlot(request, *args)
-    except Exception as err: # depending on the arguments, we may get an exception or we may get a null return, we need to handle both cases
+    except Exception as err:  # depending on the arguments, we may get an exception or we may get a null return, we need to handle both cases
         if is_debug_mode():
             raise
         else:

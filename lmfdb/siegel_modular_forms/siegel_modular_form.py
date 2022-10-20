@@ -152,7 +152,7 @@ def Sp4Z_j():
 
 def render_main_page(bread):
     fams = get_smf_families()
-    fam_list = [c for c in fams if c.computes_dimensions() and c.name not in ["Sp4Z","Sp4Z_2"]] # Sp4Z and Sp4Z_2 are sub-families of Sp4Z_j
+    fam_list = [c for c in fams if c.computes_dimensions() and c.name not in ["Sp4Z","Sp4Z_2"]]  # Sp4Z and Sp4Z_2 are sub-families of Sp4Z_j
     info = { 'family_list': fam_list, 'args': {}, 'number_of_samples': db.smf_samples.count()}
     return render_template('ModularForm_GSp4_Q_index.html', title='Siegel modular forms', bread=bread, info=info)
 
@@ -222,7 +222,7 @@ def render_search_results_page(args, bread):
 
 def render_dimension_table_page(args, bread):
     fams = get_smf_families()
-    fam_list = [c for c in fams if c.computes_dimensions() and c.name not in ["Sp4Z","Sp4Z_2"]] # Sp4Z and Sp4Z_2 are sub-families of Sp4Z_j
+    fam_list = [c for c in fams if c.computes_dimensions() and c.name not in ["Sp4Z","Sp4Z_2"]]  # Sp4Z and Sp4Z_2 are sub-families of Sp4Z_j
     info = { 'family_list': fam_list, 'args': to_dict(args) }
     family = get_smf_family(args.get('family'))
     if not family:

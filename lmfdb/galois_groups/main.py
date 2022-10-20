@@ -1,4 +1,4 @@
-#i -*- coding: utf-8 -*-
+# i -*- coding: utf-8 -*-
 # This Blueprint is about Galois Groups
 # Author: John Jones
 
@@ -190,7 +190,7 @@ def galois_group_search(info, query):
         if query.get('label', '') in jump_list:
             return redirect(url_for_label(query['label']), 301)
 
-        else: # convert this to a regular search
+        else:  # convert this to a regular search
             info['gal'] = info['jump']
     parse_ints(info,query,'n','degree')
     parse_ints(info,query,'t')
@@ -204,7 +204,7 @@ def galois_group_search(info, query):
         query["parity"] = 1
     elif info.get("parity") == "odd":
         query["parity"] = -1
-    #parse_restricted(info,query,'parity',allowed=[1,-1],process=int,blank=['0','Any'])
+    # parse_restricted(info,query,'parity',allowed=[1,-1],process=int,blank=['0','Any'])
 
     degree_str = prep_ranges(info.get('n'))
     info['show_subs'] = degree_str is None or (LIST_RE.match(degree_str) and includes_composite(degree_str))
@@ -283,8 +283,8 @@ def render_group_webpage(args):
                 data['decompunique'] = dcq[0]
                 data['isoms'] = [[mult2mult(z[0]), mult2mult(z[1])] for z in dcq[1]]
                 data['isoms'] = [[modules2string(n,t,z[0]), modules2string(n,t,z[1])] for z in data['isoms']]
-                #print dcq[1]
-                #print data['isoms']
+                # print dcq[1]
+                # print data['isoms']
 
         friends = []
         if db.nf_fields.exists({'degree': n, 'galt': t}):

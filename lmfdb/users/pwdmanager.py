@@ -26,8 +26,8 @@ class PostgresUserTable(PostgresBase):
         # never narrow down the rmin-rmax range, only increase it!
         self.rmin, self.rmax = -10000, 10000
         self._rw_userdb = db.can_read_write_userdb()
-        #TODO use this instead of hardcoded columns names
-        #with identifiers
+        # TODO use this instead of hardcoded columns names
+        # with identifiers
         self._username_full_name = ["username", "full_name"]
         if self._rw_userdb:
             cur = self._execute(SQL("SELECT column_name FROM information_schema.columns WHERE table_schema = %s AND table_name = %s"), ['userdb', 'users'])
@@ -96,7 +96,7 @@ class PostgresUserTable(PostgresBase):
                 raise Exception("ERROR: Passwords do not match!")
             pwd = pwd_input
         password = self.bchash(pwd)
-        #TODO: use identifiers
+        # TODO: use identifiers
         insertor = SQL(u"INSERT INTO userdb.users (username, bcpassword, created, full_name, about, url) VALUES (%s, %s, %s, %s, %s, %s)")
         self._execute(insertor, [uid, password, datetime.utcnow(), full_name, about, url])
         new_user = LmfdbUser(uid)
@@ -105,7 +105,7 @@ class PostgresUserTable(PostgresBase):
     def change_password(self, uid, newpwd):
         if self._rw_userdb:
             bcpass = self.bchash(newpwd)
-            #TODO: use identifiers
+            # TODO: use identifiers
             updater = SQL("UPDATE userdb.users SET bcpassword = %s WHERE username = %s")
             self._execute(updater, [bcpass, uid])
             logger.info("password for %s changed!" % uid)
@@ -122,7 +122,7 @@ class PostgresUserTable(PostgresBase):
         returns a list of tuples: [('username', 'full_name'),…]
         If full_name is None it will be replaced with username.
         """
-        #TODO: use identifiers
+        # TODO: use identifiers
         selecter = SQL("SELECT username, full_name FROM userdb.users")
         cur = self._execute(selecter)
         return [(uid, full_name or uid) for uid, full_name in cur]
@@ -132,7 +132,7 @@ class PostgresUserTable(PostgresBase):
             logger.info("no attempt to authenticate, not enough privileges")
             return False
 
-        #TODO: use identifiers
+        # TODO: use identifiers
         selecter = SQL("SELECT bcpassword, password FROM userdb.users WHERE username = %s")
         cur = self._execute(selecter, [uid])
         if cur.rowcount == 0:
@@ -148,13 +148,13 @@ class PostgresUserTable(PostgresBase):
                     if bcpass:
                         logger.info("user " + uid + " logged in with old style password, trying to update")
                         try:
-                            #TODO: use identifiers
+                            # TODO: use identifiers
                             updater = SQL("UPDATE userdb.users SET (bcpassword) = (%s) WHERE username = %s")
                             self._execute(updater, [bcpass, uid])
                             logger.info("password update for " + uid + " succeeded")
                         except Exception:
-                            #if you can't update the password then likely someone is using a local install
-                            #log and continue
+                            # if you can't update the password then likely someone is using a local install
+                            # log and continue
                             logger.warning("password update for " + uid + " failed!")
                         return True
                     else:
@@ -167,7 +167,7 @@ class PostgresUserTable(PostgresBase):
             logger.info("no attempt to save, not enough privileges")
             return
 
-        data = dict(data) # copy
+        data = dict(data)  # copy
         uid = data.pop("username",None)
         if not uid:
             raise ValueError("data must contain username")
@@ -189,7 +189,7 @@ class PostgresUserTable(PostgresBase):
         return {field:value for field,value in zip(self._cols, cur.fetchone()) if value is not None}
 
     def full_names(self, uids):
-        #TODO: use identifiers
+        # TODO: use identifiers
         selecter = SQL("SELECT username, full_name FROM userdb.users WHERE username = ANY(%s)")
         cur = self._execute(selecter, [Array(uids)])
         return [{k:v for k,v in zip(["username","full_name"], rec)} for rec in cur]
@@ -335,6 +335,7 @@ class LmfdbAnonymousUser(AnonymousUserMixin):
     The sole purpose of this Anonymous User is the 'is_admin' method
     and probably others.
     """
+
     def is_admin(self):
         return False
 

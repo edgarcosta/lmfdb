@@ -174,8 +174,8 @@ class EllCurveTest(LmfdbTest):
                         "990.i appears to have the wrong optimal curve.")
 
         L = self.tc.get('EllipticCurve/Q/990h/')
-        #print row
-        #print L.get_data(as_text=True)
+        # print row
+        # print L.get_data(as_text=True)
         self.assertTrue(row in L.get_data(as_text=True),
                         "990h appears to have the wrong optimal curve.")
 
@@ -198,7 +198,7 @@ class EllCurveTest(LmfdbTest):
             'ec_galrep', "modell_image",
             'ec_padic', 'unit',
         ])
-        #assert ('ec_curvedata' in data and 'stable_faltings_height' in data and
+        # assert ('ec_curvedata' in data and 'stable_faltings_height' in data and
         #        'ec_classdata' in data and 'isogeny_matrix' in data and
         #        'ec_mwbsd' in data and 'torsion_generators' in data and
         #        'ec_iwasawa' in data and 'iwdata' in data and

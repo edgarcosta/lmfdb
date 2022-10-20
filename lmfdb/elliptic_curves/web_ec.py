@@ -13,13 +13,13 @@ from lmfdb.classical_modular_forms.main import url_for_label as cmf_url_for_labe
 
 from sage.all import EllipticCurve, KodairaSymbol, latex, ZZ, QQ, prod, Factorization, PowerSeriesRing, prime_range, RealField
 
-RR = RealField(100) # reals in the database were computed to 100 bits (30 digits) but stored with 128 bits which must be truncated
+RR = RealField(100)  # reals in the database were computed to 100 bits (30 digits) but stored with 128 bits which must be truncated
 
-RZB_URL_PREFIX = "http://users.wfu.edu/rouseja/2adic/" # Needs to be changed whenever J. Rouse and D. Zureick-Brown move their data
-CP_URL_PREFIX = "https://mathstats.uncg.edu/sites/pauli/congruence/" # Needs tto be changed whenever Cummins and Pauli move their data
+RZB_URL_PREFIX = "http://users.wfu.edu/rouseja/2adic/"  # Needs to be changed whenever J. Rouse and D. Zureick-Brown move their data
+CP_URL_PREFIX = "https://mathstats.uncg.edu/sites/pauli/congruence/"  # Needs tto be changed whenever Cummins and Pauli move their data
 
-OPTIMALITY_BOUND = 400000 # optimality of curve no. 1 in class (except class 990h) only proved in all cases for conductor less than this
-CREMONA_BOUND    = 500000 # above this bound we have nor Cremona labels (no Clabel, Ciso, Cnumber), no Manin constant or optimality info.
+OPTIMALITY_BOUND = 400000  # optimality of curve no. 1 in class (except class 990h) only proved in all cases for conductor less than this
+CREMONA_BOUND    = 500000  # above this bound we have nor Cremona labels (no Clabel, Ciso, Cnumber), no Manin constant or optimality info.
 
 cremona_label_regex = re.compile(r'(\d+)([a-z]+)(\d*)')
 lmfdb_label_regex = re.compile(r'(\d+)\.([a-z]+)(\d*)')
@@ -209,6 +209,7 @@ class WebEC():
     """
     Class for an elliptic curve over Q
     """
+
     def __init__(self, dbdata):
         """
         Arguments:
@@ -230,17 +231,17 @@ class WebEC():
             N, iso, number = split_lmfdb_label(label)
             data = db.ec_curvedata.lucky({"lmfdb_label": label})
             if not data:
-                return "Curve not found" # caller must catch this and raise an error
+                return "Curve not found"  # caller must catch this and raise an error
             data['label_type'] = 'LMFDB'
         except AttributeError:
             try:
                 N, iso, number = split_cremona_label(label)
                 data = db.ec_curvedata.lucky({"Clabel": label})
                 if not data:
-                    return "Curve not found" # caller must catch this and raise an error
+                    return "Curve not found"  # caller must catch this and raise an error
                 data['label_type'] = 'Cremona'
             except AttributeError:
-                return "Invalid label" # caller must catch this and raise an error
+                return "Invalid label"  # caller must catch this and raise an error
         return WebEC(data)
 
     def make_curve(self):
@@ -254,7 +255,7 @@ class WebEC():
         data['conductor'] = N = self.conductor
         data['j_invariant'] = QQ(tuple(self.jinv))
         data['j_inv_factor'] = latex(0)
-        if data['j_invariant']: # don't factor 0
+        if data['j_invariant']:  # don't factor 0
             data['j_inv_factor'] = latex(data['j_invariant'].factor())
         data['j_inv_latex'] = web_latex(data['j_invariant'])
         data['faltings_height'] = RR(self.faltings_height)
@@ -300,9 +301,9 @@ class WebEC():
         # modular degree:
 
         try:
-            data['degree'] = ZZ(self.degree) # convert None to 0
-        except AttributeError: # if not computed, db has Null and the attribute is missing
-            data['degree'] = 0 # invalid, but will be displayed nicely
+            data['degree'] = ZZ(self.degree)  # convert None to 0
+        except AttributeError:  # if not computed, db has Null and the attribute is missing
+            data['degree'] = 0  # invalid, but will be displayed nicely
 
         # coefficients of modular form / L-series:
 
@@ -371,9 +372,9 @@ class WebEC():
         data['optimality_bound'] = OPTIMALITY_BOUND
         self.cremona_bound = CREMONA_BOUND
         if N<CREMONA_BOUND:
-            data['manin_constant'] = self.manin_constant # (conditional on data['optimality_known'])
+            data['manin_constant'] = self.manin_constant  # (conditional on data['optimality_known'])
         else:
-            data['manin_constant'] = 0 # (meaning not available)
+            data['manin_constant'] = 0  # (meaning not available)
 
         if N<OPTIMALITY_BOUND:
 
@@ -586,19 +587,19 @@ class WebEC():
     def make_iwasawa(self):
         iw = self.iw = {}
         iwasawadata = db.ec_iwasawa.lookup(self.lmfdb_label)
-        if not iwasawadata: # For curves with no Iwasawa data
+        if not iwasawadata:  # For curves with no Iwasawa data
             return
-        if 'iwp0' not in iwasawadata: # For curves with no Iwasawa data
+        if 'iwp0' not in iwasawadata:  # For curves with no Iwasawa data
             return
 
-        iw['p0'] = iwasawadata['iwp0'] # could be None
+        iw['p0'] = iwasawadata['iwp0']  # could be None
         iwdata = iwasawadata['iwdata']
         iw['data'] = []
         pp = [int(p) for p in iwdata]
         badp = self.bad_primes
         rtypes = [l['reduction_type'] for l in self.local_data]
-        iw['missing_flag'] = False # flags that there is at least one "?" in the table
-        iw['additive_shown'] = False # flags that there is at least one additive prime in table
+        iw['missing_flag'] = False  # flags that there is at least one "?" in the table
+        iw['additive_shown'] = False  # flags that there is at least one additive prime in table
         for p in sorted(pp):
             rtype = ''
             rtknowl = 'ec.q.reduction_type'
@@ -641,7 +642,7 @@ class WebEC():
     def make_torsion_growth(self):
         # The torsion growth table has one row per extension field
         tgdata = list(db.ec_torsion_growth.search({'lmfdb_label': self.lmfdb_label}))
-        if not tgdata: # we only have torsion growth data for some range of conductors
+        if not tgdata:  # we only have torsion growth data for some range of conductors
             self.torsion_growth_data_exists = False
             return
 
@@ -684,10 +685,10 @@ class WebEC():
                 tg1['m'] = len([x for x in tgextra if x['d']==d])
                 lastd = d
 
-        ## Hard-coded this for now.  Note that the *only* place where
-        ## this number is used is in the ec-curve template where it
-        ## says "The number fields ... of degree less than
-        ## {{data.tg.maxd}} such that...".
+        # Hard-coded this for now.  Note that the *only* place where
+        # this number is used is in the ec-curve template where it
+        # says "The number fields ... of degree less than
+        # {{data.tg.maxd}} such that...".
 
         tg['maxd'] = 24
 

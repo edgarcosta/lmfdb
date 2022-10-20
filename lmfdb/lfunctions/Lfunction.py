@@ -1,4 +1,4 @@
-#_ -*- coding: utf-8 -*-
+# _ -*- coding: utf-8 -*-
 # The class Lfunction is defined in Lfunction_base and represents an L-function
 # We subclass it here:
 # RiemannZeta, Lfunction_Dirichlet, Lfunction_EC_Q, Lfunction_CMF,
@@ -103,7 +103,7 @@ def constructor_logger(obj, args):
 
 # Compute Dirichlet coefficients from Euler factors.
 def an_from_data(euler_factors,upperbound=30):
-    if type(euler_factors[0][0]) is int:
+    if isinstance(euler_factors[0][0], int):
         R = ZZ
     else:
         R = euler_factors[0][0].parent()
@@ -174,7 +174,7 @@ def makeLfromdata(L):
     else:
         # this is a numeric converted to RealLiteral
         L.analytic_normalization = round_to_half_int(data.get('analytic_normalization'))
-        L.motivic_weight = '' # ZZ(2*L.analytic_normalization)
+        L.motivic_weight = ''  # ZZ(2*L.analytic_normalization)
 
     L.mu_fe = []
     for i in range(len(data['gamma_factors'][0])):
@@ -218,7 +218,7 @@ def makeLfromdata(L):
         field_degree = int(L.base_field.split('.')[0])
         L.st_link = st_link_by_name(L.motivic_weight, L.degree // field_degree, L.st_group)
     else:
-        #this assumes that the base field of the Galois representation is QQ
+        # this assumes that the base field of the Galois representation is QQ
         L.st_link = st_link_by_name(L.motivic_weight, L.degree, L.st_group)
 
     if data.get('credit', None) is not None:
@@ -329,7 +329,7 @@ def makeLfromdata(L):
 
     # Configure the data for the plot
     plot_delta = float(data['plot_delta'])
-    if type(data['plot_values'][0]) is str:
+    if isinstance(data['plot_values'][0], str):
         plot_values = [string2number(elt) for elt in data['plot_values']]
     else:
         plot_values = data['plot_values']
@@ -340,7 +340,7 @@ def makeLfromdata(L):
         neg_plot = [ [-1*pt[0], L.sign * pt[1]]
                      for pt in pos_plot ][1:]
     else:
-        if type(dual_L_data['plot_values'][0]) is str:
+        if isinstance(dual_L_data['plot_values'][0], str):
             dual_plot_values = [string2number(elt) for elt in dual_L_data['plot_values']]
         else:
             dual_plot_values = dual_L_data['plot_values']
@@ -387,7 +387,7 @@ def apply_coeff_info(L, coeff_info):
             else:
                 # an = e^(2 pi i an_power_int / this_base_power_int)
                 arithmetic = r" $e\left(\frac{" + str(an_power_int) + "}{" + str(this_base_power_int)  + r"}\right)$"
-                #exp(2*pi*I*QQ(an_power_int)/ZZ(this_base_power_int)).n()
+                # exp(2*pi*I*QQ(an_power_int)/ZZ(this_base_power_int)).n()
                 analytic = (2*CBF(an_power_int)/this_base_power_int).exppii()
                 # round half integers
                 analytic = round_CBF_to_half_int(analytic)
@@ -452,6 +452,7 @@ class Lfunction_from_db(Lfunction):
 
     Compulsory parameters: Lhash or label
     """
+
     def __init__(self, **kwargs):
         constructor_logger(self, kwargs)
         argkeys = ({'url', 'label', 'Lhash'}).intersection(set(kwargs))
@@ -558,7 +559,7 @@ class Lfunction_from_db(Lfunction):
 
     @lazy_attribute
     def instances(self):
-        return [] # disable instances
+        return []  # disable instances
         # we got here by tracehash or Lhash
         if self._Ltype == "general":
             linstances = []
@@ -679,7 +680,7 @@ class Lfunction_from_db(Lfunction):
     def texnamecompleteds_arithmetic(self):
         return self.texnamecompleteds
 
-    #def _retrieve_lfunc_data_from_db(self):
+    # def _retrieve_lfunc_data_from_db(self):
     #    self.lfunc_data = get_lfunction_by_url(self.url)
     #    if not self.lfunc_data:
     #        raise KeyError('No L-function instance data for "%s" was found in the database.' % self.url)
@@ -704,6 +705,7 @@ class Lfunction_Maass(Lfunction):
 
     Possible parameters: group,level,char,R,ap_id  (if data is in Lfunctions DB)
     """
+
     def __init__(self, **args):
         constructor_logger(self, args)
 
@@ -745,7 +747,7 @@ class Lfunction_Maass(Lfunction):
             # Specific properties
             if not self.selfdual:
                 self.dual_link = '/L' + self.lfunc_data.get('conjugate', None)
-            title_end = ""  #" on $%s$" % (self.group)
+            title_end = ""  # " on $%s$" % (self.group)
 
         else:   # Generate from Maass form
 
@@ -769,7 +771,7 @@ class Lfunction_Maass(Lfunction):
                                    + 'the L-function. ')
             else:  # no fricke for level 1
                 self.fricke = 1
-            if self.symmetry == -1: # odd
+            if self.symmetry == -1:  # odd
                 self.sign = -self.fricke
                 aa = 1
             else:
@@ -1030,7 +1032,7 @@ class Lfunction_SMF2_scalar_valued(Lfunction):
             raise KeyError("Siegel modular form Sp4Z.%s not found in database." % label)
         self.field = self.S.field()
         evlist = self.S.available_eigenvalues()
-        if len(evlist) < 3: # FIXME -- we should sanity check that we have enough eigenvalues for it make sense to display an L-function page (presumably 3 is not enough)
+        if len(evlist) < 3:  # FIXME -- we should sanity check that we have enough eigenvalues for it make sense to display an L-function page (presumably 3 is not enough)
             raise ValueError("Eigenvalue data for Siegel modular form Sp4Z.%s not available or insufficient." % label)
         self.evs = self.S.eigenvalues(self.S.available_eigenvalues())
         for ev in self.evs:
@@ -1065,7 +1067,7 @@ class Lfunction_SMF2_scalar_valued(Lfunction):
         self.nu_fe = [Rational(1/2), self.automorphyexp]  # the shift of the Gamma_C to print
         self.compute_kappa_lambda_Q_from_mu_nu()
         self.algebraic = True
-        self.motivic_weight = 2*self.weight - 3 # taken from A. Panchiskin's talk @ Oberwolfach, Oct. 2007
+        self.motivic_weight = 2*self.weight - 3  # taken from A. Panchiskin's talk @ Oberwolfach, Oct. 2007
 
         # Compute Dirichlet coefficients ########################
         roots = compute_local_roots_SMF2_scalar_valued(self.field, self.evs, self.weight, self.number)  # compute the roots of the Euler factors
@@ -1139,7 +1141,7 @@ class DedekindZeta(Lfunction):
             self.res = RR(2 ** self.signature[0] * self.h * self.R) / self.w
             self.residues = [self.res, -self.res]
         self.poles_L = [1]  # poles of L(s) used by createLcalcfile_ver2
-        self.residues_L = [1234] # residues of L(s) used by createLcalcfile_ver2,
+        self.residues_L = [1234]  # residues of L(s) used by createLcalcfile_ver2,
                                  # TODO: needs to be set
         self.langlands = True
         self.primitive = False
@@ -1153,7 +1155,7 @@ class DedekindZeta(Lfunction):
         self.algebraic = True
         self.motivic_weight = 0
         self.dirichlet_coefficients = [Integer(x) for x in
-                                       self.NF.zeta_coefficients(5000)] # TODO: adjust nr of coef
+                                       self.NF.zeta_coefficients(5000)]  # TODO: adjust nr of coef
         self.sign = 1
         self.selfdual = True
 
@@ -1178,8 +1180,8 @@ class DedekindZeta(Lfunction):
                     self.factorization += (r'\(\;\cdot\) <a href="/L/Character/Dirichlet/%d/%d/">\(L(s,\chi_{%d}(%d, \cdot))\)</a>'
                                            % (mycond, myj, mycond, myj))
             elif wnf.factor_perm_repn():
-                nfgg = wnf.factor_perm_repn() # first call cached it
-                ar = wnf.artin_reps() # these are in the same order
+                nfgg = wnf.factor_perm_repn()  # first call cached it
+                ar = wnf.artin_reps()  # these are in the same order
                 self.factorization = (r'\(\zeta_K(s) =\) <a href="/L/Riemann/">'
                                            +r'\(\zeta(s)\)</a>')
                 for j in range(len(ar)):
@@ -1227,6 +1229,7 @@ class ArtinLfunction(Lfunction):
     Compulsory parameters: label
 
     """
+
     def __init__(self, **args):
         constructor_logger(self, args)
 
@@ -1314,6 +1317,7 @@ class HypergeometricMotiveLfunction(Lfunction):
         family, for instance 'A2.2.2.2_B1.1.1.1'
         and t for instance 't1.2'
     """
+
     def __init__(self, **args):
         constructor_logger(self, args)
 
@@ -1373,7 +1377,7 @@ class HypergeometricMotiveLfunction(Lfunction):
 ##        Lexponent = self.motivic_weight/2.
 ##        normalize =lambda coeff, n, exponent: Reals()(coeff)/n**exponent
 ##        self.dirichlet_coefficient = [normalize(coeff, i+1, Lexponent) for i, coeff in enumerate(self.arith_coeffs)]
-##        Are these coefficients not the same as dirichlet_coefficients computed above
+# Are these coefficients not the same as dirichlet_coefficients computed above
         self.sageLfunction = lc.Lfunction_D("LfunctionHypergeometric", 0, self.dirichlet_coefficients, self.coefficient_period,
                                             self.Q_fe, self.sign, self.kappa_fe, self.lambda_fe, self.poles, self.residues)
 

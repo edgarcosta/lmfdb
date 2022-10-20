@@ -129,7 +129,7 @@ def extract_defines(content):
 
 
 class KnowlBackend(PostgresBase):
-    _default_fields = ['authors', 'cat', 'content', 'last_author', 'timestamp', 'title', 'status', 'type', 'links', 'defines', 'source', 'source_name'] # doesn't include id, _keywords, reviewer or review_timestamp
+    _default_fields = ['authors', 'cat', 'content', 'last_author', 'timestamp', 'title', 'status', 'type', 'links', 'defines', 'source', 'source_name']  # doesn't include id, _keywords, reviewer or review_timestamp
 
     def __init__(self):
         PostgresBase.__init__(self, 'db_knowl', db)
@@ -199,7 +199,7 @@ class KnowlBackend(PostgresBase):
         return [{k: (v if k == 'id' else [normalize_define(t) for t in v])
                  for k, v in zip(['id', 'defines'], res)} for res in cur]
 
-    #FIXME shouldn't I be allowed to search on id? or something?
+    # FIXME shouldn't I be allowed to search on id? or something?
     def search(self, category="", filters=[], types=[], keywords="", author=None, sort=[], projection=['id', 'title'], regex=False):
         """
         INPUT:
@@ -290,7 +290,7 @@ class KnowlBackend(PostgresBase):
         else:
             typ, source, name = extract_typ(knowl.id)
         links = extract_links(knowl.content)
-        if typ == 2: # column description
+        if typ == 2:  # column description
             defines = [knowl.id.split(".")[-1]]
         else:
             defines = extract_defines(knowl.content)
@@ -470,7 +470,7 @@ class KnowlBackend(PostgresBase):
                 lines = match.split('\n')
                 for line in lines:
                     m = grep_extractor.match(line)
-                    if m and m.group(2) == ':': # active match rather than context
+                    if m and m.group(2) == ':':  # active match rather than context
                         for kid in extract_links(line):
                             if kid in kids:
                                 kids.remove(kid)
@@ -548,7 +548,7 @@ class KnowlBackend(PostgresBase):
                     matches.extend(subprocess.check_output(['git', 'grep', '--full-name', '--line-number', '--context', '2', """['"]%s['"]"""%(kid.replace('.',r'\.'))],encoding='utf-8').split(u'\n--\n'))
                 else:
                     matches.extend(subprocess.check_output(['git', 'grep', '--full-name', '--line-number', '--context', '2', """['"]%s['"]"""%(kid.replace('.',r'\.'))]).split(u'\n--\n'))
-            except subprocess.CalledProcessError: # no matches
+            except subprocess.CalledProcessError:  # no matches
                 pass
         return [self._process_git_grep(match) for match in matches]
 
@@ -566,7 +566,7 @@ class KnowlBackend(PostgresBase):
                 matches = subprocess.check_output(['git', 'grep', """['"]%s['"]"""%(knowlid.replace('.',r'\.'))],encoding='utf-8').split('\n')
             else:
                 matches = subprocess.check_output(['git', 'grep', """['"]%s['"]"""%(knowlid.replace('.',r'\.'))]).split('\n')
-        except subprocess.CalledProcessError: # no matches
+        except subprocess.CalledProcessError:  # no matches
             return 0
 
         easy_matches = subprocess.check_output(['git', 'grep', knowlid.replace('.',r'\.')],encoding='utf-8').split('\n')
@@ -625,7 +625,7 @@ class KnowlBackend(PostgresBase):
             referrers = self.ids_referencing(knowl.id, old=True)
             updator = SQL("UPDATE kwl_knowls SET (content, links) = (regexp_replace(content, %s, %s, %s), array_replace(links, %s, %s)) WHERE id = ANY(%s)")
             values = [r"""['"]\s*{0}\s*['"]""".format(knowl.id.replace('.', r'\.')),
-                      "'{0}'".format(new_name), 'g', knowl.id, new_name, referrers] # g means replace all
+                      "'{0}'".format(new_name), 'g', knowl.id, new_name, referrers]  # g means replace all
             self._execute(updator, values)
             if knowl.id in self.cached_titles:
                 self.cached_titles[new_name] = self.cached_titles.pop(knowl.id)
@@ -678,7 +678,7 @@ class KnowlBackend(PostgresBase):
             bad_lines = []
             for line in lines:
                 m = grep_extractor.match(line)
-                if m and m.group(2) == ':': # active match rather than context
+                if m and m.group(2) == ':':  # active match rather than context
                     bad_kids.extend([kid for kid in extract_links(line) if kid not in all_kids])
                     bad_lines.append(int(m.group(3)))
             if bad_kids:
@@ -783,12 +783,13 @@ class Knowl():
     - ``allow_deleted`` -- whether the knowl database should return data from deleted knowls with this ID.
     - ``timestamp`` -- desired version of knowl at the given timestamp
     """
+
     def __init__(self, ID, template_kwargs=None, data=None, editing=False, showing=False,
                  saving=False, renaming=False, allow_deleted=False, timestamp=None):
         self.template_kwargs = template_kwargs or {}
 
         self.id = ID
-        #given that we cache it's existence it is quicker to check for existence
+        # given that we cache it's existence it is quicker to check for existence
         if data is None:
             if self.exists(allow_deleted=allow_deleted):
                 if editing:
@@ -825,8 +826,8 @@ class Knowl():
                 self.coltype = db[pieces[1]].col_type.get(pieces[2], "DEFUNCT")
             else:
                 self.coltype = "DEFUNCT"
-        #self.reviewer = data.get('reviewer') # Not returned by get_knowl by default
-        #self.review_timestamp = data.get('review_timestamp') # Not returned by get_knowl by default
+        # self.reviewer = data.get('reviewer') # Not returned by get_knowl by default
+        # self.review_timestamp = data.get('review_timestamp') # Not returned by get_knowl by default
 
         if showing:
             self.comments = knowldb.get_comments(ID)
@@ -850,7 +851,7 @@ class Knowl():
             self.edit_history = knowldb.get_edit_history(ID)
             # Use to determine whether this is the most recent version of this knowl.
             self.most_recent = not self.edit_history or self.edit_history[-1]['timestamp'] == self.timestamp
-            #if not self.edit_history:
+            # if not self.edit_history:
             #    # New knowl.  This block should be edited according to the desired behavior for diffs
             #    self.edit_history = [{"timestamp":datetime.utcnow(),
             #                          "last_author":"__nobody__",

@@ -16,7 +16,7 @@ from lmfdb.hecke_algebras.hecke_algebras_stats import hecke_algebras_summary
 hecke_algebras_credit = 'Samuele Anni, Panagiotis Tsaknias and Gabor Wiese'
 l_range = list(prime_range(14))
 
-#breadcrumbs and links for data quality entries
+# breadcrumbs and links for data quality entries
 
 def get_bread(breads=[]):
     bc = [("HeckeAlgebra", url_for(".index"))]
@@ -145,7 +145,7 @@ def hecke_algebras_postprocess(res, info, query):
     return res
 
 @search_wrap(template="hecke_algebras-search.html",
-             table=db.hecke_algebras, # note that if 'ell' is included, a different table is used
+             table=db.hecke_algebras,  # note that if 'ell' is included, a different table is used
              title='Hecke algebra search results',
              err_title='Hecke algebra search error',
              shortcuts={'download':download_search,
@@ -228,7 +228,7 @@ def render_hecke_algebras_webpage(**args):
     proj = ['orbit_label','hecke_op','num_hecke_op','Zbasis','discriminant','disc_fac','Qbasis','Qalg_gen']
     orb = list(db.hecke_orbits.search({'parent_label': data['label']}, proj))
     if orb:
-        #consistency check
+        # consistency check
         if len(orb) != int(data['num_orbits']):
             return search_input_error(info)
 
@@ -256,7 +256,7 @@ def render_hecke_algebras_webpage(**args):
                     v['gen_display'] = [v['Zbasis'][0][0]]
                 else:
                     v['gen_display'] = [latex(matrix(dim,dim,v['Zbasis'][i])) for i in range(dim)]
-                v['inner_twists'] = "not available" # not yet in the database
+                v['inner_twists'] = "not available"  # not yet in the database
                 v['download_gen'] = [(lang, url_for(".render_hecke_algebras_webpage_download", orbit_label=v['orbit_label'], lang=lang, obj='gen')) for lang in ['gp', 'magma','sage']]
         info['orbits'] = orb
 
@@ -368,7 +368,7 @@ def render_hecke_algebras_webpage_l_adic(**args):
     return render_template("hecke_algebras_l_adic-single.html", info=info, credit=credit, title=t, bread=bread, properties=info['properties'], learnmore=learnmore_list(), friends=info['friends'], KNOWL_ID='hecke_algebra_l_adic.%s'%(info['orbit_label']))
 
 
-#data quality pages
+# data quality pages
 @hecke_algebras_page.route("/Completeness")
 def completeness_page():
     t = 'Completeness of Hecke algebra data'
@@ -405,7 +405,7 @@ def history_page():
     return render_template("single.html", kid='hecke_algebras.history',
                            credit=credit, title=t, bread=bread, learnmore=learnmore_list_remove('History'))
 
-#download
+# download
 download_comment_prefix = {'magma':'//','sage':'#','gp':'\\\\'}
 download_assignment_start = {'magma':'data := ','sage':'data = ','gp':'data = '}
 download_assignment_end = {'magma':';','sage':'','gp':''}
@@ -511,7 +511,7 @@ def download_hecke_algebras_full_lists_id(**args):
     lang = args['lang']
     c = download_comment_prefix[lang]
 
-    if lang == 'magma': #no idea for gp
+    if lang == 'magma':  # no idea for gp
         ladic = 'pAdicRing(%s : Precision :=200),'%ell
     elif lang== 'sage':
         ladic = 'Qp(%s, 200),'%ell

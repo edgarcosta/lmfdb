@@ -333,7 +333,7 @@ def round_RBF_to_half_int(x):
         pass
     try:
         return float(x)
-    except TypeError: # old version of Sage
+    except TypeError:  # old version of Sage
         return float(x.n(x.prec()))
 
 def round_CBF_to_half_int(x):
@@ -341,7 +341,7 @@ def round_CBF_to_half_int(x):
 
 def str_to_CBF(s):
     # in sage 8.2 or earlier this is equivalent to CBF(s)
-    s = str(s) # to convert from unicode
+    s = str(s)  # to convert from unicode
     try:
         return CBF(s)
     except TypeError:
@@ -441,7 +441,7 @@ def display_float(x, digits, method="truncate",
     if try_halfinteger and abs(x) < 10.**digits:
         if is_exact(x):
             s = str(x)
-            if len(s) < digits + 2: # 2 = '/' + '-'
+            if len(s) < digits + 2:  # 2 = '/' + '-'
                 return str(x)
         k = round_to_half_int(x)
         if k == x:
@@ -691,6 +691,7 @@ class ValueSaver():
     """
     Takes a generator and saves values as they are generated so that values can be retrieved multiple times.
     """
+
     def __init__(self, source):
         self.source = source
         self.store = []
@@ -727,6 +728,7 @@ class Pagination():
     - ``endpoint`` -- an argument for ``url_for`` to get more pages
     - ``endpoint_params`` -- keyword arguments for the ``url_for`` call
     """
+
     def __init__(self, source, per_page, page, endpoint, endpoint_params):
         if isinstance(source, GeneratorType):
             source = ValueSaver(source)

@@ -29,10 +29,10 @@ class StandardColors():
     light_grey_2 = '#cdcdcd'
     light_grey_3 = '#ddd'
     light_grey_4 = '#ccc'
-    #light_grey_5 = '#c4c4c4'
-    #light_grey_6 = '#d1d1d1'
-    #light_grey_7 = '#d5d5d5'
-    #light_grey_8 = '#e2e2e2'
+    # light_grey_5 = '#c4c4c4'
+    # light_grey_6 = '#d1d1d1'
+    # light_grey_7 = '#d5d5d5'
+    # light_grey_8 = '#e2e2e2'
     light_grey_9 = '#e9e9e9'
     almost_white = '#fafbfa'
 
@@ -53,23 +53,23 @@ c = StandardColors()
 
 class ColorScheme():
     colors = {
-        'col_main_d': None, # Header and footer
-        'col_main_dl': None, # Header and footer text
-        'col_a_knowl': '#292', # Links
+        'col_main_d': None,  # Header and footer
+        'col_main_dl': None,  # Header and footer text
+        'col_a_knowl': '#292',  # Links
         'col_main': None,      # Links
         'col_link': '#2a2',    # Links
         'col_visited': 'col_main',       # Visited links in body
-        'col_body_text': 'col_main', # Links in body
-        'col_sidebar_text': 'col_main', # Sidebar text in body and header, under Dat, gets over-written for the rest.
-        'col_sidebar_links': 'col_main', # Sidebar link text
-        'col_sidebar_header_links': 'col_main', # Sidebar header links
-        #'col_search_border': 'col_main',
-        'col_main_2': None, # Main link hovers
-        'col_main_l': None, # Tabs
-        'col_main_b': 'col_main_l', # Buttons -- not defined in non-original color schemes
-        'col_main_lg': None, # Shadow and bottom border
-        'col_main_ld': None, # Box background
-        'col_main_ll': None, # Beta text
+        'col_body_text': 'col_main',  # Links in body
+        'col_sidebar_text': 'col_main',  # Sidebar text in body and header, under Dat, gets over-written for the rest.
+        'col_sidebar_links': 'col_main',  # Sidebar link text
+        'col_sidebar_header_links': 'col_main',  # Sidebar header links
+        # 'col_search_border': 'col_main',
+        'col_main_2': None,  # Main link hovers
+        'col_main_l': None,  # Tabs
+        'col_main_b': 'col_main_l',  # Buttons -- not defined in non-original color schemes
+        'col_main_lg': None,  # Shadow and bottom border
+        'col_main_ld': None,  # Box background
+        'col_main_ll': None,  # Beta text
         'col_main_g': '#474',
 
         # Body colors
@@ -86,11 +86,11 @@ class ColorScheme():
         'knowl_hyper_text': '#006',
         'knowl_title_text': '#004',
         'knowl_underline': '#aaf',
-        'knowl_hover_text': '#88f', # Text color when hovering on link in header/footer
-        'knowl_thin_border': '#88f', # Darker border at base of top knowl bar
+        'knowl_hover_text': '#88f',  # Text color when hovering on link in header/footer
+        'knowl_thin_border': '#88f',  # Darker border at base of top knowl bar
         'knowl_shadow': '#88b',
-        'knowl_1': '#99b3ff', # paging_full_numbers span.paginate_button
-        'knowl_db': '#66d', # knowl-qm.active
+        'knowl_1': '#99b3ff',  # paging_full_numbers span.paginate_button
+        'knowl_db': '#66d',  # knowl-qm.active
         'knowl_border_links': 'knowl_hyper_text',
         'knowl_border_hover': 'knowl_hyper_text',
         'knowl_border_text': c.grey,
@@ -107,9 +107,9 @@ class ColorScheme():
         'knowl_l_9': '#eef',
 
         # Content colors
-        'content_text': c.black, # Body section text TODO: change
-        'content_text_h3': 'col_main', # TODO: where is this used?
-        'content_border': 'col_main', # TODO: where is this used?
+        'content_text': c.black,  # Body section text TODO: change
+        'content_text_h3': 'col_main',  # TODO: where is this used?
+        'content_border': 'col_main',  # TODO: where is this used?
         'content_background': 'col_main_ll',
         'content_border_red': c.red,
         'content_background_red': c.col_light_red_1,
@@ -126,9 +126,9 @@ class ColorScheme():
         'footer_text': 'col_main_dl',
 
         # a colors
-        'a_text': 'col_body_text', # This occurs in for some hyperlinks, and sidebar header text.
+        'a_text': 'col_body_text',  # This occurs in for some hyperlinks, and sidebar header text.
         'a_inactive': c.black,
-        'a_text_visited': 'col_visited', # This occurs for the rest of the hyperlinks, and sidebar header text, i.e., once visited
+        'a_text_visited': 'col_visited',  # This occurs for the rest of the hyperlinks, and sidebar header text, i.e., once visited
         'a_text_hover': c.black,
         'a_background_hover': 'col_main_l',
 
@@ -154,7 +154,7 @@ class ColorScheme():
 
 
         # Header colors
-        'header_background': 'col_main_ld', #Color of the banner at the top
+        'header_background': 'col_main_ld',  # Color of the banner at the top
         'header_shadow': 'col_main_lg',
         'header_text_title': 'col_main_d',
         'header_text_topright': 'col_main_dl',
@@ -173,21 +173,21 @@ class ColorScheme():
         'properties_body_background': 'col_main_ll',
         'properties_header_text': 'col_main_d',
         'properties_header_background': 'col_main_l',
-        'properties_collapser': 'col_main_d', #The little circle-arrow thingy
+        'properties_collapser': 'col_main_d',  # The little circle-arrow thingy
 
 
         # Sidebar: left hand side sidebar.
         'sidebar_background': 'col_main_ll',
-        'sidebar_background_h2': 'col_main_l', #sidebar tab background
-        'sidebar_text': c.black, #sidebar non-header non-link non-future text
-        'sidebar_text_h2': c.black, # non-link sidebar header text.
-        'sidebar_h2_hover': 'sidebar_text_h2', # sidebar tab hover text color
+        'sidebar_background_h2': 'col_main_l',  # sidebar tab background
+        'sidebar_text': c.black,  # sidebar non-header non-link non-future text
+        'sidebar_text_h2': c.black,  # non-link sidebar header text.
+        'sidebar_h2_hover': 'sidebar_text_h2',  # sidebar tab hover text color
 
         'sidebar_background_hover': 'col_main_l',
         'sidebar_background_li': 'col_main_ll',
         'sidebar_background_h2_hover': 'col_main_2',
         'sidebar_bkg_highlight': 'col_main_l',
-        'sidebar_bkg_highlight_knowl': 'knowl_db', # This was broken: col_knowl_d
+        'sidebar_bkg_highlight_knowl': 'knowl_db',  # This was broken: col_knowl_d
         'sidebar_text_future': c.grey,
         'sidebar_text_beta': c.purple,
         'sidebar_background_off': c.white,
@@ -208,17 +208,17 @@ class ColorScheme():
         'table_background_hover': 'col_main_l',
         'table_ntdata_background': 'col_main_2',
         'table_ntdata_background_2': 'col_main_ll',
-        'table_ntdata_background_c1': c.white, # tr:first-child, odd
-        'table_ntdata_background_cn': 'col_main_ll', #tr:nth-child, even
+        'table_ntdata_background_c1': c.white,  # tr:first-child, odd
+        'table_ntdata_background_cn': 'col_main_ll',  # tr:nth-child, even
         'table_ntdata_border': 'col_main_lg',
         'table_ntdata_border_bottom': c.grey,
 
-        #index-boxes todo
+        # index-boxes todo
         'box_background': c.white,
         'box_background_img': 'col_main_ll',
         'box_background_title': 'col_main_l',
 
-        #Maass nav and show
+        # Maass nav and show
         'maas_table_bkg': c.white,
         'maas_table_bkg_hl': 'col_main_l',
         'maas_coff_bkg': c.white,
@@ -229,7 +229,7 @@ class ColorScheme():
         'chi_background': 'col_main_2',
         'chi_table_background_off': c.white,
         'chi_border': 'col_main_lg',
-        'chi_table_background': 'col_main_ld', # This was specified twice in color.css; could also be col_main_ll
+        'chi_table_background': 'col_main_ld',  # This was specified twice in color.css; could also be col_main_ll
         'chi_table_border': 'col_main_dl',
 
         # acknowledgments
@@ -290,11 +290,11 @@ class ColorScheme():
 
 class YellowKnowls(ColorScheme):
     # Subclasses need to set knowl_hyper_text and knowl_shadow
-    knowl_border = '#FFF59D' # P2-200
-    knowl_background = '#FFFDE7' # P2-50
+    knowl_border = '#FFF59D'  # P2-200
+    knowl_background = '#FFFDE7'  # P2-50
     knowl_title_text = c.black
     knowl_hover_text = c.black
-    knowl_thin_border = '#FFEE58' # P2-400
+    knowl_thin_border = '#FFEE58'  # P2-400
     body_background = c.almost_white
 
     def __init__(self):
@@ -329,64 +329,64 @@ class Original(ColorScheme):
 
 class CarribeanSea(YellowKnowls):
     code = 15
-    col_main_ld = '#4DB6AC' # P1-300
+    col_main_ld = '#4DB6AC'  # P1-300
     col_main_dl = c.black
-    col_main    = '#00695C' # P1-800
-    col_visited = '#00BFA5' # A1-700
-    col_body_text = '#00695C' # P1-800
+    col_main    = '#00695C'  # P1-800
+    col_visited = '#00BFA5'  # A1-700
+    col_body_text = '#00695C'  # P1-800
     col_sidebar_text = c.black
-    col_sidebar_links = '#00695C' # P1-800
-    col_sidebar_header_links = '#004D40' # P1-900
-    #col_search_border = '#004D40' # P1-900
-    col_main_2  = '#FFF59D' # A2-100
-    col_main_l  = '#80CBC4' # P1-200
-    col_main_lg = '#004D40' # P1-900
-    col_main_ll = '#E0F2F1' # P1-50
-    col_main_d  = c.black # ?00
-    knowl_hyper_text = '#00695C' # P1-800
-    knowl_shadow = '#004D40' # P1-900
+    col_sidebar_links = '#00695C'  # P1-800
+    col_sidebar_header_links = '#004D40'  # P1-900
+    # col_search_border = '#004D40' # P1-900
+    col_main_2  = '#FFF59D'  # A2-100
+    col_main_l  = '#80CBC4'  # P1-200
+    col_main_lg = '#004D40'  # P1-900
+    col_main_ll = '#E0F2F1'  # P1-50
+    col_main_d  = c.black  # ?00
+    knowl_hyper_text = '#00695C'  # P1-800
+    knowl_shadow = '#004D40'  # P1-900
 
 
 class NiceGreen(YellowKnowls):
     code = 16
-    col_main_ld = '#81C784' # P1-300
+    col_main_ld = '#81C784'  # P1-300
     col_main_dl = c.black
-    col_main    = '#2E7D32' # P1-800
-    col_visited = '#00C853' # A1-700
-    col_body_text = '#2E7D32' # P1-800
+    col_main    = '#2E7D32'  # P1-800
+    col_visited = '#00C853'  # A1-700
+    col_body_text = '#2E7D32'  # P1-800
     col_sidebar_text = c.black
-    col_sidebar_links = '#2E7D32' # P1-800
-    col_sidebar_header_links = '#1B5E20' # P1-900
-    #col_search_border = '#1B5E20' # P1-900
-    col_main_2  = '#FFF59D' # A2-100
-    col_main_l  = '#A5D6A7' # P1-200
-    col_main_lg = '#1B5E20' # P1-900
-    col_main_ll = '#E8F5E9' # P1-50
-    col_main_d  = c.black # ?00
-    knowl_hyper_text = '#2E7D32' # P1-800
-    knowl_shadow = '#1B5E20' # P1-900
+    col_sidebar_links = '#2E7D32'  # P1-800
+    col_sidebar_header_links = '#1B5E20'  # P1-900
+    # col_search_border = '#1B5E20' # P1-900
+    col_main_2  = '#FFF59D'  # A2-100
+    col_main_l  = '#A5D6A7'  # P1-200
+    col_main_lg = '#1B5E20'  # P1-900
+    col_main_ll = '#E8F5E9'  # P1-50
+    col_main_d  = c.black  # ?00
+    knowl_hyper_text = '#2E7D32'  # P1-800
+    knowl_shadow = '#1B5E20'  # P1-900
 
 
 class JohnBlue(YellowKnowls):
     code = 17
-    col_main_ld = '#64B5F6' # P1-300
+    col_main_ld = '#64B5F6'  # P1-300
     col_main_dl = c.black
     col_a_knowl = '#27C'
-    col_main    = '#1565C0' # P1-800
+    col_main    = '#1565C0'  # P1-800
     col_link    = '#28E'
-    col_visited = '#0091EA' # A1-700
-    col_body_text = '#1565C0' # P1-800
+    col_visited = '#0091EA'  # A1-700
+    col_body_text = '#1565C0'  # P1-800
     col_sidebar_text = c.black
-    col_sidebar_links = '#1565C0' # P1-800
-    col_sidebar_header_links = '#0D47A1' # P1-900
-    #col_search_border = '#0D47A1' # P1-900
-    col_main_2  = '#FFF59D' # A2-100
-    col_main_l  = '#90CAF9' # P1-200
-    col_main_lg = '#0D47A1' # P1-900
-    col_main_ll = '#E3F2FD' # P1-50
-    col_main_d  = c.black # ?00
-    knowl_hyper_text = '#1565C0' # P1-800
-    knowl_shadow = '#0D47A1' # P1-900
+    col_sidebar_links = '#1565C0'  # P1-800
+    col_sidebar_header_links = '#0D47A1'  # P1-900
+    # col_search_border = '#0D47A1' # P1-900
+    col_main_2  = '#FFF59D'  # A2-100
+    col_main_l  = '#90CAF9'  # P1-200
+    col_main_lg = '#0D47A1'  # P1-900
+    col_main_ll = '#E3F2FD'  # P1-50
+    col_main_d  = c.black  # ?00
+    knowl_hyper_text = '#1565C0'  # P1-800
+    knowl_shadow = '#0D47A1'  # P1-900
     table_ntdata_background = c.white
 
 
@@ -395,23 +395,23 @@ class SteelBlue(GreyKnowls):
     col_main_ld = '#90CAF9'
     col_main_dl = c.black
     col_a_knowl = '#1C61A6'
-    col_main    = '#1565C0' # P1-800
+    col_main    = '#1565C0'  # P1-800
     col_link    = '#1C61A6'
     col_visited = '#1C61A6'
-    col_body_text = '#1565C0' # P1-800
+    col_body_text = '#1565C0'  # P1-800
     col_sidebar_text = c.black
-    col_sidebar_links = '#1565C0' # P1-800
-    col_sidebar_header_links = '#0D47A1' # P1-900
-    #col_search_border = '#0D47A1' # P1-900
+    col_sidebar_links = '#1565C0'  # P1-800
+    col_sidebar_header_links = '#0D47A1'  # P1-900
+    # col_search_border = '#0D47A1' # P1-900
     col_main_2  = '#EEEEEE'
-    col_main_l  = '#90CAF9' # P1-200
-    col_main_lg = '#0D47A1' # P1-900
-    col_main_ll = '#E3F2FD' # P1-50
-    col_main_d  = c.black # ?00
-    knowl_hyper_text = '#1565C0' # P1-800
-    knowl_shadow = '#0D47A1' # P1-900
-    sidebar_background_hover = c.white # '#CCE6FC' # accessibility change
-    a_background_hover = '#E3F2FD' # accessibility change
+    col_main_l  = '#90CAF9'  # P1-200
+    col_main_lg = '#0D47A1'  # P1-900
+    col_main_ll = '#E3F2FD'  # P1-50
+    col_main_d  = c.black  # ?00
+    knowl_hyper_text = '#1565C0'  # P1-800
+    knowl_shadow = '#0D47A1'  # P1-900
+    sidebar_background_hover = c.white  # '#CCE6FC' # accessibility change
+    a_background_hover = '#E3F2FD'  # accessibility change
     # knowl_hover = '#FFF8C1' # yellow, lighter than knowl border
     knowl_hover = '#EDEDED'
     knowl_border_links = c.black
@@ -428,20 +428,20 @@ class SteelBlue(GreyKnowls):
 
 class IndigoHair(YellowKnowls):
     code = 18
-    col_main_ld = '#7986CB' # P1-300
+    col_main_ld = '#7986CB'  # P1-300
     col_main_dl = c.black
-    col_main    = '#283593' # P1-800
-    col_visited = '#304FFE' # A1-700
-    col_body_text = '#283593' # P1-800
+    col_main    = '#283593'  # P1-800
+    col_visited = '#304FFE'  # A1-700
+    col_body_text = '#283593'  # P1-800
     col_sidebar_text = c.black
-    col_sidebar_links = '#283593' # P1-800
-    col_sidebar_header_links = '#1A237E' # P1-900
-    #col_search_border = '#1A237E' # P1-900
-    col_main_2  = '#FFF59D' # A2-100
-    col_main_l  = '#9FA8DA' # P1-200
-    col_main_lg = '#1A237E' # P1-900
-    col_main_ll = '#E8EAF6' # P1-50
-    col_main_d  = c.black # ?00
+    col_sidebar_links = '#283593'  # P1-800
+    col_sidebar_header_links = '#1A237E'  # P1-900
+    # col_search_border = '#1A237E' # P1-900
+    col_main_2  = '#FFF59D'  # A2-100
+    col_main_l  = '#9FA8DA'  # P1-200
+    col_main_lg = '#1A237E'  # P1-900
+    col_main_ll = '#E8EAF6'  # P1-50
+    col_main_d  = c.black  # ?00
     knowl_hyper_text = '#283593'
     knowl_shadow = '#1A237E'
 
@@ -456,17 +456,17 @@ class SadGreen(YellowKnowls):
     col_main_lg = '#727076'
     col_main_ll = '#E0ECE3'
     col_main_d  = c.black
-    col_main_g  = '#474' # Not very visible
-    knowl_hyper_text = '#00695C' # P1-800
-    knowl_shadow = '#004D40' # P1-900
-    knowl_hover = '#FF8A80' #  A-100
-    knowl_hyper_text = '#00695C' # P1-800
-    knowl_shadow = '#004D40' # P1-900
-    knowl_hover_text = '#FF1744' # ?A-400
+    col_main_g  = '#474'  # Not very visible
+    knowl_hyper_text = '#00695C'  # P1-800
+    knowl_shadow = '#004D40'  # P1-900
+    knowl_hover = '#FF8A80'  # A-100
+    knowl_hyper_text = '#00695C'  # P1-800
+    knowl_shadow = '#004D40'  # P1-900
+    knowl_hover_text = '#FF1744'  # ?A-400
     knowl_underline = '#FF1744'
 
     def __init__(self):
-        pass # Don't set underline to hyper_text
+        pass  # Don't set underline to hyper_text
 
 
 class Green1(ColorScheme):
@@ -492,7 +492,7 @@ class RuddyBrowns(ColorScheme):
     col_main_lg = '#83614c'
     col_main_ll = '#c39070'
     col_main_d  = '#33261d'
-    col_main_g  = '#474' # Not very visible
+    col_main_g  = '#474'  # Not very visible
     grey        = '#771307'
 
 
@@ -519,7 +519,7 @@ class Tans(ColorScheme):
     col_main_lg = '#8ca9cc'
     col_main_ll = '#ffd893'
     col_main_d  = '#5c4a7f'
-    col_main_g  = '#474' # Not very visible
+    col_main_g  = '#474'  # Not very visible
     grey        = '#5c4a7f'
 
 
@@ -546,7 +546,7 @@ class Blues(ColorScheme):
     col_main_lg = '#555555'
     col_main_ll = '#b9c8ff'
     col_main_d  = '#5c4a7f'
-    col_main_g  = '#474' # Not very visible
+    col_main_g  = '#474'  # Not very visible
     grey        = '#5c4a7f'
 
 
@@ -573,7 +573,7 @@ class TealAndOrange(ColorScheme):
     col_main_lg = '#555555'
     col_main_ll = '#cec7bc'
     col_main_d  = '#5c4a7f'
-    col_main_g  = '#474' # Not very visible
+    col_main_g  = '#474'  # Not very visible
     grey        = '#5c4a7f'
     body_background = '#f5f2eb'
     body_text = '#512809'

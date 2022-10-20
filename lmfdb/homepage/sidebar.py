@@ -47,6 +47,7 @@ class SideBar():
     """
     Class for holding the sidebar content.
     """
+
     def __init__(self):
 
         _curdir = os.path.dirname(os.path.abspath(__file__))
