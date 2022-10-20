@@ -9,21 +9,24 @@ logger = make_logger("modlmfs")
 
 the_modlmf_stats = None
 
+
 def get_stats():
     global the_modlmf_stats
     if the_modlmf_stats is None:
-       the_modlmf_stats = modlmf_stats()
+        the_modlmf_stats = modlmf_stats()
     return the_modlmf_stats
 
 
 def modlmf_summary():
     counts = get_stats().counts()
-    return r"<p>The database currently contains %s <a title='mod &#x2113; modular forms [modlmf.definition]' knowl='modlmf.definition' kwargs=''>mod &#x2113; modular forms</a>. <br>The largest <a title='level [modlmf.level]' knowl='modlmf.level' kwargs=''>level</a> is %s, the largest <a title='weight [modlmf.weight]' knowl='modlmf.weight' kwargs=''>weight</a> is %s.</p>" % (str(counts['nmodlmf_c']), str(counts['max_level_c']), str(counts['max_weight_c']))
+    return r"<p>The database currently contains %s <a title='mod &#x2113; modular forms [modlmf.definition]' knowl='modlmf.definition' kwargs=''>mod &#x2113; modular forms</a>. <br>The largest <a title='level [modlmf.level]' knowl='modlmf.level' kwargs=''>level</a> is %s, the largest <a title='weight [modlmf.weight]' knowl='modlmf.weight' kwargs=''>weight</a> is %s.</p>" % (
+        str(counts['nmodlmf_c']), str(counts['max_level_c']), str(counts['max_weight_c']))
 
 
 @app.context_processor
 def ctx_modlmf_summary():
     return {'modlmf_summary': modlmf_summary}
+
 
 class modlmf_stats(object):
     """
@@ -34,8 +37,8 @@ class modlmf_stats(object):
         logger.debug("Computing modlmf counts...")
         counts = {}
         nmodlmf = db.modlmf_forms.count()
-        counts['nmodlmf']  = nmodlmf
-        counts['nmodlmf_c']  = comma(nmodlmf)
+        counts['nmodlmf'] = nmodlmf
+        counts['nmodlmf_c'] = comma(nmodlmf)
         max_level = db.modlmf_forms.max('level')
         counts['max_level'] = max_level
         counts['max_level_c'] = comma(max_level)

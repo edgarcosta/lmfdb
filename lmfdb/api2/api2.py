@@ -39,11 +39,16 @@ def live_page_pg(db):
     if (db.startswith("<") and db.endswith(">")):
         title = "API Description"
         return render_template("example.html", **locals())
-    search = utils.create_search_dict(table = db, request = request)
+    search = utils.create_search_dict(table=db, request=request)
     for el in request.args:
         utils.interpret(search['query'], el, request.args[el], None)
     search_tuple = utils.simple_search(search)
-    return Response(utils.build_api_search(db, search_tuple, request = request), mimetype='application/json')
+    return Response(
+        utils.build_api_search(
+            db,
+            search_tuple,
+            request=request),
+        mimetype='application/json')
 
 
 @api2_page.route("/pretty/<path:path_var>")
@@ -58,30 +63,40 @@ def handle_singletons(path_var):
     label = val[2]
     baseurl = val[0]
     while baseurl not in singletons:
-       val = baseurl.rpartition('/')
-       if val[0] == '': break
-       baseurl = val[0]
-       label = val[2] + '/' + label
+        val = baseurl.rpartition('/')
+        if val[0] == '':
+            break
+        baseurl = val[0]
+        label = val[2] + '/' + label
 
     if baseurl in singletons:
-        search = utils.create_search_dict(table = singletons[baseurl]['table'],
-            request = request)
+        search = utils.create_search_dict(table=singletons[baseurl]['table'],
+                                          request=request)
         if singletons[baseurl]['full_search']:
-            return Response(singletons[baseurl]['full_search'], mimetype='application/json')
+            return Response(
+                singletons[baseurl]['full_search'],
+                mimetype='application/json')
         elif singletons[baseurl]['simple_search']:
             singletons[baseurl]['simple_search'](search, baseurl, label)
         else:
-            search['query'] = {singletons[baseurl]['key']:label}
+            search['query'] = {singletons[baseurl]['key']: label}
         search_tuple = utils.simple_search(search)
-        return Response(utils.build_api_search(path_var, search_tuple, request = request), mimetype='application/json')
-    return Response(utils.build_api_error(path_var), mimetype='application/json')
+        return Response(
+            utils.build_api_search(
+                path_var,
+                search_tuple,
+                request=request),
+            mimetype='application/json')
+    return Response(
+        utils.build_api_error(path_var),
+        mimetype='application/json')
 
 
 @api2_page.route("/description/searchers")
 def list_searchers():
-    names=[]
-    h_names=[]
-    descs=[]
+    names = []
+    h_names = []
+    descs = []
     for el in searchers:
         names.append(el)
         h_names.append(searchers[el].get_name())
@@ -106,7 +121,9 @@ def list_descriptions(searcher):
     if (val):
         lst = val.get_info()
     else:
-        return Response(utils.build_api_error(searcher), mimetype='application/json')
+        return Response(
+            utils.build_api_error(searcher),
+            mimetype='application/json')
     if lst:
         return Response(
             utils.build_api_descriptions(searcher, lst, request=request),
@@ -128,7 +145,9 @@ def list_responses(searcher):
     if (val):
         lst = val.get_inventory()
     else:
-        return Response(utils.build_api_error(searcher), mimetype='application/json')
+        return Response(
+            utils.build_api_error(searcher),
+            mimetype='application/json')
     if lst:
         return Response(
             utils.build_api_inventory(searcher, lst, request=request),
@@ -148,11 +167,13 @@ def get_data(searcher):
         val = None
 
     if not val:
-        return Response(utils.build_api_error(searcher), mimetype='application/json')
+        return Response(
+            utils.build_api_error(searcher),
+            mimetype='application/json')
 
     search = val.auto_search(request)
 
     return Response(
-        utils.build_api_search('/data/'+searcher, search, request=request),
+        utils.build_api_search('/data/' + searcher, search, request=request),
         mimetype='application/json'
     )

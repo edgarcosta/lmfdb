@@ -29,7 +29,8 @@ def quote_string(value):
 
 def pretty_document(rec, sep=", ", id=True):
     # sort keys and remove _id for html display
-    attrs = sorted([(key, quote_string(rec[key])) for key in rec.keys() if (id or key != 'id')])
+    attrs = sorted([(key, quote_string(rec[key]))
+                    for key in rec.keys() if (id or key != 'id')])
     return "{" + sep.join("'%s': %s" % attr for attr in attrs) + "}"
 
 
@@ -37,14 +38,17 @@ def hidden_collection(c):
     """
     hide some collections from the main page (still available via direct requests)
     """
-    return c.startswith("test") or c.endswith(".rand") or c.endswith(".stats") or c.endswith(".chunks") or c.endswith(".new") or c.endswith(".old")
+    return c.startswith("test") or c.endswith(".rand") or c.endswith(
+        ".stats") or c.endswith(".chunks") or c.endswith(".new") or c.endswith(".old")
 
-#def collection_indexed_keys(collection):
+# def collection_indexed_keys(collection):
 #    """
 #    input: cursor for the collection
 #    output: a set with all the keys indexed
 #    """
-#    return set([t[0] for t in sum([val['key'] for name, val in collection.index_information().items() if name!='_id_'],[])])
+# return set([t[0] for t in sum([val['key'] for name, val in
+# collection.index_information().items() if name!='_id_'],[])])
+
 
 def get_database_info(show_hidden=False):
     info = defaultdict(list)
@@ -54,8 +58,9 @@ def get_database_info(show_hidden=False):
             raise RuntimeError
         database = table[:i]
         coll = getattr(db, table)
-        info[database].append((table, table[i+1:], coll.count()))
+        info[database].append((table, table[i + 1:], coll.count()))
     return info
+
 
 @api_page.route("/")
 def index(show_hidden=False):
@@ -63,21 +68,24 @@ def index(show_hidden=False):
     title = "Database"
     return render_template("api.html", **locals())
 
+
 @api_page.route("/all")
 def full_index():
     return index(show_hidden=True)
 
+
 @api_page.route("/stats")
 def stats():
     def mb(x):
-        return int(round(x/2**20.))
-    info={}
-    info['minsizes'] = ['0','1','10','100','1000','10000','100000']
-    info['minsize'] = request.args.get('minsize','1').strip()
+        return int(round(x / 2**20.))
+    info = {}
+    info['minsizes'] = ['0', '1', '10', '100', '1000', '10000', '100000']
+    info['minsize'] = request.args.get('minsize', '1').strip()
     if not info['minsize'] in info['minsizes']:
         info['minsizes'] = '1'
-    info['groupby'] = 'db' if request.args.get('groupby','').strip().lower() == 'db' else ''
-    info['sortby'] = request.args.get('sortby','size').strip().lower()
+    info['groupby'] = 'db' if request.args.get(
+        'groupby', '').strip().lower() == 'db' else ''
+    info['sortby'] = request.args.get('sortby', 'size').strip().lower()
     if not info['sortby'] in ['size', 'objects', 'name']:
         info['sortby'] = 'size'
     nobjects = size = dataSize = indexSize = 0
@@ -85,12 +93,13 @@ def stats():
     dbObjects = defaultdict(int)
     stats = {}
     table_sizes = db.table_sizes()
+
     def split_db(tablename):
         i = tablename.find('_')
         if i == -1:
             return '', tablename
         else:
-            return tablename[:i], tablename[i+1:]
+            return tablename[:i], tablename[i + 1:]
     for tablename, sizes in table_sizes.items():
         dname, name = split_db(tablename)
         dbSize[dname] += sizes['total_bytes']
@@ -106,19 +115,40 @@ def stats():
             if tablename not in db.tablenames:
                 link = tablename
             else:
-                link = '<a href = "' + url_for(".api_query", table=tablename) + '">' + tablename + '</a>'
+                link = '<a href = "' + \
+                    url_for(".api_query", table=tablename) + '">' + tablename + '</a>'
             if not sizes['toast_bytes']:
-                sizes['toast_bytes'] = 0 
+                sizes['toast_bytes'] = 0
             if sizes['nrows']:
-                avg_size = int(round(float(sizes['table_bytes'] + sizes['toast_bytes'] + sizes['extra_bytes']) / sizes['nrows']))
+                avg_size = int(
+                    round(
+                        float(
+                            sizes['table_bytes'] +
+                            sizes['toast_bytes'] +
+                            sizes['extra_bytes']) /
+                        sizes['nrows']))
             else:
                 avg_size = 0
             stats[tablename] = {
-                'db':dname, 'table':link, 'dbSize':dbSize[dname], 'dbObjects':dbObjects[dname],
-                'size': csize, 'avgObjSize':avg_size,
-                'indexSize':mb(sizes['index_bytes']), 'dataSize':mb(sizes['table_bytes'] + sizes['toast_bytes'] + sizes['extra_bytes']),
-                'countsSize':mb(sizes['counts_bytes']), 'statsSize':mb(sizes['stats_bytes']),
-                'nrows': sizes['nrows'], 'nstats': sizes['nstats'], 'ncounts': sizes['ncounts']}
+                'db': dname,
+                'table': link,
+                'dbSize': dbSize[dname],
+                'dbObjects': dbObjects[dname],
+                'size': csize,
+                'avgObjSize': avg_size,
+                'indexSize': mb(
+                    sizes['index_bytes']),
+                'dataSize': mb(
+                    sizes['table_bytes'] +
+                    sizes['toast_bytes'] +
+                    sizes['extra_bytes']),
+                'countsSize': mb(
+                    sizes['counts_bytes']),
+                'statsSize': mb(
+                    sizes['stats_bytes']),
+                'nrows': sizes['nrows'],
+                'nstats': sizes['nstats'],
+                'ncounts': sizes['ncounts']}
     dataSize = size - indexSize
     info['ntables'] = len(table_sizes)
     info['nobjects'] = nobjects
@@ -128,13 +158,21 @@ def stats():
     if info['sortby'] == 'name':
         sortedkeys = sorted(list(stats))
     elif info['sortby'] == 'objects' and info['groupby'] == 'db':
-        sortedkeys = sorted(list(stats),key=lambda x: (-stats[x]['dbObjects'],stats[x]['db'],-stats[x]['nrows'],stats[x]['table']))
+        sortedkeys = sorted(list(stats), key=lambda x: (
+            -stats[x]['dbObjects'], stats[x]['db'], -stats[x]['nrows'], stats[x]['table']))
     elif info['sortby'] == 'objects':
-        sortedkeys = sorted(list(stats),key=lambda x: (-stats[x]['nrows'],stats[x]['db'],stats[x]['table']))
+        sortedkeys = sorted(list(stats),
+                            key=lambda x: (-stats[x]['nrows'],
+                                           stats[x]['db'],
+                                           stats[x]['table']))
     elif info['sortby'] == 'size' and info['groupby'] == 'db':
-        sortedkeys = sorted(list(stats),key=lambda x: (-stats[x]['dbSize'],stats[x]['db'],-stats[x]['size'],stats[x]['table']))
+        sortedkeys = sorted(list(stats), key=lambda x: (
+            -stats[x]['dbSize'], stats[x]['db'], -stats[x]['size'], stats[x]['table']))
     else:
-        sortedkeys = sorted(list(stats),key=lambda x: (-stats[x]['size'],stats[x]['db'],stats[x]['table']))
+        sortedkeys = sorted(list(stats),
+                            key=lambda x: (-stats[x]['size'],
+                                           stats[x]['db'],
+                                           stats[x]['table']))
     info['stats'] = [stats[key] for key in sortedkeys]
     return render_template('api-stats.html', info=info)
 
@@ -152,7 +190,7 @@ def api_query_id(table, id):
         </tr>
         """
         for c in sorted(col_type.keys()):
-            out += "<tr><td>%s</td><td> %s </td>\n" % (c, col_type[c]) 
+            out += "<tr><td>%s</td><td> %s </td>\n" % (c, col_type[c])
         return out
     else:
         return api_query(table, id=id)
@@ -160,8 +198,8 @@ def api_query_id(table, id):
 
 @api_page.route("/<table>")
 @api_page.route("/<table>/")
-def api_query(table, id = None):
-    #if censored_table(table):
+def api_query(table, id=None):
+    # if censored_table(table):
     #    return abort(404)
 
     # parsing the meta parameters _format and _offset
@@ -183,7 +221,9 @@ def api_query(table, id = None):
         if format != "html":
             return abort(404)
         else:
-            flash_error("offset %s too large, please refine your query.", offset)
+            flash_error(
+                "offset %s too large, please refine your query.",
+                offset)
             return redirect(url_for(".api_query", table=table))
 
     # preparing the actual database query q
@@ -207,7 +247,7 @@ def api_query(table, id = None):
             id = int(id)
         else:
             return abort(404, "id '%s' must be an integer" % id)
-        data = coll.lucky({'id':id}, projection=fields)
+        data = coll.lucky({'id': id}, projection=fields)
         data = [data] if data else []
     else:
         single_object = False
@@ -223,7 +263,8 @@ def api_query(table, id = None):
                     qval = int(qval[1:])
                 elif qval.startswith("f"):
                     qval = float(qval[1:])
-                elif qval.startswith("ls"):      # indicator, that it might be a list of strings
+                # indicator, that it might be a list of strings
+                elif qval.startswith("ls"):
                     qval = qval[2].split(DELIM)
                 elif qval.startswith("li"):
                     qval = [int(_) for _ in qval[2:].split(DELIM)]
@@ -232,13 +273,13 @@ def api_query(table, id = None):
                 elif qval.startswith("py"):     # literal evaluation
                     qval = literal_eval(qval[2:])
                 elif qval.startswith("cs"):     # containing string in list
-                    qval = { "$contains" : [qval[2:]] }
+                    qval = {"$contains": [qval[2:]]}
                 elif qval.startswith("ci"):
-                    qval = { "$contains" : [int(qval[2:])] }
+                    qval = {"$contains": [int(qval[2:])]}
                 elif qval.startswith("cf"):
-                    qval = { "contains" : [float(qval[2:])] }
+                    qval = {"contains": [float(qval[2:])]}
                 elif qval.startswith("cpy"):
-                    qval = { "$contains" : [literal_eval(qval[3:])] }
+                    qval = {"$contains": [literal_eval(qval[3:])]}
             except Exception:
                 # no suitable conversion for the value, keep it as string
                 pass
@@ -248,7 +289,7 @@ def api_query(table, id = None):
 
         # assure that one of the keys of the query is indexed
         # however, this doesn't assure that the query will be fast...
-        #if q != {} and len(set(q.keys()).intersection(collection_indexed_keys(coll))) == 0:
+        # if q != {} and len(set(q.keys()).intersection(collection_indexed_keys(coll))) == 0:
         #    flash_error("no key in the query %s is indexed.", q)
         #    return redirect(url_for(".api_query", table=table))
 
@@ -264,14 +305,22 @@ def api_query(table, id = None):
             sort = None
 
         # executing the query "q" and replacing the _id in the result list
-        # So as not to preserve backwards compatibility (see test_api_usage() test)
-        if table=='ec_curvedata':
-            for oldkey, newkey in zip(['label', 'iso', 'number'], ['Clabel', 'Ciso', 'Cnumber']):
+        # So as not to preserve backwards compatibility (see test_api_usage()
+        # test)
+        if table == 'ec_curvedata':
+            for oldkey, newkey in zip(['label', 'iso', 'number'], [
+                                      'Clabel', 'Ciso', 'Cnumber']):
                 if oldkey in q:
                     q[newkey] = q[oldkey]
                     q.pop(oldkey)
         try:
-            data = list(coll.search(q, projection=fields, sort=sort, limit=100, offset=offset))
+            data = list(
+                coll.search(
+                    q,
+                    projection=fields,
+                    sort=sort,
+                    limit=100,
+                    offset=offset))
         except QueryCanceledError:
             flash_error("Query %s exceeded time limit.", q)
             return redirect(url_for(".api_query", table=table))
@@ -293,7 +342,7 @@ def api_query(table, id = None):
     if 'bytea' in coll.col_type.values():
         for row in data:
             for key, val in row.items():
-                if type(val) == buffer:
+                if isinstance(val, buffer):
                     row[key] = "[binary data]"
         #data = [ dict([ (key, val if coll.col_type[key] != 'bytea' else "binary data") for key, val in row.items() ]) for row in data]
     data = Json.prep(data)
@@ -321,8 +370,9 @@ def api_query(table, id = None):
     }
 
     if format.lower() == "json":
-        #return flask.jsonify(**data) # can't handle binary data
-        return current_app.response_class(json.dumps(data, indent=2), mimetype='application/json')
+        # return flask.jsonify(**data) # can't handle binary data
+        return current_app.response_class(json.dumps(
+            data, indent=2), mimetype='application/json')
     elif format.lower() == "yaml":
         y = yaml.dump(data,
                       default_flow_style=False,
@@ -348,7 +398,7 @@ def api_query(table, id = None):
                                search_schema=search_schema,
                                extra_schema=extra_schema,
                                single_object=single_object,
-                               query_unquote = query_unquote,
-                               url_args = url_args,
+                               query_unquote=query_unquote,
+                               url_args=url_args,
                                bread=bc,
                                **data)

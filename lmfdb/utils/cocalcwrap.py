@@ -1,5 +1,6 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import os
+
 
 class CocalcWrap(object):
     """Wrap the application in this middleware
@@ -12,7 +13,8 @@ class CocalcWrap(object):
         self.app = app
         from .config import Configuration
         flask_options = Configuration().get_flask()
-        self.app_root = '/' + os.environ['COCALC_PROJECT_ID'] + "/server/" + str(flask_options['port'])
+        self.app_root = '/' + \
+            os.environ['COCALC_PROJECT_ID'] + "/server/" + str(flask_options['port'])
 
     def __call__(self, environ, start_response):
         environ["SCRIPT_NAME"] = self.app_root

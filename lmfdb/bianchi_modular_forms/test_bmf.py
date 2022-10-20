@@ -5,6 +5,7 @@ from sage.all import Integer, PolynomialRing, QQ, NumberField
 
 base_url = '/ModularForm/GL2/ImaginaryQuadratic/'
 
+
 class BMFTest(LmfdbTest):
     # All tests should pass
     #
@@ -21,7 +22,7 @@ class BMFTest(LmfdbTest):
         Check that the link to a random curve works.
         """
         homepage = self.tc.get(base_url).get_data(as_text=True)
-        self.check(homepage, base_url+"random", 'Hecke eigenvalues')
+        self.check(homepage, base_url + "random", 'Hecke eigenvalues')
 
     # Browsing links
     def test_browse(self):
@@ -31,15 +32,21 @@ class BMFTest(LmfdbTest):
         homepage = self.tc.get(base_url).get_data(as_text=True)
         t = "?field_label=2.0.3.1"
         assert t in homepage
-        self.check_args(base_url+t, "/ModularForm/GL2/ImaginaryQuadratic/2.0.3.1/124.1/a/")
+        self.check_args(
+            base_url + t,
+            "/ModularForm/GL2/ImaginaryQuadratic/2.0.3.1/124.1/a/")
         t = "?field_label=2.0.4.1"
         assert t in homepage
-        self.check_args(base_url+t, "/ModularForm/GL2/ImaginaryQuadratic/2.0.4.1/164.1")
+        self.check_args(
+            base_url + t,
+            "/ModularForm/GL2/ImaginaryQuadratic/2.0.4.1/164.1")
         t = "gl2dims/2.0.4.1"
         assert t in homepage
-        self.check_args(base_url+t,'show both the dimension $d$ of the space of cusp forms of weight')
+        self.check_args(
+            base_url + t,
+            'show both the dimension $d$ of the space of cusp forms of weight')
         t = '2.0.4.1/100.2/a/'
-        self.check_args(base_url+t,'Base change')
+        self.check_args(base_url + t, 'Base change')
 
     #
     # Jump to specific newform
@@ -47,17 +54,22 @@ class BMFTest(LmfdbTest):
         r"""
         Check that jumping to a specific newform by label works.
         """
-        self.check_args(base_url+"?jump=2.0.4.1-65.2-a", 'Analytic rank')
-
+        self.check_args(base_url + "?jump=2.0.4.1-65.2-a", 'Analytic rank')
 
     #
     # Various search combinations
+
     def test_search(self):
         r"""
         Check that various search combinations work.
         """
-        self.check_args(base_url+"?field_label=2.0.7.1&level_norm=322&count=10", 'Results (4 matches)')
-        self.check_args(base_url+"?start=0&include_base_change=off&include_cm=only&count=100", '/ModularForm/GL2/ImaginaryQuadratic/2.0.19.1/2025.1/a/')
+        self.check_args(
+            base_url +
+            "?field_label=2.0.7.1&level_norm=322&count=10",
+            'Results (4 matches)')
+        self.check_args(
+            base_url + "?start=0&include_base_change=off&include_cm=only&count=100",
+            '/ModularForm/GL2/ImaginaryQuadratic/2.0.19.1/2025.1/a/')
 
     #
     # tests for newspace pages
@@ -66,8 +78,12 @@ class BMFTest(LmfdbTest):
         r"""
         Check newspace pages
         """
-        self.check_args(base_url+'2.0.3.1/77283.1', 'contains the following\nnewforms')
-        self.check_args(base_url+'2.0.11.1/207.6', 'Dimension of new cuspidal subspace:')
+        self.check_args(
+            base_url + '2.0.3.1/77283.1',
+            'contains the following\nnewforms')
+        self.check_args(
+            base_url + '2.0.11.1/207.6',
+            'Dimension of new cuspidal subspace:')
         # I don't know why the following fails, as the text was copied from the page source:
         #self.check_args(base_url+'2.0.11.1/207.6', '\((2 a + 13) = (\left(a - 1\right))^{2} \cdot (\left(a - 5\right)) \)')
 
@@ -78,46 +94,55 @@ class BMFTest(LmfdbTest):
         Check newform pages
         """
         base_url = '/ModularForm/GL2/ImaginaryQuadratic/'
-        self.check_args(base_url+'2.0.11.1/207.6/b', 'Base change')
-        self.check_args(base_url+'2.0.11.1/207.6/b', '2.0.11.1-207.6-b')
-        self.check_args(base_url+'2.0.3.1/44332.1/a/', 'Elliptic curve 2.0.3.1-44332.1-a')
-        self.check_args(base_url+'2.0.3.1/44332.1/a/', '-238 a + 76')
-        self.check_args(base_url+'2.0.11.1/256.1/a/', 'no, but is a twist of the base change of a form over')
-        self.check_args(base_url+'2.0.11.1/256.1/a/', 'Elliptic curve 2.0.11.1-256.1-a')
+        self.check_args(base_url + '2.0.11.1/207.6/b', 'Base change')
+        self.check_args(base_url + '2.0.11.1/207.6/b', '2.0.11.1-207.6-b')
+        self.check_args(
+            base_url + '2.0.3.1/44332.1/a/',
+            'Elliptic curve 2.0.3.1-44332.1-a')
+        self.check_args(base_url + '2.0.3.1/44332.1/a/', '-238 a + 76')
+        self.check_args(base_url + '2.0.11.1/256.1/a/',
+                        'no, but is a twist of the base change of a form over')
+        self.check_args(
+            base_url + '2.0.11.1/256.1/a/',
+            'Elliptic curve 2.0.11.1-256.1-a')
         # A dimension 2 example
-        self.check_args(base_url+'2.0.4.1/377.1/a2', r'The Hecke eigenfield is \(\Q(z)\) where  $z$ is a root of the defining')
+        self.check_args(
+            base_url + '2.0.4.1/377.1/a2',
+            r'The Hecke eigenfield is \(\Q(z)\) where  $z$ is a root of the defining')
 
     def test_friends(self):
         for url, texts, notitself in [
-                ('/ModularForm/GL2/ImaginaryQuadratic/2.0.7.1/44.3/a/',
-                    ('Bianchi modular form 2.0.7.1-44.4-a',
-                        'Elliptic curve 2.0.7.1-44.3-a',
-                        'Elliptic curve 2.0.7.1-44.4-a'),
-                    'Bianchi modular form 2.0.7.1-44.3-a'),
-                ('/ModularForm/GL2/ImaginaryQuadratic/2.0.7.1/44.4/a/',
-                    ('Bianchi modular form 2.0.7.1-44.3-a',
-                        'Elliptic curve 2.0.7.1-44.3-a',
-                        'Elliptic curve 2.0.7.1-44.4-a'),
-                    'Bianchi modular form 2.0.7.1-44.4-a'),
-                ('/ModularForm/GL2/ImaginaryQuadratic/2.0.8.1/32.1/a/',
-                    ('Hilbert modular form 2.2.8.1-32.1-a',
-                        'Elliptic curve 2.0.8.1-32.1-a',
-                        'Elliptic curve 2.2.8.1-32.1-a'),
-                    'Bianchi modular form 2.0.8.1-32.1-a')
-                    ]:
+            ('/ModularForm/GL2/ImaginaryQuadratic/2.0.7.1/44.3/a/',
+             ('Bianchi modular form 2.0.7.1-44.4-a',
+              'Elliptic curve 2.0.7.1-44.3-a',
+              'Elliptic curve 2.0.7.1-44.4-a'),
+             'Bianchi modular form 2.0.7.1-44.3-a'),
+            ('/ModularForm/GL2/ImaginaryQuadratic/2.0.7.1/44.4/a/',
+             ('Bianchi modular form 2.0.7.1-44.3-a',
+              'Elliptic curve 2.0.7.1-44.3-a',
+              'Elliptic curve 2.0.7.1-44.4-a'),
+             'Bianchi modular form 2.0.7.1-44.4-a'),
+            ('/ModularForm/GL2/ImaginaryQuadratic/2.0.8.1/32.1/a/',
+             ('Hilbert modular form 2.2.8.1-32.1-a',
+              'Elliptic curve 2.0.8.1-32.1-a',
+              'Elliptic curve 2.2.8.1-32.1-a'),
+             'Bianchi modular form 2.0.8.1-32.1-a')
+        ]:
             L = self.tc.get(url)
             for t in texts:
                 assert t in L.get_data(as_text=True)
             assert 'L-function' in L.get_data(as_text=True)
 
             # this test isn't very specific
-            # but the goal is to test that itself doesn't show in the friends list
+            # but the goal is to test that itself doesn't show in the friends
+            # list
             assert notitself not in L.get_data(as_text=True)
 
     def test_download_sage(self):
 
         # A dimension 1 example
-        L1_sage_code = self.tc.get('/ModularForm/GL2/ImaginaryQuadratic/2.0.3.1/18333.3/a/download/sage').get_data(as_text=True)
+        L1_sage_code = self.tc.get(
+            '/ModularForm/GL2/ImaginaryQuadratic/2.0.3.1/18333.3/a/download/sage').get_data(as_text=True)
         L1_level = self.check_sage_compiles_and_extract_var(L1_sage_code, 'NN')
         assert L1_level.norm() == Integer(18333)
         assert 'NN = ZF.ideal((6111, 3*a + 5052))' in L1_sage_code
@@ -134,16 +159,18 @@ class BMFTest(LmfdbTest):
         """
 
         # A dimension 2 example
-        L2_sage_code = self.tc.get('/ModularForm/GL2/ImaginaryQuadratic/2.0.4.1/377.1/a2/download/sage').get_data(as_text=True)
+        L2_sage_code = self.tc.get(
+            '/ModularForm/GL2/ImaginaryQuadratic/2.0.4.1/377.1/a2/download/sage').get_data(as_text=True)
         L2_level = self.check_sage_compiles_and_extract_var(L2_sage_code, 'NN')
 
-        P = PolynomialRing(QQ,'x')
+        P = PolynomialRing(QQ, 'x')
         g = P([1, 0, 1])
-        F = NumberField(g,'i')
+        F = NumberField(g, 'i')
         i = F.gen()
         ZF = F.ring_of_integers()
 
-        L2_level_actual = ZF.ideal((16*i - 11))  # the level displayed on BMF homepage
+        # the level displayed on BMF homepage
+        L2_level_actual = ZF.ideal((16 * i - 11))
         assert L2_level == L2_level_actual
         assert L2_level.norm() == 377
         assert '(2*i+3,),(i+4,),(i-4,),(-2*i+5,),(2*i+5,),(i+6,)' in L2_sage_code
@@ -151,11 +178,13 @@ class BMFTest(LmfdbTest):
 
     def test_download_magma(self):
         # A dimension 1 example
-        L = self.tc.get('/ModularForm/GL2/ImaginaryQuadratic/2.0.7.1/88.5/a/download/magma').get_data(as_text=True)
+        L = self.tc.get(
+            '/ModularForm/GL2/ImaginaryQuadratic/2.0.7.1/88.5/a/download/magma').get_data(as_text=True)
         assert 'NN := ideal<ZF | {44, 2*a + 30}>;' in L
         assert '[263,a+123],' in L
 
-        page = self.tc.get('ModularForm/GL2/ImaginaryQuadratic/159.0.7.1/30.5/a/download/magma').get_data(as_text=True)
+        page = self.tc.get(
+            'ModularForm/GL2/ImaginaryQuadratic/159.0.7.1/30.5/a/download/magma').get_data(as_text=True)
         assert 'Bianchi newform not found' in page
 
         # We run magma when it is installed
@@ -165,7 +194,8 @@ class BMFTest(LmfdbTest):
                 ['2.0.11.1/933.1/a',
                  'ideal<ZF | {a + 30, 933}>;']
         ]:
-            page = self.tc.get('/ModularForm/GL2/ImaginaryQuadratic/{}/download/magma'.format(label)).get_data(as_text=True)
+            page = self.tc.get(
+                '/ModularForm/GL2/ImaginaryQuadratic/{}/download/magma'.format(label)).get_data(as_text=True)
             assert expected in page
             assert 'make_newform' in page
 

@@ -40,14 +40,21 @@ class Configuration(object):
       - ``writeargstofile`` - a boolean, if config file doesn't exist, it determines if command line arguments are written to the config file instead of the default arguments
       - ``readargs`` - a boolean, if determines if command line arguments are read
     """
-    def __init__(self, parser=None, defaults={}, writeargstofile=False, readargs=None):
+
+    def __init__(
+            self,
+            parser=None,
+            defaults={},
+            writeargstofile=False,
+            readargs=None):
         if readargs is None:
             import __main__ as main
             # if a file was ran
             readargs = hasattr(main, '__file__')
 
         if parser is None:
-            parser = argparse.ArgumentParser(description="Default psycodict parser")
+            parser = argparse.ArgumentParser(
+                description="Default psycodict parser")
 
             parser.add_argument(
                 "-c",
@@ -81,7 +88,9 @@ class Configuration(object):
                 help="logfile for slow queries [default: %(default)s]",
                 dest="logging_slowlogfile",
                 metavar="FILE",
-                default=defaults.get("logging_slowlogfile", "slow_queries.log"),
+                default=defaults.get(
+                    "logging_slowlogfile",
+                    "slow_queries.log"),
             )
 
             # PostgresSQL options
@@ -91,7 +100,9 @@ class Configuration(object):
                 dest="postgresql_host",
                 metavar="HOST",
                 help="PostgreSQL server host or socket directory [default: %(default)s]",
-                default=defaults.get("postgresql_host", "localhost"),
+                default=defaults.get(
+                    "postgresql_host",
+                    "localhost"),
             )
             postgresqlgroup.add_argument(
                 "--postgresql-port",
@@ -158,21 +169,17 @@ class Configuration(object):
             write_args = deepcopy(self.default_args)
             if not writeargstofile:
                 print(
-                    "Config file: %s not found, creating it with the default values"
-                    % args.config_file
-                )
+                    "Config file: %s not found, creating it with the default values" %
+                    args.config_file)
             else:
                 print(
-                    "Config file: %s not found, creating it with the passed values"
-                    % args.config_file
-                )
+                    "Config file: %s not found, creating it with the passed values" %
+                    args.config_file)
                 # overwrite default arguments passed via command line args
                 for key, val in args_dict.items():
                     if key in default_arguments_dict:
                         sec, opt = sec_opt(key)
                         write_args[sec][opt] = str(val)
-
-
 
             _cfgp = ConfigParser()
             # create sections
@@ -213,13 +220,17 @@ class Configuration(object):
         # We can derive the types from the parser
         type_dict = {}
         for action in parser._actions:
-            if isinstance(action, (argparse._StoreTrueAction, argparse._StoreFalseAction)):
+            if isinstance(
+                action,
+                (argparse._StoreTrueAction,
+                 argparse._StoreFalseAction)):
                 type_dict[action.dest] = strbool
             else:
                 type_dict[action.dest] = action.type
+
         def get(section, key):
             val = _cfgp.get(section, key)
-            full = section+"_"+key
+            full = section + "_" + key
             type_func = type_dict.get(full)
             if type_func is not None:
                 val = type_func(val)
@@ -230,7 +241,7 @@ class Configuration(object):
             for opt in options:
                 self.options[sec][opt] = get(sec, opt)
 
-        self.extra_options = {} # not stored in the config file
+        self.extra_options = {}  # not stored in the config file
         for key, val in args_dict.items():
             if key not in default_arguments_dict:
                 self.extra_options[key] = val
@@ -239,4 +250,3 @@ class Configuration(object):
         res = dict(self.default_args["postgresql"])
         res["port"] = int(res["port"])
         return res
-

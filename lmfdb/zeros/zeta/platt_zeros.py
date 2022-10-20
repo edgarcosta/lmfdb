@@ -15,9 +15,10 @@ from math import log
 import mpmath
 mpmath.mp.prec = 300
 
-zeta_folder =  os.path.expanduser('/home/lmfdb/data/zeros/zeta/')
+zeta_folder = os.path.expanduser('/home/lmfdb/data/zeros/zeta/')
 data_location = os.path.join(zeta_folder, 'data/')
-db_location = os.path.join(zeta_folder,'index.db')
+db_location = os.path.join(zeta_folder, 'index.db')
+
 
 def list_zeros(filename,
                offset,
@@ -54,7 +55,7 @@ def list_zeros(filename,
     c = db.cursor()
 
     eps = mpmath.mpf(2) ** (-101)     # The (absolute!) precision to which
-                                    # the zeros are stored.
+    # the zeros are stored.
 
     infile = open(os.path.join(data_location, filename), 'rb')
 
@@ -62,9 +63,10 @@ def list_zeros(filename,
     # It is in a compressed binary format that we aren't going to
     # describe completely here. See [TODO].
 
-    number_of_blocks = struct.unpack('Q', infile.read(8))[0]  # The first 8 bytes of the
-                                                             # the file are a 64-bit
-                                                             # unsigned integer.
+    number_of_blocks = struct.unpack('Q', infile.read(8))[
+        0]  # The first 8 bytes of the
+    # the file are a 64-bit
+    # unsigned integer.
 
     # We move to the beginning of the block that we are interested in...
     infile.seek(offset, 0)
@@ -76,24 +78,25 @@ def list_zeros(filename,
     # Nt0 = N(t0), the number of zeros with imaginary part < t0, and similarly
     # for t1. So the number of zeros in this block is Nt1 - Nt0.
 
-    mpmath.mp.prec = log(t1, 2) + 10 + 101  # We make sure that the working precision
-                                            # is large enough. Note that we are adding
-                                            # a little too much here, so when these
-                                            # numbers are printed, they will have too
-                                            # many digits.
+    # We make sure that the working precision
+    mpmath.mp.prec = log(t1, 2) + 10 + 101
+    # is large enough. Note that we are adding
+    # a little too much here, so when these
+    # numbers are printed, they will have too
+    # many digits.
 
     t0 = mpmath.mpf(t0)
 
     Z = 0   # Z is going to be a python integer that holds the
-            # difference gamma - t0, where gamma is a zero of
-            # the zeta function. Z will be a 104+ bit positive integer,
-            # and the difference is interpreted as Z * eps == Z * 2^(-101).
+    # difference gamma - t0, where gamma is a zero of
+    # the zeta function. Z will be a 104+ bit positive integer,
+    # and the difference is interpreted as Z * eps == Z * 2^(-101).
 
     count = 0   # the number of zeros we have found so far
     N = Nt0     # the index of the next zero
 
     # FIXME THIS VARIABLE IS NEVER USED
-    #L = []      # the zeros we have found so far
+    # L = []      # the zeros we have found so far
 
     # now we start finding zeros
     while count < number_of_zeros:
@@ -167,7 +170,12 @@ def zeros_starting_at_t(t, number_of_zeros=1000):
     c = sqlite3.connect(db_location).cursor()
     c.execute(query, (float(t),))
     t0, N0, filename, offset, block_number = c.fetchone()
-    return list_zeros(filename, offset, block_number, number_of_zeros=number_of_zeros, t_start=t)
+    return list_zeros(
+        filename,
+        offset,
+        block_number,
+        number_of_zeros=number_of_zeros,
+        t_start=t)
 
 
 def zeros_starting_at_N(N, number_of_zeros=1000):
@@ -179,7 +187,13 @@ def zeros_starting_at_N(N, number_of_zeros=1000):
     c = sqlite3.connect(db_location).cursor()
     c.execute(query, (N,))
     t0, N0, filename, offset, block_number = c.fetchone()
-    return list_zeros(filename, offset, block_number, number_of_zeros=number_of_zeros, N_start=N)
+    return list_zeros(
+        filename,
+        offset,
+        block_number,
+        number_of_zeros=number_of_zeros,
+        N_start=N)
+
 
 if __name__ == "__main__":
     t = float(sys.argv[1])

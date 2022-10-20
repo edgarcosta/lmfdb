@@ -1,6 +1,7 @@
 
 from .type_generation import String, Array, Int
 
+
 def PolynomialAsString(convention):
     class ParametrizedPolynomialAsString(String):
         def sage(self):
@@ -72,4 +73,3 @@ def AlgebraicNumberPolynomialString(pol_as_string_convention):
     class ParametrizedAlgebraicNumberPolynomialString(String):
         pass
     return ParametrizedAlgebraicNumberPolynomialString
-

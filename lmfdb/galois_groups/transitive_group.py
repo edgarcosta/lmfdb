@@ -7,6 +7,7 @@ from sage.all import ZZ, gap, cached_function
 
 from lmfdb.utils import list_to_latex_matrix, display_multiset
 
+
 def knowl_cache(galois_labels):
     """
     Returns a dictionary for use in small_group_display_knowl and
@@ -25,7 +26,8 @@ def knowl_cache(galois_labels):
     cache = {}
     reverse = defaultdict(list)
     gap_labels = []
-    for rec in db.gps_transitive.search({"label": {"$in": galois_labels}}, ["label", "order", "gapid", "pretty"]):
+    for rec in db.gps_transitive.search({"label": {"$in": galois_labels}}, [
+                                        "label", "order", "gapid", "pretty"]):
         label = rec["label"]
         cache[label] = rec
         gapid = "%d.%d" % (rec["order"], rec["gapid"])
@@ -34,10 +36,12 @@ def knowl_cache(galois_labels):
     smallgroup_cache(gap_labels, cache, reverse)
     return cache
 
+
 def smallgroup_cache(gap_labels, cache=None, reverse=None):
     if cache is None:
         cache = {}
-    for rec in db.gps_small.search({"label": {"$in": gap_labels}}, ["label", "pretty"]):
+    for rec in db.gps_small.search(
+            {"label": {"$in": gap_labels}}, ["label", "pretty"]):
         label = rec["label"]
         cache[label] = rec
         if reverse is not None:
@@ -48,11 +52,12 @@ def smallgroup_cache(gap_labels, cache=None, reverse=None):
                 cache[nTj]["pretty"] = ("$%s$" % pretty) if pretty else ""
     return cache
 
-@cached_function(key=lambda n,k,name,cache: (n,k,name))
+
+@cached_function(key=lambda n, k, name, cache: (n, k, name))
 def small_group_display_knowl(n, k, name=None, cache=None):
     label = '%s.%s' % (n, k)
     if not name:
-        myname = 'GAP id $[%d, %d]$'%(n,k)
+        myname = 'GAP id $[%d, %d]$' % (n, k)
     else:
         myname = name
     if cache:
@@ -62,15 +67,18 @@ def small_group_display_knowl(n, k, name=None, cache=None):
     if group is None:
         return myname
     if not name:
-        myname = '$%s$'%group['pretty']
-    return '<a title = "' + myname + ' [group.small.data]" knowl="group.small.data" kwargs="gapid=' + str(n) + '.' + str(k) + '">' + myname + '</a>'
+        myname = '$%s$' % group['pretty']
+    return '<a title = "' + myname + \
+        ' [group.small.data]" knowl="group.small.data" kwargs="gapid=' + str(n) + '.' + str(k) + '">' + myname + '</a>'
+
 
 @cached_function
 def small_group_label_display_knowl(label, name=None):
     if not name:
         group = db.gps_small.lookup(label)
-        name = '$%s$'%group['pretty']
-    return '<a title = "' + name + ' [group.small.data]" knowl="group.small.data" kwargs="gapid=' + label + '">' + name + '</a>'
+        name = '$%s$' % group['pretty']
+    return '<a title = "' + name + \
+        ' [group.small.data]" knowl="group.small.data" kwargs="gapid=' + label + '">' + name + '</a>'
 
 
 @cached_function
@@ -81,26 +89,33 @@ def small_group_data(gapid):
     group = db.gps_small.lookup(str(gapid))
     inf = "Group $%s$" % str(group['pretty'])
     inf += " &nbsp; &nbsp; &mdash; &nbsp; &nbsp;  "
-    inf += ('' if group['cyclic'] else 'not')+' cyclic, '
-    inf += ('' if group['abelian'] else 'non-')+'abelian, '
-    inf += ('' if group['solvable'] else 'not')+' solvable'
-    inf += '<p>Order: '+str(n)
-    inf += '<br>GAP small group number: '+str(k)
-    inf += '<br>Exponent: '+str(group['exponent'])
-    inf += '<br>Perfect: '+str(group['perfect'])
-    inf += '<br>Simple: '+str(group['simple'])
-    inf += '<br>Normal subgroups: '+display_multiset(group['normal_subgroups'],small_group_label_display_knowl)
-    inf += '<br>Maximal subgroups: '+display_multiset(group['maximal_subgroups'], small_group_label_display_knowl)
-    inf += '<br>Center: '+small_group_label_display_knowl(str(group['center']))
-    inf += '<br>Derived subgroup: '+small_group_label_display_knowl(str(group['derived_group']))
-    inf += '<br>Abelianization: '+small_group_label_display_knowl(str(group['abelian_quotient']))
+    inf += ('' if group['cyclic'] else 'not') + ' cyclic, '
+    inf += ('' if group['abelian'] else 'non-') + 'abelian, '
+    inf += ('' if group['solvable'] else 'not') + ' solvable'
+    inf += '<p>Order: ' + str(n)
+    inf += '<br>GAP small group number: ' + str(k)
+    inf += '<br>Exponent: ' + str(group['exponent'])
+    inf += '<br>Perfect: ' + str(group['perfect'])
+    inf += '<br>Simple: ' + str(group['simple'])
+    inf += '<br>Normal subgroups: ' + \
+        display_multiset(group['normal_subgroups'], small_group_label_display_knowl)
+    inf += '<br>Maximal subgroups: ' + \
+        display_multiset(group['maximal_subgroups'], small_group_label_display_knowl)
+    inf += '<br>Center: ' + \
+        small_group_label_display_knowl(str(group['center']))
+    inf += '<br>Derived subgroup: ' + \
+        small_group_label_display_knowl(str(group['derived_group']))
+    inf += '<br>Abelianization: ' + \
+        small_group_label_display_knowl(str(group['abelian_quotient']))
     inf += '<br>Conjugacy class information: <table style="text-align: center;"><tr><th>Element Order<th>Size<th>Multiplicity'
     for row in group['clases']:
-        inf += '<tr><td>%d<td>%d<td>%d'%(row[0],row[1],row[2])
+        inf += '<tr><td>%d<td>%d<td>%d' % (row[0], row[1], row[2])
     inf += '</table></p>'
     return inf
 
 # Input is a list [[[n1, t1], mult1], [[n2,t2],mult2], ...]
+
+
 def list_with_mult(lis, names=True):
     ans = ''
     for k in lis:
@@ -109,23 +124,27 @@ def list_with_mult(lis, names=True):
         if names:
             ans += group_display_knowl(k[0][0], k[0][1])
         else:
-            ans += group_display_knowl(k[0][0], k[0][1], base_label(k[0][0],k[0][1]))
-        if k[1]>1:
-            ans += "<span style='font-size: small'> x %d</span>"% k[1]
+            ans += group_display_knowl(k[0][0], k[0]
+                                       [1], base_label(k[0][0], k[0][1]))
+        if k[1] > 1:
+            ans += "<span style='font-size: small'> x %d</span>" % k[1]
     return ans
 
 # Given [[1,2,4],[3,5]] give the string '(1,2,4)(3,5)'
+
+
 def cyclestrings(perm):
-    a = ['('+','.join([str(u) for u in v])+')' for v in perm]
+    a = ['(' + ','.join([str(u) for u in v]) + ')' for v in perm]
     return ''.join(a)
 
-############  Galois group object
+# Galois group object
 
 
 class WebGaloisGroup:
     """
       Class for retrieving transitive group information from the database
     """
+
     def __init__(self, label, data=None):
         self.label = label
         if data is None:
@@ -157,7 +176,7 @@ class WebGaloisGroup:
 
     def arith_equivalent(self):
         if 'arith_equiv' in self._data:
-          return self._data['arith_equiv']
+            return self._data['arith_equiv']
         return 0
 
     def gapid(self):
@@ -172,7 +191,7 @@ class WebGaloisGroup:
     def display_short(self, emptyifnotpretty=False):
         if self._data.get('pretty') is not None:
             return self._data['pretty']
-        gapid = "%d.%d"%(self.order(),self.gapid())
+        gapid = "%d.%d" % (self.order(), self.gapid())
         gapgroup = db.gps_small.lookup(gapid)
         if gapgroup and 'pretty' in gapgroup:
             return "$%s$" % gapgroup['pretty']
@@ -183,11 +202,11 @@ class WebGaloisGroup:
     def otherrep_list(self, givebound=True):
         sibs = self._data['siblings']
         pharse = r"with degree $\leq %d$" % self.sibling_bound()
-        if len(sibs)==0 and givebound:
-            return "There are no siblings "+pharse
+        if len(sibs) == 0 and givebound:
+            return "There are no siblings " + pharse
         li = list_with_mult(sibs, names=False)
         if givebound:
-            li += '<p>Siblings are shown '+pharse
+            li += '<p>Siblings are shown ' + pharse
         return li
 
     def subfields(self):
@@ -205,7 +224,7 @@ class WebGaloisGroup:
         if int(self.n()) == 1:
             G = gap.SmallGroup(1, 1)
         else:
-            G = gap('Group(['+self.generator_string()+'])')
+            G = gap('Group([' + self.generator_string() + '])')
         return G
 
     def num_conjclasses(self):
@@ -216,7 +235,9 @@ class WebGaloisGroup:
             return self._data['conjclasses']
         g = self.gapgroupnt()
         n = self.n()
-        gap.set('cycletype', 'function(el, n) local ct; ct := CycleLengths(el, [1..n]); ct := ShallowCopy(ct); Sort(ct); ct := Reversed(ct); return(ct); end;')
+        gap.set(
+            'cycletype',
+            'function(el, n) local ct; ct := CycleLengths(el, [1..n]); ct := ShallowCopy(ct); Sort(ct); ct := Reversed(ct); return(ct); end;')
         cc = g.ConjugacyClasses()
         ccn = [x.Size() for x in cc]
         ccc = [x.Representative() for x in cc]
@@ -229,7 +250,8 @@ class WebGaloisGroup:
         cc2 = [str(x) for x in cc2]
         cc2 = [re.sub(r"\[", '', x) for x in cc2]
         cc2 = [re.sub(r"\]", '', x) for x in cc2]
-        ans = [[cc[j], ccc[j].Order(), ccn[j], cc2[j]] for j in range(len(ccn))]
+        ans = [[cc[j], ccc[j].Order(), ccn[j], cc2[j]]
+               for j in range(len(ccn))]
         self._data['conjclasses'] = ans
         return ans
 
@@ -240,10 +262,11 @@ class WebGaloisGroup:
         return self._data['bound_quotients']
 
 
-############  Misc Functions
+# Misc Functions
 
 def base_label(n, t):
     return str(n) + "T" + str(t)
+
 
 def trylink(n, t):
     label = base_label(n, t)
@@ -255,9 +278,11 @@ def trylink(n, t):
 
 @cached_function
 def group_display_short(n, t, emptyifnotpretty=False):
-    return WebGaloisGroup.from_nt(n,t).display_short(emptyifnotpretty)
+    return WebGaloisGroup.from_nt(n, t).display_short(emptyifnotpretty)
 
-@cached_function(key=lambda n,t,useknowls,skip_nTj,cache: (n,t,useknowls,skip_nTj))
+
+@cached_function(key=lambda n, t, useknowls, skip_nTj,
+                 cache: (n, t, useknowls, skip_nTj))
 def group_pretty_and_nTj(n, t, useknowls=False, skip_nTj=False, cache=None):
     label = base_label(n, t)
     string = label
@@ -267,25 +292,33 @@ def group_pretty_and_nTj(n, t, useknowls=False, skip_nTj=False, cache=None):
         group = db.gps_transitive.lookup(label)
     group_obj = WebGaloisGroup.from_data(group)
     if useknowls and group is not None:
-        ntj = '<a title = "' + label + ' [nf.galois_group.data]" knowl="nf.galois_group.data" kwargs="n=' + str(n) + '&t=' + str(t) + '">' + label + '</a>'
+        ntj = '<a title = "' + label + \
+            ' [nf.galois_group.data]" knowl="nf.galois_group.data" kwargs="n=' + str(n) + '&t=' + str(t) + '">' + label + '</a>'
     else:
         ntj = label
     pretty = group_obj.display_short(True) if group else ''
     if pretty != '':
         # modify if we use knowls and have the gap id
         if useknowls:
-            gapid = "%d.%d"%(group['order'],group['gapid'])
+            gapid = "%d.%d" % (group['order'], group['gapid'])
             if cache:
                 gapgroup = cache.get(gapid)
             else:
                 gapgroup = db.gps_small.lookup(gapid)
             if gapgroup is not None:
-                pretty = small_group_display_knowl(group['order'], group['gapid'], name='$'+gapgroup['pretty']+'$', cache=cache)
+                pretty = small_group_display_knowl(
+                    group['order'],
+                    group['gapid'],
+                    name='$' + gapgroup['pretty'] + '$',
+                    cache=cache)
         if skip_nTj:
-            # This is used for statistics where we want to display the abstract group, but we still need to be able to get back to the nTj label for searching
+            # This is used for statistics where we want to display the abstract
+            # group, but we still need to be able to get back to the nTj label
+            # for searching
             if useknowls and group is not None and gapgroup is None:
                 # Use the nTj knowl
-                string = '<a title = "' + label + ' [nf.galois_group.data]" knowl="nf.galois_group.data" kwargs="n=' + str(n) + '&t=' + str(t) + '">' + pretty + '</a>'
+                string = '<a title = "' + label + \
+                    ' [nf.galois_group.data]" knowl="nf.galois_group.data" kwargs="n=' + str(n) + '&t=' + str(t) + '">' + pretty + '</a>'
             else:
                 string = pretty + '<span style="display:none">%s</span>' % label
         else:
@@ -294,8 +327,11 @@ def group_pretty_and_nTj(n, t, useknowls=False, skip_nTj=False, cache=None):
         string = ntj
     return string
 
+
 # These functions are used for displaying statistics.
 Tfinder = re.compile(r"(\d+)T(\d+)")
+
+
 def galdata(gal):
     if isinstance(gal, list):
         return tuple(gal)
@@ -303,12 +339,15 @@ def galdata(gal):
     if gal.isdigit():
         return [int(gal), 0]
     return [int(x) for x in Tfinder.findall(gal.upper())[0]]
+
+
 def galunformatter(gal):
     n, t = galdata(gal)
     if t == 0:
         return str(n)
     else:
         return "%dT%d" % (n, t)
+
 
 @cached_function
 def group_display_knowl(n, t, name=None):
@@ -321,7 +360,9 @@ def group_display_knowl(n, t, name=None):
             name = label
     if group is None:
         return name
-    return '<a title = "' + name + ' [nf.galois_group.data]" knowl="nf.galois_group.data" kwargs="n=' + str(n) + '&t=' + str(t) + '">' + name + '</a>'
+    return '<a title = "' + name + \
+        ' [nf.galois_group.data]" knowl="nf.galois_group.data" kwargs="n=' + str(n) + '&t=' + str(t) + '">' + name + '</a>'
+
 
 def group_display_knowl_C1_as_trivial(n, t):
     if [n, t] == [1, 1]:
@@ -335,19 +376,21 @@ def galois_module_knowl(n, t, index):
     name = db.gps_gmodules.lucky({'n': n, 't': t, 'index': index}, 'name')
     if name is None:
         return 'Error'
-    return '<a title = "%s [nf.galois_group.gmodule]" knowl="nf.galois_group.gmodule" kwargs="n=%d&t=%d&ind=%d">%s</a>'%(name, n, t, index, name)
+    return '<a title = "%s [nf.galois_group.gmodule]" knowl="nf.galois_group.gmodule" kwargs="n=%d&t=%d&ind=%d">%s</a>' % (
+        name, n, t, index, name)
 
 
 @cached_function
 def cclasses_display_knowl(n, t, name=None):
-    ncc = WebGaloisGroup.from_nt(n,t).num_conjclasses()
+    ncc = WebGaloisGroup.from_nt(n, t).num_conjclasses()
     if not name:
-        name = 'The %d conjugacy class representatives for '% ncc
-        if n==1 and t==1:
+        name = 'The %d conjugacy class representatives for ' % ncc
+        if n == 1 and t == 1:
             name = 'The conjugacy class representative for '
         name += group_display_short(n, t)
     if ncc < 50:
-        return '<a title = "' + name + ' [gg.conjugacy_classes.data]" knowl="gg.conjugacy_classes.data" kwargs="n=' + str(n) + '&t=' + str(t) + '">' + name + '</a>'
+        return '<a title = "' + name + \
+            ' [gg.conjugacy_classes.data]" knowl="gg.conjugacy_classes.data" kwargs="n=' + str(n) + '&t=' + str(t) + '">' + name + '</a>'
     return name + ' are not computed'
 
 
@@ -358,7 +401,8 @@ def character_table_display_knowl(n, t, name=None):
         name += group_display_short(n, t)
     group = WebGaloisGroup.from_nt(n, t)
     if ZZ(group.order()) < ZZ(10000000) and group.num_conjclasses() < 21:
-        return '<a title = "' + name + ' [gg.character_table.data]" knowl="gg.character_table.data" kwargs="n=' + str(n) + '&t=' + str(t) + '">' + name + '</a>'
+        return '<a title = "' + name + \
+            ' [gg.character_table.data]" knowl="gg.character_table.data" kwargs="n=' + str(n) + '&t=' + str(t) + '">' + name + '</a>'
     return name + ' is not computed'
 
 
@@ -384,7 +428,8 @@ def group_phrase(n, t):
 def group_display_long(n, t):
     label = base_label(n, t)
     group = db.gps_transitive.lookup(label)
-    inf = "Group %sT%s, order %s, parity %s" % (group['n'], group['t'], group['order'], group['parity'])
+    inf = "Group %sT%s, order %s, parity %s" % (
+        group['n'], group['t'], group['order'], group['parity'])
     if group['cyc'] == 1:
         inf += ", cyclic"
     elif group['ab'] == 1:
@@ -426,11 +471,12 @@ def galois_group_data(n, t):
         inf += ", imprimitive"
     if n < 16:
         inf += '<div>'
-        inf += '<a title="%s [gg.conway_name]" knowl="gg.conway_name" kwarts="n=%s&t=%s">%s</a>: '%('CHM label',str(n),str(t),'CHM label')
-        inf += '%s</div>'%(group['name'])
+        inf += '<a title="%s [gg.conway_name]" knowl="gg.conway_name" kwarts="n=%s&t=%s">%s</a>: ' % (
+            'CHM label', str(n), str(t), 'CHM label')
+        inf += '%s</div>' % (group['name'])
 
     rest = '<div><h3>Generators</h3><blockquote>'
-    rest += WebGaloisGroup.from_nt(n,t).generator_string()
+    rest += WebGaloisGroup.from_nt(n, t).generator_string()
     rest += '</blockquote></div>'
 
     rest += '<div><h3>Subfields</h3><blockquote>'
@@ -444,13 +490,14 @@ def galois_group_data(n, t):
         rest += 'None'
     rest += '</blockquote></div>'
     rest += '<div align="right">'
-    rest += '<a href="/GaloisGroup/%s">%sT%s home page</a>' % (label, str(n), str(t))
+    rest += '<a href="/GaloisGroup/%s">%sT%s home page</a>' % (
+        label, str(n), str(t))
     rest += '</div>'
 
     if group.get('pretty', None) is not None:
-        return group['pretty'] + "&nbsp;&nbsp;&mdash;&nbsp;&nbsp;  "+ inf + rest
+        return group['pretty'] + \
+            "&nbsp;&nbsp;&mdash;&nbsp;&nbsp;  " + inf + rest
     return inf + rest
-
 
 
 @cached_function
@@ -490,19 +537,20 @@ def group_character_table_knowl_guts(n, t):
 
 @cached_function
 def galois_module_knowl_guts(n, t, index):
-    mymod = db.gps_gmodules.lucky({'n': int(n), 't': int(t), 'index': int(index)}, ['name','dim','gens'])
+    mymod = db.gps_gmodules.lucky({'n': int(n), 't': int(
+        t), 'index': int(index)}, ['name', 'dim', 'gens'])
     if mymod is None:
         return 'Database call failed'
     name = mymod['name']
     out = "$\\Z[G]$ module %s with $G=$ " % str(name)
     out += group_display_knowl(n, t)
-    out += " = %sT%s " %(n, t)
+    out += " = %sT%s " % (n, t)
     out += "<blockquote>"
     out += "Dimension: %s" % str(mymod['dim'])
     out += r"<br>Action: $$\begin{aligned}"
     for g in mymod['gens']:
         matg = list_to_latex_matrix(g[1])
-        out += "%s &\\mapsto %s \\\\" %(str(g[0]), matg)
+        out += "%s &\\mapsto %s \\\\" % (str(g[0]), matg)
     out = out[:-2]
     out += r"\end{aligned}$$"
     out += "</blockquote>"
@@ -523,8 +571,8 @@ def subfield_display(n, subs):
         if substrs[k[0][0]] != '':
             substrs[k[0][0]] += ', '
         substrs[k[0][0]] += group_display_knowl(k[0][0], k[0][1])
-        if k[1]>1:
-            substrs[k[0][0]] += '<span style="font-size: small"> x %d</span>'%k[1]
+        if k[1] > 1:
+            substrs[k[0][0]] += '<span style="font-size: small"> x %d</span>' % k[1]
     for deg in degs:
         ans += '<p>Degree ' + str(deg) + ': '
         if substrs[deg] == '':
@@ -536,8 +584,7 @@ def subfield_display(n, subs):
 def otherrep_display(n, t, reps):
     reps = [(j[0], j[1]) for j in reps]
     me = (n, t)
-    difreps = list(set(reps))
-    difreps.sort()
+    difreps = sorted(set(reps))
     ans = ''
     for k in difreps:
         if ans != '':
@@ -582,24 +629,27 @@ def resolve_display(resolves):
             ans += group_display_knowl(k[0], k[1], '%dT?' % k[0])
         else:
             ans += group_display_knowl(k[0], k[1])
-        if j[2]>1:
-            ans += '<span style="font-size: small"> x %d</span>'% j[2]
+        if j[2] > 1:
+            ans += '<span style="font-size: small"> x %d</span>' % j[2]
     if ans != '':
         ans += '</td></tr></table>'
     else:
         ans = 'none'
     return ans
 
+
 def group_display_inertia(code):
     if str(code[0]) == "t":
         return group_display_knowl(code[1][0], code[1][1])
-    if code[1] == [1,1]:
+    if code[1] == [1, 1]:
         return "trivial"
-    ans = "Intransitive group isomorphic to "+small_group_display_knowl(code[1][0],code[1][1])
+    ans = "Intransitive group isomorphic to " + \
+        small_group_display_knowl(code[1][0], code[1][1])
     return ans
 
+
 def cclasses(n, t):
-    group = WebGaloisGroup.from_nt(n,t)
+    group = WebGaloisGroup.from_nt(n, t)
     if group.num_conjclasses() >= 50:
         return 'not computed'
     html = """<div>
@@ -620,7 +670,7 @@ def cclasses(n, t):
 
 
 def chartable(n, t):
-    group = WebGaloisGroup.from_nt(n,t)
+    group = WebGaloisGroup.from_nt(n, t)
     G = group.gapgroupnt()
     ctable = str(G.CharacterTable().Display())
     ctable = re.sub("^.*\n", '', ctable)
@@ -640,15 +690,18 @@ def group_alias_table():
             ntlist = aliases[j]
             ntstrings = [str(x[0]) + "T" + str(x[1]) for x in ntlist]
             ntstring = ", ".join(ntstrings)
-            ans += r"<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (j, name, ntstring)
+            ans += r"<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (
+                j, name, ntstring)
     ans += r'</tbody></table>'
     return ans
 
+
 def nt2gap(n, t):
-    res = db.gps_transitive.lookup('{}T{}'.format(n,t))
+    res = db.gps_transitive.lookup('{}T{}'.format(n, t))
     if res and 'gapid' in res:
         return [res['order'], res['gapid']]
     raise NameError('GAP id not found')
+
 
 def complete_group_code(code):
     # Order direct products
@@ -664,7 +717,8 @@ def complete_group_code(code):
     # Try GAP code
     rematch = re.match(r'^\[\d+,\d+\]$', code)
     if rematch:
-        nts = list(db.gps_transitive.search({'gapidfull':code}, projection=['n','t']))
+        nts = list(db.gps_transitive.search(
+            {'gapidfull': code}, projection=['n', 't']))
         nts = [(z['n'], z['t']) for z in nts]
         return nts
     else:
@@ -693,10 +747,10 @@ def complete_group_codes(codes):
 aliases = {}
 
 # Do all cyclic groups as once
-for j in range(1,48):
+for j in range(1, 48):
     if j != 32:
-        aliases['C'+str(j)] = [(j,1)]
-aliases['C32'] = [(32,33)]
+        aliases['C' + str(j)] = [(j, 1)]
+aliases['C32'] = [(32, 33)]
 
 # For direct products, factors must be reverse-sorted
 # All nicknames here must be all upper-case
@@ -732,7 +786,7 @@ aliases['S7'] = [(7, 7)]
 aliases['C4XC2'] = [(8, 2)]
 aliases['C2XC2XC2'] = [(8, 3)]
 aliases['Q8'] = [(8, 5)]
-aliases['D8'] = [(8, 6),(16,7)]
+aliases['D8'] = [(8, 6), (16, 7)]
 aliases['SL(2,3)'] = [(8, 12)]
 aliases['GL(2,3)'] = [(8, 23)]
 aliases['PSL(2,7)'] = aliases['GL(3,2)']
@@ -761,7 +815,7 @@ aliases['A11'] = [(11, 7)]
 aliases['S11'] = [(11, 8)]
 aliases['C6XC2'] = [(12, 2)]
 aliases['C3:C4'] = [(12, 5)]
-aliases['D12'] = [(12,12)]
+aliases['D12'] = [(12, 12)]
 aliases['A12'] = [(12, 300)]
 aliases['S12'] = [(12, 301)]
 aliases['F13'] = [(13, 6)]
@@ -801,102 +855,102 @@ aliases['S23'] = [(23, 7)]
 aliases['Q8XC3'] = [(24, 4)]
 aliases['C3:Q8'] = [(24, 5)]
 aliases['C3:C8'] = [(24, 8)]
-aliases['A24'] = [(24,24999)]
-aliases['S24'] = [(24,25000)]
-aliases['A25'] = [(25,210)]
-aliases['S25'] = [(25,211)]
-aliases['A26'] = [(26,95)]
-aliases['S26'] = [(26,96)]
-aliases['A27'] = [(27,2391)]
-aliases['S27'] = [(27,2392)]
+aliases['A24'] = [(24, 24999)]
+aliases['S24'] = [(24, 25000)]
+aliases['A25'] = [(25, 210)]
+aliases['S25'] = [(25, 211)]
+aliases['A26'] = [(26, 95)]
+aliases['S26'] = [(26, 96)]
+aliases['A27'] = [(27, 2391)]
+aliases['S27'] = [(27, 2392)]
 aliases['C7:C4'] = [(28, 3)]
-aliases['A28'] = [(28,1853)]
-aliases['S28'] = [(28,1854)]
-aliases['A29'] = [(29,7)]
-aliases['S29'] = [(29,8)]
-aliases['A30'] = [(30,5711)]
-aliases['S30'] = [(30,5712)]
-aliases['A31'] = [(31,11)]
-aliases['S31'] = [(31,12)]
+aliases['A28'] = [(28, 1853)]
+aliases['S28'] = [(28, 1854)]
+aliases['A29'] = [(29, 7)]
+aliases['S29'] = [(29, 8)]
+aliases['A30'] = [(30, 5711)]
+aliases['S30'] = [(30, 5712)]
+aliases['A31'] = [(31, 11)]
+aliases['S31'] = [(31, 12)]
 aliases['Q32'] = [(32, 51)]
-aliases['A32'] = [(32,2801323)]
-aliases['S32'] = [(32,2801324)]
-aliases['A33'] = [(33,161)]
-aliases['S33'] = [(33,162)]
-aliases['A34'] = [(34,114)]
-aliases['S34'] = [(34,115)]
-aliases['A35'] = [(35,406)]
-aliases['S35'] = [(35,407)]
-aliases['A36'] = [(36,121278)]
-aliases['S36'] = [(36,121279)]
-aliases['A37'] = [(37,10)]
-aliases['S37'] = [(37,11)]
-aliases['A38'] = [(38,75)]
-aliases['S38'] = [(38,76)]
-aliases['A39'] = [(39,305)]
-aliases['S39'] = [(39,306)]
+aliases['A32'] = [(32, 2801323)]
+aliases['S32'] = [(32, 2801324)]
+aliases['A33'] = [(33, 161)]
+aliases['S33'] = [(33, 162)]
+aliases['A34'] = [(34, 114)]
+aliases['S34'] = [(34, 115)]
+aliases['A35'] = [(35, 406)]
+aliases['S35'] = [(35, 407)]
+aliases['A36'] = [(36, 121278)]
+aliases['S36'] = [(36, 121279)]
+aliases['A37'] = [(37, 10)]
+aliases['S37'] = [(37, 11)]
+aliases['A38'] = [(38, 75)]
+aliases['S38'] = [(38, 76)]
+aliases['A39'] = [(39, 305)]
+aliases['S39'] = [(39, 306)]
 aliases['C5:C8'] = [(40, 3)]
-aliases['A40'] = [(40,315841)]
-aliases['S40'] = [(40,315842)]
-aliases['A41'] = [(41,9)]
-aliases['S41'] = [(41,10)]
-aliases['A42'] = [(42,9490)]
-aliases['S42'] = [(42,9491)]
-aliases['A43'] = [(43,9)]
-aliases['S43'] = [(43,10)]
-aliases['A44'] = [(44,2112)]
-aliases['S44'] = [(44,2113)]
-aliases['A45'] = [(45,10922)]
-aliases['S45'] = [(45,10923)]
-aliases['A46'] = [(46,55)]
-aliases['S46'] = [(46,56)]
-aliases['A47'] = [(47,5)]
-aliases['S47'] = [(47,6)]
+aliases['A40'] = [(40, 315841)]
+aliases['S40'] = [(40, 315842)]
+aliases['A41'] = [(41, 9)]
+aliases['S41'] = [(41, 10)]
+aliases['A42'] = [(42, 9490)]
+aliases['S42'] = [(42, 9491)]
+aliases['A43'] = [(43, 9)]
+aliases['S43'] = [(43, 10)]
+aliases['A44'] = [(44, 2112)]
+aliases['S44'] = [(44, 2113)]
+aliases['A45'] = [(45, 10922)]
+aliases['S45'] = [(45, 10923)]
+aliases['A46'] = [(46, 55)]
+aliases['S46'] = [(46, 56)]
+aliases['A47'] = [(47, 5)]
+aliases['S47'] = [(47, 6)]
 
-aliases['D13'] = [(13,2)]
-aliases['D14'] = [(14,3)]
-aliases['D15'] = [(15,2)]
-aliases['D16'] = [(16,56)]
-aliases['D17'] = [(17,2)]
-aliases['D18'] = [(18,13)]
-aliases['D19'] = [(19,2)]
-aliases['D20'] = [(20,10)]
-aliases['D21'] = [(21,5)]
-aliases['D22'] = [(22,3)]
-aliases['D23'] = [(23,2)]
-aliases['D24'] = [(24,34)]
-aliases['D25'] = [(25,4)]
-aliases['D26'] = [(26,3)]
-aliases['D27'] = [(27,8)]
-aliases['D28'] = [(28,10)]
-aliases['D29'] = [(29,2)]
-aliases['D30'] = [(30,14)]
-aliases['D31'] = [(31,2)]
-aliases['D32'] = [(32,374)]
-aliases['D33'] = [(33,3)]
-aliases['D34'] = [(34,3)]
-aliases['D35'] = [(35,4)]
-aliases['D36'] = [(36,47)]
-aliases['D37'] = [(37,2)]
-aliases['D38'] = [(38,3)]
-aliases['D39'] = [(39,4)]
-aliases['D40'] = [(40,46)]
-aliases['D41'] = [(41,2)]
-aliases['D42'] = [(42,11)]
-aliases['D43'] = [(43,2)]
-aliases['D44'] = [(44,9)]
-aliases['D45'] = [(45,4)]
-aliases['D46'] = [(46,3)]
-aliases['D47'] = [(47,2)]
+aliases['D13'] = [(13, 2)]
+aliases['D14'] = [(14, 3)]
+aliases['D15'] = [(15, 2)]
+aliases['D16'] = [(16, 56)]
+aliases['D17'] = [(17, 2)]
+aliases['D18'] = [(18, 13)]
+aliases['D19'] = [(19, 2)]
+aliases['D20'] = [(20, 10)]
+aliases['D21'] = [(21, 5)]
+aliases['D22'] = [(22, 3)]
+aliases['D23'] = [(23, 2)]
+aliases['D24'] = [(24, 34)]
+aliases['D25'] = [(25, 4)]
+aliases['D26'] = [(26, 3)]
+aliases['D27'] = [(27, 8)]
+aliases['D28'] = [(28, 10)]
+aliases['D29'] = [(29, 2)]
+aliases['D30'] = [(30, 14)]
+aliases['D31'] = [(31, 2)]
+aliases['D32'] = [(32, 374)]
+aliases['D33'] = [(33, 3)]
+aliases['D34'] = [(34, 3)]
+aliases['D35'] = [(35, 4)]
+aliases['D36'] = [(36, 47)]
+aliases['D37'] = [(37, 2)]
+aliases['D38'] = [(38, 3)]
+aliases['D39'] = [(39, 4)]
+aliases['D40'] = [(40, 46)]
+aliases['D41'] = [(41, 2)]
+aliases['D42'] = [(42, 11)]
+aliases['D43'] = [(43, 2)]
+aliases['D44'] = [(44, 9)]
+aliases['D45'] = [(45, 4)]
+aliases['D46'] = [(46, 3)]
+aliases['D47'] = [(47, 2)]
 
-aliases['M12'] = [(12,295)]
-aliases['M22'] = [(22,38)]
-aliases['M23'] = [(23,5)]
-aliases['M24'] = [(24,24680)]
-aliases['PSL(3,3)'] = [(13,7)]
-aliases['PSL(2,13)'] = [(14,30)]
-aliases['PSP(4,3)'] = [(27,993)]
-aliases['PSU(3,3)'] = [(28,323)]
+aliases['M12'] = [(12, 295)]
+aliases['M22'] = [(22, 38)]
+aliases['M23'] = [(23, 5)]
+aliases['M24'] = [(24, 24680)]
+aliases['PSL(3,3)'] = [(13, 7)]
+aliases['PSL(2,13)'] = [(14, 30)]
+aliases['PSP(4,3)'] = [(27, 993)]
+aliases['PSU(3,3)'] = [(28, 323)]
 
 # Load all sibling representations from the database
 labels = ["%sT%s" % elt[0] for elt in aliases.values()]
@@ -908,9 +962,8 @@ siblings = dict(
 )
 for ky in aliases.keys():
     nt = aliases[ky][0]
-    label = "%sT%s"% nt
+    label = "%sT%s" % nt
     aliases[ky] = siblings[label][:]
     if nt not in aliases[ky]:
         aliases[ky].append(nt)
     aliases[ky].sort()
-

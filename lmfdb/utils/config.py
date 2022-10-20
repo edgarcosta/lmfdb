@@ -15,6 +15,7 @@ via optional command-line arguments.
 """
 
 
+from config import Configuration as _Configuration
 import argparse
 import os
 import sys
@@ -30,11 +31,15 @@ root_lmfdb_path = os.path.abspath(
 # We don't want to trigger the lmfdb/__init__.py
 working_dir = sys.path[0]
 sys.path[0] = os.path.join(root_lmfdb_path, 'lmfdb', 'backend')
-from config import Configuration as _Configuration
 sys.path[0] = working_dir
 
+
 def abs_path_lmfdb(filename):
-    return os.path.relpath(os.path.join(root_lmfdb_path, filename), os.getcwd())
+    return os.path.relpath(
+        os.path.join(
+            root_lmfdb_path,
+            filename),
+        os.getcwd())
 
 
 def get_secret_key():
@@ -125,8 +130,9 @@ class Configuration(_Configuration):
         )
 
         logginggroup.add_argument(
-            "--logfocus", help="name of a logger to focus on", default=argparse.SUPPRESS
-        )
+            "--logfocus",
+            help="name of a logger to focus on",
+            default=argparse.SUPPRESS)
 
         logginggroup.add_argument(
             "--slowcutoff",
@@ -236,10 +242,15 @@ class Configuration(_Configuration):
             default=argparse.SUPPRESS,
         )
         # if start-lmfdb.py was executed
-        startlmfdbQ =  getattr(__main__, '__file__').endswith("start-lmfdb.py") if hasattr(__main__, '__file__') else False
+        startlmfdbQ = getattr(__main__, '__file__').endswith(
+            "start-lmfdb.py") if hasattr(__main__, '__file__') else False
         writeargstofile = writeargstofile or startlmfdbQ
         readargs = readargs or startlmfdbQ
-        _Configuration.__init__(self, parser, writeargstofile=writeargstofile, readargs=readargs)
+        _Configuration.__init__(
+            self,
+            parser,
+            writeargstofile=writeargstofile,
+            readargs=readargs)
 
         opts = self.options
         extopts = self.extra_options

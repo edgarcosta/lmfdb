@@ -6,6 +6,7 @@ from collections import defaultdict
 
 from psycopg2.sql import SQL, Identifier, Placeholder
 
+
 class SearchParsingError(ValueError):
     """
     Used for errors raised when parsing search boxes
@@ -15,6 +16,7 @@ class SearchParsingError(ValueError):
 ##################################################################
 # query language                                                 #
 ##################################################################
+
 
 # These operators are used in the filter_sql_injection function
 # If you make any additions or changes, ensure that it doesn't
@@ -30,7 +32,10 @@ postgres_infix_ops = {
     "$regex": "~",
 }
 
-# This function is used to support the inclusion of limited raw postgres in queries
+# This function is used to support the inclusion of limited raw postgres
+# in queries
+
+
 def filter_sql_injection(clause, col, col_type, op, table):
     """
     INPUT:
@@ -56,7 +61,8 @@ def filter_sql_injection(clause, col, col_type, op, table):
     # It's possible that some search columns include numbers (dim1_factor in av_fq_isog for example)
     # However, we don't support columns that are entirely numbers (such as some in smf_dims)
     # since there's no way to distinguish them from integers
-    # We also want to include periods as part of the word/number character set, since they can appear in floats
+    # We also want to include periods as part of the word/number character
+    # set, since they can appear in floats
     FLOAT_RE = r"^((\d+([.]\d*)?)|([.]\d+))([eE][-+]?\d+)?$"
     ARITH_RE = r"^[+*-/^()]+$"
     processed = []
@@ -75,12 +81,22 @@ def filter_sql_injection(clause, col, col_type, op, table):
                 else:
                     values.append(int(piece))
             else:
-                raise SearchParsingError("%s: %s is not a column of %s" % (clause, piece, table.search_table))
+                raise SearchParsingError(
+                    "%s: %s is not a column of %s" %
+                    (clause, piece, table.search_table))
         else:
-            if re.match(ARITH_RE, piece) and not any(comment in piece for comment in ["--", "/*", "*/"]):
+            if re.match(
+                ARITH_RE,
+                piece) and not any(
+                comment in piece for comment in [
+                    "--",
+                    "/*",
+                    "*/"]):
                 processed.append(SQL(piece))
             else:
-                raise SearchParsingError("%s: invalid characters %s (only +*-/^() allowed)" % (clause, piece))
+                raise SearchParsingError(
+                    "%s: invalid characters %s (only +*-/^() allowed)" %
+                    (clause, piece))
     return SQL("{0} %s {1}" % op).format(col, SQL("").join(processed)), values
 
 
@@ -129,8 +145,11 @@ def IdentifierWrapper(name, convert=True):
             raise ValueError("%s is not in the proper format" % knife)
         chunks = knife[1:-1].split("][")
         # Prevent SQL injection
-        if not all(all(x.isdigit() for x in chunk.split(":")) for chunk in chunks):
-            raise ValueError("% is must be numeric, brackets and colons" % knife)
+        if not all(all(x.isdigit() for x in chunk.split(":"))
+                   for chunk in chunks):
+            raise ValueError(
+                "% is must be numeric, brackets and colons" %
+                knife)
         if convert:
             for i, s in enumerate(chunks):
                 # each cut is of the format a:b:c
@@ -206,6 +225,7 @@ class DelayCommit(object):
         if exc_type is not None:
             self.obj.conn.rollback()
 
+
 # Reraise an exception, possibly with a different message, type, or traceback.
 if sys.version_info.major < 3:  # Python 2?
     # Using exec avoids a SyntaxError in Python 3.
@@ -222,6 +242,7 @@ else:
         if exc_value.__traceback__ is not exc_traceback:
             raise exc_value.with_traceback(exc_traceback)
         raise exc_value
+
 
 def range_formatter(x):
     if x is None:
@@ -246,18 +267,21 @@ def range_formatter(x):
         elif a is None:
             return "..{0}".format(b)
         else:
-            return "{0}-{1}".format(a,b)
+            return "{0}-{1}".format(a, b)
     return str(x)
+
 
 class KeyedDefaultDict(defaultdict):
     """
     A defaultdict where the default value takes the key as input.
     """
+
     def __missing__(self, key):
         if self.default_factory is None:
             raise KeyError((key,))
         self[key] = value = self.default_factory(key)
         return value
+
 
 def make_tuple(val):
     """
@@ -267,6 +291,6 @@ def make_tuple(val):
     if isinstance(val, (list, tuple)):
         return tuple(make_tuple(x) for x in val)
     elif isinstance(val, dict):
-        return tuple((make_tuple(a), make_tuple(b)) for a,b in val.items())
+        return tuple((make_tuple(a), make_tuple(b)) for a, b in val.items())
     else:
         return val

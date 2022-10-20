@@ -15,7 +15,7 @@ def get_bread(breads=[]):
     return bc
 
 
-@permutations_page.route("/show", methods = ["POST"])
+@permutations_page.route("/show", methods=["POST"])
 def parse_and_redirect():
     r"""
     This gets called when the user submit some input in the data box of the
@@ -31,7 +31,7 @@ def parse_and_redirect():
     return redirect(url_for(".show", data=data))
 
 
-@permutations_page.route("/show", methods = ["GET"])
+@permutations_page.route("/show", methods=["GET"])
 def show():
     r"""
     This gets called when an address of that kind gets loaded:
@@ -45,10 +45,12 @@ def show():
         p = Permutation(data)
     except (TypeError, ValueError):
         logger.info("Impossible to create a permutation from input.")
-        flash_error("Ooops, impossible to create a permutation from given input!")
+        flash_error(
+            "Ooops, impossible to create a permutation from given input!")
         return redirect(url_for(".index"))
     return render_template("permutations.html", permutation=p,
-            rankbread=get_bread())
+                           rankbread=get_bread())
+
 
 @permutations_page.route("/")
 def index():
@@ -58,4 +60,7 @@ def index():
     http://127.0.0.1:37777/Permutations/
     """
     bread = get_bread()
-    return render_template("permutations-index.html", title="Permutations", bread=bread)
+    return render_template(
+        "permutations-index.html",
+        title="Permutations",
+        bread=bread)

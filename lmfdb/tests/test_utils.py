@@ -43,15 +43,16 @@ class UtilsTest(unittest2.TestCase):
         Checking utility: an_list
         """
         # (1 - 2^{-s})^{-1} (1 - 3^{-s})^{-1}
-        euler1 = lambda p: [1, -1] if p <= 3 else [1,0]
+        def euler1(p): return [1, -1] if p <= 3 else [1, 0]
         t1 = an_list(euler1, upperbound=20)
         expect1 = [1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0]
         self.assertEqual(t1, expect1)
 
         # (1 + 2^{-s})^{-1} (1 + 3^{-s})^{-1}
-        euler2 = lambda p: [1, 1] if p <= 3 else [1,0]
+        def euler2(p): return [1, 1] if p <= 3 else [1, 0]
         t2 = an_list(euler2, upperbound=20)
-        expect2 = [1, -1, -1, 1, 0, 1, 0, -1, 1, 0, 0, -1, 0, 0, 0, 1, 0, -1, 0, 0]
+        expect2 = [1, -1, -1, 1, 0, 1, 0, -1, 1,
+                   0, 0, -1, 0, 0, 0, 1, 0, -1, 0, 0]
         self.assertEqual(t2, expect2)
 
     def test_coeff_to_poly(self):
@@ -59,7 +60,7 @@ class UtilsTest(unittest2.TestCase):
         Checking utility: coeff_to_poly
         """
         x = var('x')
-        self.assertEqual(coeff_to_poly("1 - 3x + x^2"), x**2 - 3*x + 1)
+        self.assertEqual(coeff_to_poly("1 - 3x + x^2"), x**2 - 3 * x + 1)
 
     def test_display_multiset(self):
         r"""
@@ -67,7 +68,7 @@ class UtilsTest(unittest2.TestCase):
         """
         self.assertEqual(display_multiset([["a", 3], [12, 2]]), 'a x3, 12 x2')
         self.assertEqual(display_multiset([[1, 4], [0, 0], ["cat", 2]]),
-                                          '1 x4, 0, cat x2')
+                         '1 x4, 0, cat x2')
 
     def test_pair2complex(self):
         r"""
@@ -88,7 +89,7 @@ class UtilsTest(unittest2.TestCase):
         r"""
         Checking utility: to_dict
         """
-        self.assertEqual(to_dict({"not_list": 1, "is_list":[2,3,4]}),
+        self.assertEqual(to_dict({"not_list": 1, "is_list": [2, 3, 4]}),
                          {'is_list': 4, 'not_list': 1})
 
     def test_splitcoeff(self):
@@ -99,9 +100,9 @@ class UtilsTest(unittest2.TestCase):
         self.assertEqual(splitcoeff("  0  -1.2  \n  3.14  1 "),
                          [[0.0, -1.2], [3.14, 1.0]])
 
-    ################################################################################
+    ##########################################################################
     #  display and formatting utilities
-    ################################################################################
+    ##########################################################################
 
     def test_comma(self):
         r"""
@@ -114,15 +115,15 @@ class UtilsTest(unittest2.TestCase):
         r"""
         Checking utility: format_percentage
         """
-        self.assertEqual(format_percentage(12,31), '     38.71')
-        self.assertEqual(format_percentage(12,37), '     32.43')
+        self.assertEqual(format_percentage(12, 31), '     38.71')
+        self.assertEqual(format_percentage(12, 37), '     32.43')
 
     def test_signtocolour(self):
         r"""
         Checking utility: signtocolour
         """
         self.assertEqual(signtocolour(0), 'rgb(63,63,255)')
-        self.assertEqual(signtocolour(1+2j), 'rgb(197,0,184)')
+        self.assertEqual(signtocolour(1 + 2j), 'rgb(197,0,184)')
 
     def test_rgbtohex(self):
         r"""
@@ -136,16 +137,16 @@ class UtilsTest(unittest2.TestCase):
         Checking utility: pol_to_html
         """
         x = var('x')
-        f1 = x**2 + 2*x + 1
+        f1 = x**2 + 2 * x + 1
         self.assertEqual(pol_to_html(f1),
                          '<i>x</i><sup>2</sup> + 2<i>x</i> + 1')
         f2 = 'x^3 + 1'
         self.assertEqual(pol_to_html(f2),
                          '<i>x</i><sup>3</sup> + 1')
 
-    ################################################################################
+    ##########################################################################
     #  latex/math rendering utilities
-    ################################################################################
+    ##########################################################################
 
     def test_web_latex(self):
         r"""
@@ -153,9 +154,9 @@ class UtilsTest(unittest2.TestCase):
         """
         x = var('x')
         self.assertEqual(web_latex("test string"), "test string")
-        self.assertEqual(web_latex(x**23 + 2*x + 1),
+        self.assertEqual(web_latex(x**23 + 2 * x + 1),
                          '\\( x^{23} + 2 \\, x + 1 \\)')
-        self.assertEqual(web_latex(x**23 + 2*x + 1, enclose=False),
+        self.assertEqual(web_latex(x**23 + 2 * x + 1, enclose=False),
                          ' x^{23} + 2 \\, x + 1 ')
 
     def test_web_latex_ideal_fact(self):
@@ -166,7 +167,7 @@ class UtilsTest(unittest2.TestCase):
         x = var('x')
         K = NumberField(x**2 - 5, 'a')
         a = K.gen()
-        I = K.ideal(2/(5+a)).factor()
+        I = K.ideal(2 / (5 + a)).factor()
         self.assertEqual(web_latex_ideal_fact(I),
                          '\\( \\left(-a\\right)^{-1} \\)')
         self.assertEqual(web_latex_ideal_fact(I, enclose=False),
@@ -203,11 +204,11 @@ class UtilsTest(unittest2.TestCase):
         r"""
         Checking utility: list_to_latex_matrix
         """
-        identity_list = [[1,0], [0,1]]
+        identity_list = [[1, 0], [0, 1]]
         identity_rep = '\\left(\\begin{array}{rr}1 & 0\\\\0 & 1\\end{array}\\right)'
         self.assertEqual(list_to_latex_matrix(identity_list), identity_rep)
 
         # malformed matrices should work
-        malformed = [[1,0], [0]]
+        malformed = [[1, 0], [0]]
         malform_rep = '\\left(\\begin{array}{rr}1 & 0\\\\0\\end{array}\\right)'
         self.assertEqual(list_to_latex_matrix(malformed), malform_rep)

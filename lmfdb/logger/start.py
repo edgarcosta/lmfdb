@@ -8,19 +8,31 @@ from .utils import LmfdbFormatter
 
 # logfocus
 logfocus = None
+
+
 def get_logfocus():
     # set by start_logging
     return logfocus
 
+
 file_handler = None
+
+
 def logger_file_handler():
     # set by start_logging
     return file_handler
 
+
 LMFDB_SAGE_VERSION = '9.2'
+
+
 def check_sage_version():
-    if [int(c) for c in sage_version.split(".")[:2]] < [int(c) for c in LMFDB_SAGE_VERSION.split(".")[:2]]:
-        warning("*** WARNING: SAGE VERSION %s IS OLDER THAN %s ***"%(sage_version,LMFDB_SAGE_VERSION))
+    if [int(c) for c in sage_version.split(".")[:2]] < [int(c)
+                                                        for c in LMFDB_SAGE_VERSION.split(".")[:2]]:
+        warning(
+            "*** WARNING: SAGE VERSION %s IS OLDER THAN %s ***" %
+            (sage_version, LMFDB_SAGE_VERSION))
+
 
 def start_logging():
     global logfocus, file_handler
@@ -47,7 +59,5 @@ def start_logging():
     cfg = config.get_all()
     if "postgresql_options" and "password" in cfg["postgresql_options"]:
         cfg["postgresql_options"]["password"] = "****"
-    info("Configuration = {}".format(cfg) )
+    info("Configuration = {}".format(cfg))
     check_sage_version()
-
-

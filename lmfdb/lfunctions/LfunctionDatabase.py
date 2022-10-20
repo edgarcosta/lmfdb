@@ -26,11 +26,13 @@ def get_instances_by_Lhash(Lhash):
 
 
 def get_multiples_by_Lhash(Lhash):
-    return list(db.lfunc_instances.search({'Lhash_array': {'$contains': Lhash.split(',')}}, sort=[]))
+    return list(db.lfunc_instances.search(
+        {'Lhash_array': {'$contains': Lhash.split(',')}}, sort=[]))
 
 
 # a temporary fix while we don't replace the old Lhash (=trace_hash)
-# there are trace hash collisions out there, we need the degree to distinguish them
+# there are trace hash collisions out there, we need the degree to
+# distinguish them
 def get_instances_by_trace_hash(degree, trace_hash):
     # this is only relevant to find L-funs for ECQ or G2C
     if degree not in [2, 4]:
@@ -91,8 +93,9 @@ def get_factors_instances(Lhash, degree, trace_hash):
                                             ['trace_hash', 'degree'])
             # names_and_urls will remove duplicates
             instances.extend(
-                get_instances_by_Lhash_and_trace_hash(factor_Lhash,
-                    elt['degree'], elt.get('trace_hash', None)))
+                get_instances_by_Lhash_and_trace_hash(
+                    factor_Lhash, elt['degree'], elt.get(
+                        'trace_hash', None)))
     # try to get factors as EC, this only arises for G2C
     for elt in db.lfunc_instances.search({'Lhash': Lhash, 'type': 'ECQP'},
                                          'url'):
@@ -100,7 +103,8 @@ def get_factors_instances(Lhash, degree, trace_hash):
             for url in elt.split('|'):
                 url = url.rstrip('/')
                 # Lhash = trace_hash
-                instances.extend(get_instances_by_trace_hash(2, db.lfunc_instances.lucky({'url': url}, 'Lhash')))
+                instances.extend(get_instances_by_trace_hash(
+                    2, db.lfunc_instances.lucky({'url': url}, 'Lhash')))
 
     # or we need to use the trace_hash to find other factorizations
     if str(trace_hash) == Lhash:
@@ -121,7 +125,9 @@ def get_lfunction_by_url(url, **kwargs):
     Lhash = instance['Lhash']
     Ldata = get_lfunction_by_Lhash(Lhash, **kwargs)
     if not Ldata:
-        raise KeyError("Lhash '%s' in instances record for URL '%s' not found in Lfunctions collection" % (Lhash, url))
+        raise KeyError(
+            "Lhash '%s' in instances record for URL '%s' not found in Lfunctions collection" %
+            (Lhash, url))
     return Ldata
 
 
@@ -131,7 +137,8 @@ def getEllipticCurveData(label):
 
 def getHmfData(label):
     from lmfdb.hilbert_modular_forms.hilbert_modular_form import get_hmf, get_hmf_field
-    # return (None,None) if nothing is found i.e. if for does not exist in the database
+    # return (None,None) if nothing is found i.e. if for does not exist in the
+    # database
     f = get_hmf(label)
     if f:
         return (f, get_hmf_field(f['field_label']))

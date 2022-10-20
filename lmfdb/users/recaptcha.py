@@ -16,7 +16,8 @@ from urllib.parse import urlencode
 pubkey = ""
 
 # Private Key:
-# Use this when communicating between your server and our server. Be sure to keep it a secret.
+# Use this when communicating between your server and our server. Be sure
+# to keep it a secret.
 privkey = ""
 
 
@@ -27,9 +28,11 @@ def verify(ip, challenge, response):
     payload['challenge'] = challenge.encode('utf-8')
     payload['response'] = response.encode('utf-8')
     payload = urlencode(payload)
-    result_req = Request(url="http://www.google.com/recaptcha/api/verify",
-                         data=payload,
-                         headers={'Content-Type': 'application/x-www-form-urlencoded'})
+    result_req = Request(
+        url="http://www.google.com/recaptcha/api/verify",
+        data=payload,
+        headers={
+            'Content-Type': 'application/x-www-form-urlencoded'})
     result = urlopen(result_req).read()
 
     if result.status_code == 200:

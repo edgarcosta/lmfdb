@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from lmfdb.tests import LmfdbTest
 
+
 class Genus2Test(LmfdbTest):
 
     # All tests should pass
     def test_stats(self):
         L = self.tc.get('/Genus2Curve/Q/stats')
-        assert 'Sato-Tate groups' in L.get_data(as_text=True) and 'proportion' in L.get_data(as_text=True)
+        assert 'Sato-Tate groups' in L.get_data(
+            as_text=True) and 'proportion' in L.get_data(
+            as_text=True)
 
     def test_cond_range(self):
         L = self.tc.get('/Genus2Curve/Q/?cond=100000-1000000')
@@ -17,30 +20,51 @@ class Genus2Test(LmfdbTest):
         assert '336.a.172032.1' in L.get_data(as_text=True)
 
     def test_by_curve_label(self):
-        L = self.tc.get('/Genus2Curve/Q/169.a.169.1',follow_redirects=True)
-        assert 'square of' in L.get_data(as_text=True) and 'E_6' in L.get_data(as_text=True)
-        L = self.tc.get('/Genus2Curve/Q/1152.a.147456.1',follow_redirects=True)
-        assert 'non-isogenous elliptic curve' in L.get_data(as_text=True) and '24.a' in L.get_data(as_text=True) and '48.a' in L.get_data(as_text=True)
-        L = self.tc.get('/Genus2Curve/Q/15360.f.983040.2',follow_redirects=True)
-        assert r"N(\mathrm{U}(1)\times\mathrm{SU}(2))" in L.get_data(as_text=True) and '480.b' in L.get_data(as_text=True) and '32.a' in L.get_data(as_text=True)
+        L = self.tc.get('/Genus2Curve/Q/169.a.169.1', follow_redirects=True)
+        assert 'square of' in L.get_data(
+            as_text=True) and 'E_6' in L.get_data(
+            as_text=True)
+        L = self.tc.get(
+            '/Genus2Curve/Q/1152.a.147456.1',
+            follow_redirects=True)
+        assert 'non-isogenous elliptic curve' in L.get_data(
+            as_text=True) and '24.a' in L.get_data(
+            as_text=True) and '48.a' in L.get_data(
+            as_text=True)
+        L = self.tc.get(
+            '/Genus2Curve/Q/15360.f.983040.2',
+            follow_redirects=True)
+        assert r"N(\mathrm{U}(1)\times\mathrm{SU}(2))" in L.get_data(
+            as_text=True) and '480.b' in L.get_data(
+            as_text=True) and '32.a' in L.get_data(
+            as_text=True)
 
     def test_isogeny_class_label(self):
         L = self.tc.get('/Genus2Curve/Q/1369/a/')
-        assert '1369.1' in L.get_data(as_text=True) and '50653.1' in L.get_data(as_text=True) and r"\mathrm{SU}(2)\times\mathrm{SU}(2)" in L.get_data(as_text=True)
+        assert '1369.1' in L.get_data(
+            as_text=True) and '50653.1' in L.get_data(
+            as_text=True) and r"\mathrm{SU}(2)\times\mathrm{SU}(2)" in L.get_data(
+            as_text=True)
 
     def test_Lfunction_link(self):
-        L = self.tc.get('/L/Genus2Curve/Q/1369/a',follow_redirects=True)
+        L = self.tc.get('/L/Genus2Curve/Q/1369/a', follow_redirects=True)
         assert 'Motivic weight' in L.get_data(as_text=True)
 
     def test_twist_link(self):
-        L = self.tc.get('/Genus2Curve/Q/?g22=1016576&g20=5071050752/9&g21=195344320/9')
-        for label in ['576.b.147456.1', '1152.a.147456.1', '2304.b.147456.1', '4608.a.4608.1','4608.b.4608.1']:
+        L = self.tc.get(
+            '/Genus2Curve/Q/?g22=1016576&g20=5071050752/9&g21=195344320/9')
+        for label in [
+            '576.b.147456.1',
+            '1152.a.147456.1',
+            '2304.b.147456.1',
+            '4608.a.4608.1',
+                '4608.b.4608.1']:
             assert label in L.get_data(as_text=True)
 
     def test_by_conductor(self):
         L = self.tc.get('/Genus2Curve/Q/15360/')
         for x in "abcdefghij":
-            assert "15360."+x in L.get_data(as_text=True)
+            assert "15360." + x in L.get_data(as_text=True)
         L = self.tc.get('/Genus2Curve/Q/15360/?abs_disc=169')
         assert 'No matches' in L.get_data(as_text=True)
 
@@ -51,26 +75,41 @@ class Genus2Test(LmfdbTest):
     def test_by_url_curve_label(self):
         # Two elliptic curve factors and decomposing endomorphism algebra:
         L = self.tc.get('/Genus2Curve/Q/1088/b/2176/1')
-        assert '32.a1' in L.get_data(as_text=True) and '34.a3' in L.get_data(as_text=True)
+        assert '32.a1' in L.get_data(
+            as_text=True) and '34.a3' in L.get_data(
+            as_text=True)
         # RM curve:
         L = self.tc.get('/Genus2Curve/Q/17689/e/866761/1')
-        assert ('simple' in L.get_data(as_text=True) or 'Simple' in L.get_data(as_text=True)) and r"\mathrm{SU}(2)\times\mathrm{SU}(2)" in L.get_data(as_text=True)
+        assert (
+            'simple' in L.get_data(
+                as_text=True) or 'Simple' in L.get_data(
+                as_text=True)) and r"\mathrm{SU}(2)\times\mathrm{SU}(2)" in L.get_data(
+            as_text=True)
         # QM curve:
         L = self.tc.get('Genus2Curve/Q/262144/d/524288/1')
-        assert 'quaternion algebra' in L.get_data(as_text=True) and 'J(E_2)' in L.get_data(as_text=True)
+        assert 'quaternion algebra' in L.get_data(
+            as_text=True) and 'J(E_2)' in L.get_data(
+            as_text=True)
         L = self.tc.get('Genus2Curve/Q/4096/b/65536/1')
         # Square over a quadratic extension that is CM over one extension and
-        # multiplication by a quaternion algebra ramifying at infinity over another
-        assert 'square of' in L.get_data(as_text=True) and '2.2.8.1-64.1-a3'\
-            in L.get_data(as_text=True) and r'\H' in L.get_data(as_text=True) and '(CM)' in L.get_data(as_text=True)
+        # multiplication by a quaternion algebra ramifying at infinity over
+        # another
+        assert 'square of' in L.get_data(
+            as_text=True) and '2.2.8.1-64.1-a3' in L.get_data(
+            as_text=True) and r'\H' in L.get_data(
+            as_text=True) and '(CM)' in L.get_data(
+                as_text=True)
 
     def test_by_url_isogeny_class_discriminant(self):
         L = self.tc.get('/Genus2Curve/Q/15360/f/983040/')
-        assert '15360.f.983040.1' in L.get_data(as_text=True) and '15360.f.983040.2' in L.get_data(as_text=True) and '15360.d.983040.1' not in L.get_data(as_text=True)
+        assert '15360.f.983040.1' in L.get_data(
+            as_text=True) and '15360.f.983040.2' in L.get_data(
+            as_text=True) and '15360.d.983040.1' not in L.get_data(
+            as_text=True)
 
     def test_random(self):
         for i in range(5):
-            L = self.tc.get('/Genus2Curve/Q/random',follow_redirects=True)
+            L = self.tc.get('/Genus2Curve/Q/random', follow_redirects=True)
             assert 'Sato-Tate group' in L.get_data(as_text=True)
 
     def test_conductor_search(self):
@@ -136,8 +175,11 @@ class Genus2Test(LmfdbTest):
         L = self.tc.get('/Genus2Curve/Q/?analytic_sha=3')
         assert 'No matches' in L.get_data(as_text=True)
         L = self.tc.get('/Genus2Curve/Q/?has_square_sha=False')
-        assert '336.a.172032.1' in L.get_data(as_text=True) and '169.a.169.1' not in L.get_data(as_text=True)
-        L = self.tc.get('/Genus2Curve/Q/?locally_solvable=True&has_square_sha=False')
+        assert '336.a.172032.1' in L.get_data(
+            as_text=True) and '169.a.169.1' not in L.get_data(
+            as_text=True)
+        L = self.tc.get(
+            '/Genus2Curve/Q/?locally_solvable=True&has_square_sha=False')
         assert 'No matches' in L.get_data(as_text=True)
         L = self.tc.get('/Genus2Curve/Q/?analytic_sha=2&has_square_sha=True')
         assert 'No matches' in L.get_data(as_text=True)
@@ -156,8 +198,10 @@ class Genus2Test(LmfdbTest):
         assert '\\infty' in L.get_data(as_text=True)
         assert '6.2.1658432.2' in L.get_data(as_text=True)
         L = self.tc.get('/Genus2Curve/Q/969306/a/969306/1')
-        assert "\\Z \\times \\Z \\times \\Z \\times \\Z/{2}\\Z" in L.get_data(as_text=True)
-        assert '16y' in L.get_data(as_text=True) and '2xz^2 + 11z^3' in L.get_data(as_text=True)
+        assert "\\Z \\times \\Z \\times \\Z \\times \\Z/{2}\\Z" in L.get_data(
+            as_text=True)
+        assert '16y' in L.get_data(
+            as_text=True) and '2xz^2 + 11z^3' in L.get_data(as_text=True)
         assert '3.259671' in L.get_data(as_text=True)
         assert '\\infty' in L.get_data(as_text=True)
         assert 'D_4\\times C_2' in L.get_data(as_text=True)
@@ -218,33 +262,40 @@ class Genus2Test(LmfdbTest):
 
     # tests for searching by geometric invariants
     def test_igusa_clebsch_search(self):
-        L = self.tc.get('/Genus2Curve/Q/?geometric_invariants_type=igusa_clebsch_inv&geometric_invariants=[456%2C11220%2C2199936%2C202612]')
+        L = self.tc.get(
+            '/Genus2Curve/Q/?geometric_invariants_type=igusa_clebsch_inv&geometric_invariants=[456%2C11220%2C2199936%2C202612]')
         assert '1369.a.50653.1' in L.get_data(as_text=True)
         assert '169.a.169.1' not in L.get_data(as_text=True)
-        L = self.tc.get('/Genus2Curve/Q/?geometric_invariants=[456%2C11220%2C2199936%2C202612]')
+        L = self.tc.get(
+            '/Genus2Curve/Q/?geometric_invariants=[456%2C11220%2C2199936%2C202612]')
         assert '1369.a.50653.1' in L.get_data(as_text=True)
         assert '169.a.169.1' not in L.get_data(as_text=True)
 
     def test_igusa_search(self):
-        L = self.tc.get('/Genus2Curve/Q/?geometric_invariants_type=igusa_inv&geometric_invariants=[228%2C296%2C-98568%2C-5640280%2C50653]')
+        L = self.tc.get(
+            '/Genus2Curve/Q/?geometric_invariants_type=igusa_inv&geometric_invariants=[228%2C296%2C-98568%2C-5640280%2C50653]')
         assert '1369.a.50653.1' in L.get_data(as_text=True)
         assert '169.a.169.1' not in L.get_data(as_text=True)
 
     def test_G2_search(self):
-        L = self.tc.get('/Genus2Curve/Q/?geometric_invariants_type=g2_inv&geometric_invariants=[616132666368%2F50653%2C94818816%2F1369%2C-3742848%2F37]')
+        L = self.tc.get(
+            '/Genus2Curve/Q/?geometric_invariants_type=g2_inv&geometric_invariants=[616132666368%2F50653%2C94818816%2F1369%2C-3742848%2F37]')
         assert '1369.a.50653.1' in L.get_data(as_text=True)
         assert '169.a.169.1' not in L.get_data(as_text=True)
 
     def test_badprimes_search(self):
-        L = self.tc.get('/Genus2Curve/Q/?bad_quantifier=exactly&bad_primes=2%2C3')
+        L = self.tc.get(
+            '/Genus2Curve/Q/?bad_quantifier=exactly&bad_primes=2%2C3')
         assert '324.a.648.1' in L.get_data(as_text=True)
         assert not('450.a.2700.1' in L.get_data(as_text=True))
         assert not('169.a.169.1' in L.get_data(as_text=True))
-        L = self.tc.get('/Genus2Curve/Q/?bad_quantifier=exclude&bad_primes=2%2C3')
+        L = self.tc.get(
+            '/Genus2Curve/Q/?bad_quantifier=exclude&bad_primes=2%2C3')
         assert not('324.a.648.1' in L.get_data(as_text=True))
         assert not('450.a.2700.1' in L.get_data(as_text=True))
         assert '169.a.169.1' in L.get_data(as_text=True)
-        L = self.tc.get('/Genus2Curve/Q/?bad_quantifier=include&bad_primes=2%2C3')
+        L = self.tc.get(
+            '/Genus2Curve/Q/?bad_quantifier=include&bad_primes=2%2C3')
         assert '324.a.648.1' in L.get_data(as_text=True)
         assert '450.a.2700.1' in L.get_data(as_text=True)
         assert not('169.a.169.1' in L.get_data(as_text=True))
@@ -267,7 +318,7 @@ class Genus2Test(LmfdbTest):
                         'Hilbert modular form 2.2.24.1-36.1-a',
                         'Elliptic curve 2.2.24.1-36.1-a',
                         'Twists',)
-                    ),
+                 ),
                 ('/Genus2Curve/Q/20736/i/',
                     ('L-function',
                         'Elliptic curve 576.f',
@@ -279,15 +330,14 @@ class Genus2Test(LmfdbTest):
                         'Elliptic curve 2.2.24.1-36.1-a',
                         'Hilbert modular form 2.2.24.1-36.1-a',
                      )
-                    ),
+                 ),
                 ('/Genus2Curve/Q/576/a/',
                     ('L-function',
                         'Elliptic curve 2.2.8.1-9.1-a',
                         'Modular form 24.2.d.a',
                         'Hilbert modular form 2.2.8.1-9.1-a',)
-                    )
-                ]:
+                 )
+        ]:
             data = self.tc.get(url).get_data(as_text=True)
             for friend in friends:
                 assert friend in data
-

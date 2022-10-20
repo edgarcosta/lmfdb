@@ -6,31 +6,55 @@ from sage.all import cached_function, psi, RR, Integer, prod
 from psycopg2.sql import SQL, Identifier
 from .verification import TableChecker, overall
 
+
 @cached_function
 def kbarbar(weight):
     # The weight part of the analytic conductor
-    return psi(RR(weight)/2).exp() / (2*RR.pi())
+    return psi(RR(weight) / 2).exp() / (2 * RR.pi())
+
 
 def analytic_conductor(level, weight):
     return level * kbarbar(weight)**2
 
-def check_analytic_conductor(level, weight, analytic_conductor_stored, verbose=False, threshold = 1e-12):
-    success = (abs(analytic_conductor(level, weight) - analytic_conductor_stored)/analytic_conductor(level, weight)) < threshold
+
+def check_analytic_conductor(
+        level,
+        weight,
+        analytic_conductor_stored,
+        verbose=False,
+        threshold=1e-12):
+    success = (abs(analytic_conductor(level, weight) -
+                   analytic_conductor_stored) /
+               analytic_conductor(level, weight)) < threshold
     if not success and verbose:
-        print("Analytic conductor failure", analytic_conductor(level, weight), analytic_conductor_stored)
+        print(
+            "Analytic conductor failure",
+            analytic_conductor(
+                level,
+                weight),
+            analytic_conductor_stored)
     return success
+
 
 @cached_function
 def level_attributes(level):
-    # returns level_radical, level_primes, level_is_prime, level_is_prime_power, level_is_squarefree, level_is_square
+    # returns level_radical, level_primes, level_is_prime,
+    # level_is_prime_power, level_is_squarefree, level_is_square
     fact = Integer(level).factor()
     level_primes = [elt[0] for elt in fact]
     level_radical = prod(level_primes)
     level_is_prime_power = len(fact) == 1
     level_is_prime = level_is_prime_power and level_radical == level
-    level_is_square = all( elt[1] % 2 == 0 for elt in fact)
-    level_is_squarefree = all( elt[1] == 1 for elt in fact)
-    return [level_radical, level_primes, level_is_prime, level_is_prime_power, level_is_squarefree, level_is_square]
+    level_is_square = all(elt[1] % 2 == 0 for elt in fact)
+    level_is_squarefree = all(elt[1] == 1 for elt in fact)
+    return [
+        level_radical,
+        level_primes,
+        level_is_prime,
+        level_is_prime_power,
+        level_is_squarefree,
+        level_is_square]
+
 
 class MfChecker(TableChecker):
     def _box_query(self, box, extras={}, drop=[]):
@@ -42,7 +66,8 @@ class MfChecker(TableChecker):
             (e.g. dim <= 20, which would be {'dim':{'$lte':20}})
         """
         query = defaultdict(dict)
-        for bcol, col in [('N','level'), ('k', 'weight'), ('o', 'char_order'), ('Nk2', 'Nk2'), ('D', 'dim')]:
+        for bcol, col in [('N', 'level'), ('k', 'weight'),
+                          ('o', 'char_order'), ('Nk2', 'Nk2'), ('D', 'dim')]:
             for mm, code in [('min', '$gte'), ('max', '$lte')]:
                 constraint = box.get(bcol + mm)
                 if constraint is not None:
@@ -58,7 +83,13 @@ class MfChecker(TableChecker):
         """
         check level_* attributes (radical,primes,is_prime,...)
         """
-        attributes = ['level_radical', 'level_primes', 'level_is_prime', 'level_is_prime_power',  'level_is_squarefree', 'level_is_square']
+        attributes = [
+            'level_radical',
+            'level_primes',
+            'level_is_prime',
+            'level_is_prime_power',
+            'level_is_squarefree',
+            'level_is_square']
         stored = [rec[attr] for attr in attributes]
         computed = level_attributes(rec['level'])
         success = stored == computed
@@ -69,6 +100,7 @@ class MfChecker(TableChecker):
         return success
 
     hecke_orbit_code = []
+
     @overall
     def check_hecke_orbit_code(self):
         """
@@ -86,9 +118,12 @@ class MfChecker(TableChecker):
                 N_column, k_column, i_column = self.hecke_orbit_code[1]
             # N + (k<<24) + ((i-1)<<36) + ((x-1)<<52)
             if x_column is None:
-                return self._run_query(SQL("{0} != {1}::bigint + ({2}::integer::bit(64)<<24)::bigint + (({3}-1)::integer::bit(64)<<36)::bigint").format(*tuple(map(Identifier, [hoc_column, N_column, k_column, i_column]))))
+                return self._run_query(SQL("{0} != {1}::bigint + ({2}::integer::bit(64)<<24)::bigint + (({3}-1)::integer::bit(64)<<36)::bigint").format(
+                    *tuple(map(Identifier, [hoc_column, N_column, k_column, i_column]))))
             else:
-                return self._run_query(SQL("{0} != {1}::bigint + ({2}::integer::bit(64)<<24)::bigint + (({3}-1)::integer::bit(64)<<36)::bigint + (({4}-1)::integer::bit(64)<<52)::bigint").format(*tuple(map(Identifier, [hoc_column, N_column, k_column, i_column, x_column]))))
+                return self._run_query(SQL("{0} != {1}::bigint + ({2}::integer::bit(64)<<24)::bigint + (({3}-1)::integer::bit(64)<<36)::bigint + (({4}-1)::integer::bit(64)<<52)::bigint").format(
+                    *tuple(map(Identifier, [hoc_column, N_column, k_column, i_column, x_column]))))
+
 
 class SubspacesChecker(MfChecker):
     @overall
@@ -112,6 +147,7 @@ class SubspacesChecker(MfChecker):
         """
         return self.check_divisible('level', 'sub_level')
 
+
 class TracesChecker(MfChecker):
     uniqueness_constraints = [['hecke_orbit_code', 'n']]
     label_col = 'hecke_orbit_code'
@@ -121,4 +157,7 @@ class TracesChecker(MfChecker):
         """
         check that hecke_orbit_code is present in mf_newforms
         """
-        return self.check_count(1000 * self.base_table.count(self.base_constraint))
+        return self.check_count(
+            1000 *
+            self.base_table.count(
+                self.base_constraint))

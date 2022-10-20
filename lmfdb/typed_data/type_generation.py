@@ -7,7 +7,8 @@
 #   def extra_func(self,...):
 #       pass
 
-# In addition, it automatically acquires a __init__ function, that ensures type conversions.
+# In addition, it automatically acquires a __init__ function, that ensures
+# type conversions.
 
 # In fact, we can also do Array(f1,f2,f3), which gives a class as well, but that is callable
 # Array(f1,f2,f3)([arg1,arg2,arg3]) gives [f1(arg1),f2(arg2),f3(arg3)]
@@ -20,11 +21,11 @@
 
 def wrapper(f):
     def g(*args, **kwargs):
-        #print f.__name__, " called with"
-        #print "     *args: ", args
-        #print "     **kwargs", kwargs
+        # print f.__name__, " called with"
+        # print "     *args: ", args
+        # print "     **kwargs", kwargs
         tmp = f(*args, **kwargs)
-        #print f.__name__, "      is returning      ", tmp
+        # print f.__name__, "      is returning      ", tmp
         return tmp
     return g
 
@@ -39,28 +40,31 @@ def ImmutableExtensionFactory(t, t_name):
 
     return ImmutableExtensionClass
 
+
 Int = ImmutableExtensionFactory(int, "Int")
 Str = String = ImmutableExtensionFactory(str, "Str")
 Float = ImmutableExtensionFactory(float, "Float")
 
-Anything = lambda x: x
 
-id = lambda x: x
+def Anything(x): return x
+
+
+def id(x): return x
 
 
 def Array(*f, **kwargs):
     # Cases:
-        # Array(f, n=3)
-        # Array(f)
-        # Array(id, n=3)
+    # Array(f, n=3)
+    # Array(f)
+    # Array(id, n=3)
 
-        # Use initOneFunction
+    # Use initOneFunction
     # Cases:
-        # Array(f1,f2,f3)
-        # Redundant: Array(f1,f2,f3,n=3)
-        # Bad: Array(f1,f2,f3, n = 4)
+    # Array(f1,f2,f3)
+    # Redundant: Array(f1,f2,f3,n=3)
+    # Bad: Array(f1,f2,f3, n = 4)
 
-        # Use initMultipleFunctions
+    # Use initMultipleFunctions
     class SmartArray(list):
         pass
 
@@ -89,16 +93,16 @@ def Array(*f, **kwargs):
 
 def Dict(*f, **kwargs):
     # Cases:
-        # Dict(f) Not allowed (or syntax would be confusing)
-        # Use instead Dict(Str, g)
-        # Not valid JSON, but should be handled: Dict(f,g)
+    # Dict(f) Not allowed (or syntax would be confusing)
+    # Use instead Dict(Str, g)
+    # Not valid JSON, but should be handled: Dict(f,g)
 
-        # Use ConstantValueTypes
+    # Use ConstantValueTypes
 
     # Cases:
-        # Dict({key1 : f1, key2 : f2, ...})
+    # Dict({key1 : f1, key2 : f2, ...})
 
-        # Use VariableValueTypes
+    # Use VariableValueTypes
 
     class SmartDict(dict):
         pass

@@ -43,15 +43,12 @@ class LmfdbTest(unittest2.TestCase):
     def check_args_with_timeout(self, path, text):
         timeout_error = "The search query took longer than expected!"
         data = self.tc.get(path, follow_redirects=True).get_data(as_text=True)
-        assert (text in data) or (timeout_error in data), "%s not in the %s" % (
-            text,
-            path,
-        )
+        assert (text in data) or (
+            timeout_error in data), "%s not in the %s" % (text, path, )
 
     def not_check_args(self, path, text):
-        assert not (
-            text in self.tc.get(path, follow_redirects=True).get_data(as_text=True)
-        ), "%s in the %s" % (text, path)
+        assert not (text in self.tc.get(path, follow_redirects=True).get_data(
+            as_text=True)), "%s in the %s" % (text, path)
 
     def check_external(self, homepage, path, text):
         headers = {"User-Agent": "Mozilla/5.0"}
@@ -59,11 +56,16 @@ class LmfdbTest(unittest2.TestCase):
         request = Request(path, headers=headers)
         assert path in homepage
         try:
-            assert text in urlopen(request, context=context).read().decode("utf-8")
+            assert text in urlopen(
+                request, context=context).read().decode("utf-8")
         except URLError as e:
-            if e.errno in [errno.ETIMEDOUT, errno.ECONNREFUSED, errno.EHOSTDOWN]:
+            if e.errno in [
+                errno.ETIMEDOUT,
+                errno.ECONNREFUSED,
+                    errno.EHOSTDOWN]:
                 pass
-            elif "Connection refused" in str(e):  # not every error comes with a errno
+            # not every error comes with a errno
+            elif "Connection refused" in str(e):
                 pass
             else:
                 print(e)

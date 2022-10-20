@@ -12,6 +12,7 @@ from collections import defaultdict
 from sage.all import prod
 import re
 
+
 def field_data(s):
     r"""
     Returns full field data from field label.
@@ -20,17 +21,21 @@ def field_data(s):
     sig = [r1, (deg - r1) // 2]
     return [s, deg, sig, abs_disc]
 
+
 def sort_field(F):
     r"""
     Returns data to sort by, from field label.
     """
     return [int(c) for c in F.split(".")]
 
+
 logger = make_logger("ecnf")
+
 
 def latex_tor(t):
     if isinstance(t, str):
-        # This is used in formatting stats, and we need it to process the output.
+        # This is used in formatting stats, and we need it to process the
+        # output.
         return t
     t = tuple(t)
     if len(t) == 0:
@@ -40,15 +45,18 @@ def latex_tor(t):
     else:
         return r"$C_{%s} \times C_{%s}$" % t
 
+
 def tor_invs(t):
     if isinstance(t, str):
         return [int(x) for x in re.findall(r"\d+", t)]
     else:
         return t
 
+
 def tor_sort_key(t):
     t = tor_invs(t)
     return (prod(t), len(t))
+
 
 class ECNF_stats(StatsDisplay):
     table = db.ec_nfcurves
@@ -67,12 +75,25 @@ class ECNF_stats(StatsDisplay):
          'proportioner': proportioners.per_row_total},
     ]
 
-    buckets = {'conductor_norm': ['1-100', '101-1000', '1001-10000', '10001-50000', '50001-100000', '100001-150000']}
+    buckets = {
+        'conductor_norm': [
+            '1-100',
+            '101-1000',
+            '1001-10000',
+            '10001-50000',
+            '50001-100000',
+            '100001-150000']}
     formatters = {'torsion_structure': latex_tor}
     query_formatters = {
-        'degree': (lambda x: 'bf_deg=%s' % x),
-        'torsion_structure': (lambda x: 'torsion_structure=%s' % (str(tor_invs(x)).replace(" ","")))
-    }
+        'degree': (
+            lambda x: 'bf_deg=%s' %
+            x),
+        'torsion_structure': (
+            lambda x: 'torsion_structure=%s' %
+            (str(
+                tor_invs(x)).replace(
+                    " ",
+                "")))}
     sort_keys = {'torsion_structure': tor_sort_key}
 
     knowls = {'degree': 'nf.degree',
@@ -89,33 +110,43 @@ class ECNF_stats(StatsDisplay):
     deg_knowl = '<a knowl="nf.degree">degree</a>'
     cond_knowls = '<a knowl="ec.conductor">conductors</a>'
     cond_knowl = '<a knowl="ec.conductor">conductor</a>'
+
     @lazy_attribute
     def ncurves(self):
         return db.ec_nfcurves.count()
+
     @lazy_attribute
     def nclasses(self):
-        return db.ec_nfcurves.count({'number':1})
+        return db.ec_nfcurves.count({'number': 1})
+
     @lazy_attribute
     def field_counts(self):
         return db.ec_nfcurves.stats.column_counts('field_label')
+
     @lazy_attribute
     def field_classes(self):
-        return db.ec_nfcurves.stats.column_counts('field_label', {'number':1})
+        return db.ec_nfcurves.stats.column_counts('field_label', {'number': 1})
+
     @lazy_attribute
     def sig_counts(self):
         return db.ec_nfcurves.stats.column_counts('signature')
+
     @lazy_attribute
     def sig_classes(self):
-        return db.ec_nfcurves.stats.column_counts('signature', {'number':1})
+        return db.ec_nfcurves.stats.column_counts('signature', {'number': 1})
+
     @lazy_attribute
     def deg_counts(self):
         return db.ec_nfcurves.stats.column_counts('degree')
+
     @lazy_attribute
     def deg_classes(self):
-        return db.ec_nfcurves.stats.column_counts('degree', {'number':1})
+        return db.ec_nfcurves.stats.column_counts('degree', {'number': 1})
+
     @lazy_attribute
     def torsion_counts(self):
         return db.ec_nfcurves.stats.column_counts('torsion_structure')
+
     @lazy_attribute
     def field_normstats(self):
         D = db.ec_nfcurves.stats.numstats('conductor_norm', 'field_label')
@@ -123,6 +154,7 @@ class ECNF_stats(StatsDisplay):
                         'nclasses': self.field_classes[label],
                         'max_norm': D[label]['max']}
                 for label in D}
+
     @lazy_attribute
     def sig_normstats(self):
         D = db.ec_nfcurves.stats.numstats('conductor_norm', 'signature')
@@ -130,6 +162,7 @@ class ECNF_stats(StatsDisplay):
                       'nclasses': self.sig_classes[sig],
                       'max_norm': D[sig]['max']}
                 for sig in D}
+
     @lazy_attribute
     def deg_normstats(self):
         D = db.ec_nfcurves.stats.numstats('conductor_norm', 'degree')
@@ -137,16 +170,20 @@ class ECNF_stats(StatsDisplay):
                       'nclasses': self.deg_classes[deg],
                       'max_norm': D[deg]['max']}
                 for deg in D}
+
     @lazy_attribute
     def maxdeg(self):
         return db.ec_nfcurves.max('degree')
+
     @staticmethod
     def _get_sig(nflabel):
-        d,r = map(int,nflabel.split('.',2)[:2])
-        return (r,(d-r)//2)
+        d, r = map(int, nflabel.split('.', 2)[:2])
+        return (r, (d - r) // 2)
+
     @staticmethod
     def _get_deg(nflabel):
-        return int(nflabel.split('.',1)[0])
+        return int(nflabel.split('.', 1)[0])
+
     def _fields_by(self, func):
         D = defaultdict(list)
         for label, count in self.field_counts.items():
@@ -155,17 +192,20 @@ class ECNF_stats(StatsDisplay):
         for fields in D.values():
             fields.sort(key=sort_field)
         return D
+
     @lazy_attribute
     def fields_by_sig(self):
         return self._fields_by(self._get_sig)
+
     @lazy_attribute
     def fields_by_deg(self):
         return self._fields_by(self._get_deg)
+
     @lazy_attribute
     def sigs_by_deg(self):
         def _get_deg_s(sig):
             r, s = sig
-            return r + 2*s
+            return r + 2 * s
         D = defaultdict(list)
         for sig in self.sig_counts:
             D[_get_deg_s(sig)].append(sig)
@@ -187,7 +227,8 @@ class ECNF_stats(StatsDisplay):
 
     @property
     def short_summary(self):
-        return self.summary + '  Here are some <a href="%s">further statistics</a>.' % (url_for(".statistics"))
+        return self.summary + \
+            '  Here are some <a href="%s">further statistics</a>.' % (url_for(".statistics"))
 
     @cached_method
     def field_summary(self, field):
@@ -195,11 +236,11 @@ class ECNF_stats(StatsDisplay):
         ncurves = stats['ncurves']
         nclasses = stats['nclasses']
         max_norm = stats['max_norm']
-        ec_knowl = self.ec_knowl if ncurves==1 else self.ec_knowls
-        iso_knowl = self.iso_knowl if ncurves==1 else self.iso_knowls
-        nf_knowl = self.nf_knowl if ncurves==1 else self.nf_knowls
-        cond_knowl = self.cond_knowl if ncurves==1 else self.cond_knowls
-        s = '' if max_norm==1 else 'up to '
+        ec_knowl = self.ec_knowl if ncurves == 1 else self.ec_knowls
+        iso_knowl = self.iso_knowl if ncurves == 1 else self.iso_knowls
+        nf_knowl = self.nf_knowl if ncurves == 1 else self.nf_knowls
+        cond_knowl = self.cond_knowl if ncurves == 1 else self.cond_knowls
+        s = '' if max_norm == 1 else 'up to '
         norm_phrase = ' of norm {}{}.'.format(s, max_norm)
         return ''.join([r'The database currently contains {} '.format(ncurves),
                         ec_knowl,
@@ -214,20 +255,26 @@ class ECNF_stats(StatsDisplay):
     @cached_method
     def signature_summary(self, sig):
         r, s = sig
-        d = r+2*s
-        stats = self.sig_normstats[r,s]
+        d = r + 2 * s
+        stats = self.sig_normstats[r, s]
         ncurves = stats['ncurves']
         nclasses = stats['nclasses']
         max_norm = stats['max_norm']
-        return ''.join([r'The database currently contains {} '.format(ncurves),
-                        self.ec_knowls,
-                        r' defined over ',
-                        self.nf_knowls,
-                        r' of signature ({},{}) (degree {}), in {} '.format(r, s, d, nclasses),
-                        self.iso_knowls,
-                        r', with ',
-                        self.cond_knowls,
-                        r' of norm up to {}.'.format(max_norm)])
+        return ''.join(
+            [
+                r'The database currently contains {} '.format(ncurves),
+                self.ec_knowls,
+                r' defined over ',
+                self.nf_knowls,
+                r' of signature ({},{}) (degree {}), in {} '.format(
+                    r,
+                    s,
+                    d,
+                    nclasses),
+                self.iso_knowls,
+                r', with ',
+                self.cond_knowls,
+                r' of norm up to {}.'.format(max_norm)])
 
     @cached_method
     def degree_summary(self, d):
@@ -247,7 +294,8 @@ class ECNF_stats(StatsDisplay):
 
     @cached_method
     def isogeny_degrees(self):
-        cur = db._execute(SQL("SELECT UNIQ(SORT(ARRAY_AGG(elements ORDER BY elements))) FROM ec_nfcurves, UNNEST(isodeg) as elements"))
+        cur = db._execute(
+            SQL("SELECT UNIQ(SORT(ARRAY_AGG(elements ORDER BY elements))) FROM ec_nfcurves, UNNEST(isodeg) as elements"))
         return cur.fetchone()[0]
 
     def setup(self, attributes=None, delete=False):
@@ -259,6 +307,7 @@ class ECNF_stats(StatsDisplay):
             assert self.deg_normstats
             assert self.torsion_counts
         super().setup(attributes, delete)
+
 
 @app.context_processor
 def ctx_ecnf_summary():

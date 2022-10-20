@@ -12,9 +12,11 @@ CP_credit = 'Alex Best, Raymond van Bommel'
 Completename = 'Completeness of the data'
 dnc = 'data not computed'
 
+
 def cluster_picture_data(label):
     return Markup(cp_knowl_guts(label))
-    
+
+
 @app.context_processor
 def ctx_cluster_pictures():
     return {'cluster_picture_data': cluster_picture_data}

@@ -40,6 +40,7 @@ except ImportError:
     SAGE_MODE = False
 else:
     SAGE_MODE = True
+
     class LmfdbRealLiteral(RealLiteral):
         """
         A real number that prints using the string used to construct it.
@@ -146,7 +147,8 @@ class Json(pgJson):
         For example, replace Integers with ints, encode various Sage types using dictionaries....
         """
         # For now we just hard code the encoding.
-        # It would be nice to have something more abstracted/systematic eventually
+        # It would be nice to have something more abstracted/systematic
+        # eventually
         if isinstance(obj, tuple):
             return cls.prep(list(obj), escape_backslashes)
         elif isinstance(obj, list):
@@ -178,7 +180,12 @@ class Json(pgJson):
             else:
                 return [cls.prep(x, escape_backslashes) for x in obj]
         elif isinstance(obj, dict):
-            if obj and all(isinstance(k, int) or SAGE_MODE and isinstance(k, Integer) for k in obj):
+            if obj and all(
+                isinstance(
+                    k,
+                    int) or SAGE_MODE and isinstance(
+                    k,
+                    Integer) for k in obj):
                 return {
                     "__IntDict__": 0,  # encoding version
                     "data": [
@@ -187,7 +194,8 @@ class Json(pgJson):
                     ],
                 }
             elif all(isinstance(k, str) for k in obj):
-                return {k: cls.prep(v, escape_backslashes) for k, v in obj.items()}
+                return {k: cls.prep(v, escape_backslashes)
+                        for k, v in obj.items()}
             else:
                 raise TypeError("keys must be strings or integers")
         elif SAGE_MODE and isinstance(obj, FreeModuleElement):
@@ -212,7 +220,11 @@ class Json(pgJson):
                 "prec": int(obj.parent().precision()),
             }
         elif isinstance(obj, complex):
-            return {"__complex__": 0, "data": [obj.real, obj.imag]}  # encoding version
+            return {
+                "__complex__": 0,
+                "data": [
+                    obj.real,
+                    obj.imag]}  # encoding version
         elif SAGE_MODE and isinstance(obj, ComplexNumber):
             return {
                 "__Complex__": 0,  # encoding version
@@ -266,7 +278,8 @@ class Json(pgJson):
             if obj.base_ring() is ZZ:
                 data = [int(c) for c in obj.list()]
             else:
-                data = [cls.prep(c, escape_backslashes)["data"] for c in obj.list()]
+                data = [cls.prep(c, escape_backslashes)["data"]
+                        for c in obj.list()]
             return {
                 "__PowerSeries__": 0,  # encoding version
                 "vname": obj.variable(),
@@ -307,7 +320,9 @@ class Json(pgJson):
             obj = [cls._extract(base, c) for c in obj]
             return parent(obj)
         else:
-            raise NotImplementedError("Cannot extract element of %s" % (parent))
+            raise NotImplementedError(
+                "Cannot extract element of %s" %
+                (parent))
 
     @classmethod
     def extract(cls, obj):
@@ -371,7 +386,8 @@ class Json(pgJson):
             elif (len(obj) == 4 and "__Poly__" in obj and "vname" in obj and "base" in obj):
                 assert SAGE_MODE
                 base = cls.extract(obj["base"])
-                return base[obj["vname"]]([cls._extract(base, c) for c in obj["data"]])
+                return base[obj["vname"]](
+                    [cls._extract(base, c) for c in obj["data"]])
             elif (
                 len(obj) == 5
                 and "__PowerSeries__" in obj
@@ -382,13 +398,17 @@ class Json(pgJson):
                 assert SAGE_MODE
                 base = cls.extract(obj["base"])
                 prec = infinity if obj["prec"] == "inf" else int(obj["prec"])
-                return base[[obj["vname"]]]([cls._extract(base, c) for c in obj["data"]], prec=prec)
+                return base[[obj["vname"]]](
+                    [cls._extract(base, c) for c in obj["data"]], prec=prec)
             elif len(obj) == 2 and "__date__" in obj:
-                return datetime.datetime.strptime(obj["data"], "%Y-%m-%d").date()
+                return datetime.datetime.strptime(
+                    obj["data"], "%Y-%m-%d").date()
             elif len(obj) == 2 and "__time__" in obj:
-                return datetime.datetime.strptime(obj["data"], "%H:%M:%S.%f").time()
+                return datetime.datetime.strptime(
+                    obj["data"], "%H:%M:%S.%f").time()
             elif len(obj) == 2 and "__datetime__" in obj:
-                return datetime.datetime.strptime(obj["data"], "%Y-%m-%d %H:%M:%S.%f")
+                return datetime.datetime.strptime(
+                    obj["data"], "%Y-%m-%d %H:%M:%S.%f")
         return obj
 
 
@@ -439,7 +459,8 @@ def copy_dumps(inp, typ, recursing=False):
                 subtyp = typ[:-2]
             elif subtyp != typ[:-2]:
                 raise ValueError("Array dimensions must be uniform")
-        return "{" + ",".join(copy_dumps(x, subtyp, recursing=True) for x in inp) + "}"
+        return "{" + ",".join(copy_dumps(x, subtyp, recursing=True)
+                              for x in inp) + "}"
     elif SAGE_MODE and isinstance(inp, RealLiteral):
         return inp.literal
     elif isinstance(inp, (float, int)) or SAGE_MODE and isinstance(inp, (Integer, RealNumber)):
@@ -451,4 +472,6 @@ def copy_dumps(inp, typ, recursing=False):
     elif typ == "bytea":
         return r"\\x" + "".join(binascii.hexlify(c) for c in inp)
     else:
-        raise TypeError("Invalid input %s (%s) for postgres type %s" % (inp, type(inp), typ))
+        raise TypeError(
+            "Invalid input %s (%s) for postgres type %s" %
+            (inp, type(inp), typ))

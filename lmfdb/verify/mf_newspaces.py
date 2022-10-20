@@ -17,24 +17,29 @@ def sturm_bound0(level, weight):
 def get_dirchar(char_mod, char_num, char_order):
     """Helper method to compute Dirichlet Character on the fly"""
     char_values_data = db.char_dir_values.lookup(
-    "{}.{}".format(char_mod, char_num)
+        "{}.{}".format(char_mod, char_num)
     )
     char_valuepairs = char_values_data['values_gens']
     char_genvalues = [int(v) for g, v in char_valuepairs]
-    return ConreyCharacter(char_mod, char_num).sage_character(char_order, char_genvalues)
+    return ConreyCharacter(
+        char_mod,
+        char_num).sage_character(
+        char_order,
+        char_genvalues)
 
 
 class mf_newspaces(MfChecker):
     table = db.mf_newspaces
 
     uniqueness_constraints = [
-       ['label'],
-       ['level', 'weight', 'char_orbit_index'],
-       ['level', 'weight', 'char_orbit_label']]
+        ['label'],
+        ['level', 'weight', 'char_orbit_index'],
+        ['level', 'weight', 'char_orbit_label']]
 
     label = ['level', 'weight', 'char_orbit_label']
 
-    hecke_orbit_code = ['hecke_orbit_code', ['level', 'weight', 'char_orbit_index']]
+    hecke_orbit_code = ['hecke_orbit_code', [
+        'level', 'weight', 'char_orbit_index']]
 
     @overall
     def check_box_count(self):
@@ -45,8 +50,10 @@ class mf_newspaces(MfChecker):
         mf_newspaces.count() should be the sum of these
         """
         # TIME about 20s
-        return accumulate_failures(self.check_count(box['newspace_count'], self._box_query(box))
-                   for box in db.mf_boxes.search())
+        return accumulate_failures(
+            self.check_count(
+                box['newspace_count'],
+                self._box_query(box)) for box in db.mf_boxes.search())
 
     @overall
     def check_box_hecke_cutter_primes(self):
@@ -55,8 +62,15 @@ class mf_newspaces(MfChecker):
         box with eigenvalues set, `min(dims) <= 20`, and weight > 1
         """
         # TIME about 2s
-        return accumulate_failures(self.check_non_null(['hecke_cutter_primes'], self._box_query(box, {'dim':{'$lte':20,'$gt':0}, 'weight':{'$gt':1}}))
-                   for box in db.mf_boxes.search({'eigenvalues':True}))
+        return accumulate_failures(
+            self.check_non_null(
+                ['hecke_cutter_primes'], self._box_query(
+                    box, {
+                        'dim': {
+                            '$lte': 20, '$gt': 0}, 'weight': {
+                            '$gt': 1}})) for box in db.mf_boxes.search(
+                {
+                    'eigenvalues': True}))
 
     @overall
     def check_box_straces(self):
@@ -66,10 +80,10 @@ class mf_newspaces(MfChecker):
         """
         # TIME about 5s
         return accumulate_failures(
-                self.check_non_null(
-                    ['traces'],
-                        self._box_query(box, {'dim':{'$gt':0}}))
-                   for box in db.mf_boxes.search({'straces':True}))
+            self.check_non_null(
+                ['traces'],
+                self._box_query(box, {'dim': {'$gt': 0}}))
+            for box in db.mf_boxes.search({'straces': True}))
 
     @overall
     def check_box_traces(self):
@@ -79,12 +93,12 @@ class mf_newspaces(MfChecker):
         """
         # TIME about ??s
         return accumulate_failures(
-                self.check_non_null([
-                        'traces',
-                        'trace_bound',
-                        'num_forms',
-                        'hecke_orbit_dims'], self._box_query(box, {'dim':{'$gt':0}}))
-                   for box in db.mf_boxes.search({'traces':True}))
+            self.check_non_null([
+                'traces',
+                'trace_bound',
+                'num_forms',
+                'hecke_orbit_dims'], self._box_query(box, {'dim': {'$gt': 0}}))
+            for box in db.mf_boxes.search({'traces': True}))
 
     @overall
     def check_char_orbit(self):
@@ -100,7 +114,11 @@ class mf_newspaces(MfChecker):
         check that trace_display is set whenever traces is set and dim > 0
         """
         # TIME about 2s
-        return self.check_non_null(['trace_display'], {'traces':{'$exists': True}, 'dim':{'$gt': 0}})
+        return self.check_non_null(
+            ['trace_display'], {
+                'traces': {
+                    '$exists': True}, 'dim': {
+                    '$gt': 0}})
 
     @overall
     def check_traces_len(self):
@@ -108,7 +126,8 @@ class mf_newspaces(MfChecker):
         if present, check that traces has length at least 1000
         """
         # TIME about 45s
-        return self.check_array_len_gte_constant('traces', 1000, {'traces':{'$exists': True}})
+        return self.check_array_len_gte_constant(
+            'traces', 1000, {'traces': {'$exists': True}})
 
     @overall
     def check_trace_bound0(self):
@@ -116,7 +135,7 @@ class mf_newspaces(MfChecker):
         check that trace_bound=0 if num_forms=1
         """
         # TIME about 1s
-        return self.check_values({'trace_bound': 0}, {'num_forms':1})
+        return self.check_values({'trace_bound': 0}, {'num_forms': 1})
 
     @overall
     def check_trace_bound1(self):
@@ -124,7 +143,9 @@ class mf_newspaces(MfChecker):
         check that trace_bound = 1 if hecke_orbit_dims set and all dims distinct
         """
         # TIME about 2s
-        return self._run_query(SQL("hecke_orbit_dims!= ARRAY(SELECT DISTINCT UNNEST(hecke_orbit_dims) ORDER BY 1)"), {'trace_bound':1})
+        return self._run_query(
+            SQL("hecke_orbit_dims!= ARRAY(SELECT DISTINCT UNNEST(hecke_orbit_dims) ORDER BY 1)"), {
+                'trace_bound': 1})
 
     @overall
     def check_trace_bound1_from_dims(self):
@@ -132,7 +153,8 @@ class mf_newspaces(MfChecker):
         check that trace_bound = 1 if hecke_orbit_dims set and all dims distinct
         """
         # TIME about 2s
-        return self._run_query(SQL("hecke_orbit_dims IS NOT NULL AND hecke_orbit_dims = ARRAY(SELECT DISTINCT UNNEST(hecke_orbit_dims) ORDER BY 1) AND num_forms > 1 AND trace_bound != 1"))
+        return self._run_query(
+            SQL("hecke_orbit_dims IS NOT NULL AND hecke_orbit_dims = ARRAY(SELECT DISTINCT UNNEST(hecke_orbit_dims) ORDER BY 1) AND num_forms > 1 AND trace_bound != 1"))
 
     @overall
     def check_AL_dims_plus_dim(self):
@@ -140,7 +162,8 @@ class mf_newspaces(MfChecker):
         check that AL_dims and plus_dim is set whenever char_orbit_index=1 and dim > 0
         """
         # TIME about 20s
-        return self.check_non_null(['AL_dims', 'plus_dim'], {'char_orbit_index':1, 'dim':{'$gt':0}})
+        return self.check_non_null(['AL_dims', 'plus_dim'], {
+                                   'char_orbit_index': 1, 'dim': {'$gt': 0}})
 
     @overall
     def check_dim0_num_forms(self):
@@ -148,7 +171,8 @@ class mf_newspaces(MfChecker):
         check that if dim = 0 then num_forms = 0 and hecke_orbit_dims = []
         """
         # TIME about 2s
-        return self.check_values({'num_forms': 0, 'hecke_orbit_dims':[]}, {'num_forms':0})
+        return self.check_values(
+            {'num_forms': 0, 'hecke_orbit_dims': []}, {'num_forms': 0})
 
     @overall
     def check_mf_dim(self):
@@ -156,7 +180,7 @@ class mf_newspaces(MfChecker):
         check that eis_dim + cusp_dim = mf_dim
         """
         # TIME about 2s
-        return self.check_sum(['eis_dim','cusp_dim'], ['mf_dim'])
+        return self.check_sum(['eis_dim', 'cusp_dim'], ['mf_dim'])
 
     @overall
     def check_mf_new_dim(self):
@@ -164,7 +188,7 @@ class mf_newspaces(MfChecker):
         check that eis_new_dim+dim=mf_new_dim
         """
         # TIME about 2s
-        return self.check_sum(['eis_new_dim','dim'], ['mf_new_dim'])
+        return self.check_sum(['eis_new_dim', 'dim'], ['mf_new_dim'])
 
     @overall
     def check_dim_wt1(self):
@@ -172,7 +196,10 @@ class mf_newspaces(MfChecker):
         for k = 1 check that dim = dihedral_dim + a4_dim + a5_dim + s4_dim
         """
         # TIME about 1s
-        return self.check_sum(['dim'], ['dihedral_dim', 'a4_dim', 'a5_dim', 's4_dim'],{'weight':1})
+        return self.check_sum(
+            ['dim'], [
+                'dihedral_dim', 'a4_dim', 'a5_dim', 's4_dim'], {
+                'weight': 1})
 
     @overall
     def check_relative_dim(self):
@@ -188,7 +215,10 @@ class mf_newspaces(MfChecker):
         if present, check that len(hecke_orbit_dims) = num_forms
         """
         # TIME about 2s
-        return self.check_array_len_col('hecke_orbit_dims', 'num_forms',{'hecke_orbit_dims':{'$exists':True}})
+        return self.check_array_len_col(
+            'hecke_orbit_dims', 'num_forms', {
+                'hecke_orbit_dims': {
+                    '$exists': True}})
 
     @overall
     def check_sum_hecke_orbit_dims(self):
@@ -196,7 +226,10 @@ class mf_newspaces(MfChecker):
         if present, check that sum(hecke_orbit_dims) = dim
         """
         # TIME about 4s
-        return self.check_array_sum('hecke_orbit_dims', 'dim', {'hecke_orbit_dims':{'$exists':True}})
+        return self.check_array_sum(
+            'hecke_orbit_dims', 'dim', {
+                'hecke_orbit_dims': {
+                    '$exists': True}})
 
     @overall
     def check_sum_AL_dims(self):
@@ -221,7 +254,7 @@ class mf_newspaces(MfChecker):
         check weight_parity
         """
         # TIME about 2s
-        return self.check_divisible('weight', 2, {'weight_parity':1})
+        return self.check_divisible('weight', 2, {'weight_parity': 1})
 
     @overall
     def weight_parity_odd(self):
@@ -229,7 +262,7 @@ class mf_newspaces(MfChecker):
         check weight_parity
         """
         # TIME about 2s
-        return self.check_non_divisible('weight', 2, {'weight_parity':-1})
+        return self.check_non_divisible('weight', 2, {'weight_parity': -1})
 
     @overall
     def check_against_char_dir_orbits(self):
@@ -237,7 +270,29 @@ class mf_newspaces(MfChecker):
         check that char_* attributes and prim_orbit_index match data in char_dir_orbits table (conrey_indexes should match galois_orbit)
         """
         # TIME about 50s
-        return accumulate_failures(self.check_crosstable('char_dir_orbits', col, ['level', 'char_orbit_label'], charcol, ['modulus', 'orbit_label']) for col, charcol in [('char_orbit_index', 'orbit_index'), ('conrey_indexes', 'galois_orbit'), ('char_order', 'order'), ('char_conductor', 'conductor'), ('char_degree', 'char_degree'), ('prim_orbit_index', 'prim_orbit_index'), ('char_parity', 'parity'), ('char_is_real', 'is_real')])
+        return accumulate_failures(self.check_crosstable('char_dir_orbits',
+                                                         col,
+                                                         ['level',
+                                                          'char_orbit_label'],
+                                                         charcol,
+                                                         ['modulus',
+                                                          'orbit_label']) for col,
+                                   charcol in [('char_orbit_index',
+                                                'orbit_index'),
+                                               ('conrey_indexes',
+                                                'galois_orbit'),
+                                               ('char_order',
+                                                'order'),
+                                               ('char_conductor',
+                                                'conductor'),
+                                               ('char_degree',
+                                                'char_degree'),
+                                               ('prim_orbit_index',
+                                                'prim_orbit_index'),
+                                               ('char_parity',
+                                                'parity'),
+                                               ('char_is_real',
+                                                'is_real')])
 
     @overall
     def check_hecke_orbit_dims_sorted(self):
@@ -254,7 +309,13 @@ class mf_newspaces(MfChecker):
         there should be exactly 1000 records in mf_hecke_traces for each record in mf_newspaces with traces set
         """
         # TIME about 800s
-        return self.check_crosstable_count('mf_hecke_newspace_traces', 1000, 'hecke_orbit_code', constraint={'traces':{'$exists':True}})
+        return self.check_crosstable_count(
+            'mf_hecke_newspace_traces',
+            1000,
+            'hecke_orbit_code',
+            constraint={
+                'traces': {
+                    '$exists': True}})
 
     @overall_long
     def check_traces_match(self):
@@ -262,7 +323,16 @@ class mf_newspaces(MfChecker):
         check that traces[n] matches trace_an in mf_hecke_newspace_traces
         """
         # TIME about 1000s
-        return self.check_crosstable_aggregate('mf_hecke_newspace_traces', 'traces', 'hecke_orbit_code', 'trace_an', sort=['n'], truncate=1000, constraint={'traces':{'$exists':True}})
+        return self.check_crosstable_aggregate(
+            'mf_hecke_newspace_traces',
+            'traces',
+            'hecke_orbit_code',
+            'trace_an',
+            sort=['n'],
+            truncate=1000,
+            constraint={
+                'traces': {
+                    '$exists': True}})
 
     ### mf_subspaces ###
     @overall
@@ -272,7 +342,9 @@ class mf_newspaces(MfChecker):
         """
         # TIME about 20s
         # from mf_subspaces
-        return self.check_crosstable_dotprod('mf_subspaces', 'cusp_dim', 'label', ['sub_mult', 'sub_dim'])
+        return self.check_crosstable_dotprod(
+            'mf_subspaces', 'cusp_dim', 'label', [
+                'sub_mult', 'sub_dim'])
 
     ### mf_newspace_portraits ###
     @overall
@@ -281,9 +353,9 @@ class mf_newspaces(MfChecker):
         check that there is a portrait present for every nonempty newspace in box where straces is set
         """
         return accumulate_failures(
-                self.check_crosstable_count('mf_newspace_portraits', 1, 'label',
-                    constraint=self._box_query(box, extras = {'dim':{'$gt':1}}))
-                for box in db.mf_boxes.search({'straces':True}))
+            self.check_crosstable_count('mf_newspace_portraits', 1, 'label',
+                                        constraint=self._box_query(box, extras={'dim': {'$gt': 1}}))
+            for box in db.mf_boxes.search({'straces': True}))
 
     ### mf_newforms ###
     @overall
@@ -292,8 +364,15 @@ class mf_newspaces(MfChecker):
         check that dim is present in hecke_orbit_dims array in newspace record and that summing dim over rows with the same space label gives newspace dim
         """
         # TIME about 40s
-        return (self.check_crosstable_aggregate('mf_newforms', 'hecke_orbit_dims', ['level', 'weight','char_orbit_index'], 'dim', constraint={'num_forms':{'$exists':True}}) +
-                self.check_crosstable_sum('mf_newforms', 'dim', 'label', 'dim', 'space_label', constraint={'num_forms':{'$exists':True}}))
+        return (
+            self.check_crosstable_aggregate(
+                'mf_newforms', 'hecke_orbit_dims', [
+                    'level', 'weight', 'char_orbit_index'], 'dim', constraint={
+                    'num_forms': {
+                        '$exists': True}}) + self.check_crosstable_sum(
+                'mf_newforms', 'dim', 'label', 'dim', 'space_label', constraint={
+                    'num_forms': {
+                        '$exists': True}}))
 
     @fast(projection=['level', 'weight', 'analytic_conductor'])
     def check_analytic_conductor(self, rec, verbose=False):
@@ -301,9 +380,19 @@ class mf_newspaces(MfChecker):
         check analytic_conductor
         """
         # TIME about 60s
-        return check_analytic_conductor(rec['level'], rec['weight'], rec['analytic_conductor'], verbose=verbose)
+        return check_analytic_conductor(
+            rec['level'],
+            rec['weight'],
+            rec['analytic_conductor'],
+            verbose=verbose)
 
-    @fast(projection=['level', 'level_radical', 'level_primes', 'level_is_prime', 'level_is_prime_power',  'level_is_squarefree', 'level_is_square'])
+    @fast(projection=['level',
+                      'level_radical',
+                      'level_primes',
+                      'level_is_prime',
+                      'level_is_prime_power',
+                      'level_is_squarefree',
+                      'level_is_square'])
     def check_level(self, rec, verbose=False):
         """
         Check the level_* columns
@@ -317,9 +406,23 @@ class mf_newspaces(MfChecker):
         check that sturm_bound is exactly floor(k*Index(Gamma0(N))/12)
         """
         # TIME about 70s
-        return self._test_equality(rec['sturm_bound'], sturm_bound0(rec['level'], rec['weight']), verbose, "Sturm bound failure: {0} != {1}")
+        return self._test_equality(
+            rec['sturm_bound'],
+            sturm_bound0(
+                rec['level'],
+                rec['weight']),
+            verbose,
+            "Sturm bound failure: {0} != {1}")
 
-    @slow(ratio=0.001, report_slow=60, max_slow=10000, constraint={'weight':{'$gt':1}}, projection=['level', 'weight', 'relative_dim', 'conrey_indexes', 'char_order'])
+    @slow(ratio=0.001,
+          report_slow=60,
+          max_slow=10000,
+          constraint={'weight': {'$gt': 1}},
+          projection=['level',
+                      'weight',
+                      'relative_dim',
+                      'conrey_indexes',
+                      'char_order'])
     def check_Skchi_dim_formula(self, rec, verbose=False):
         """
         for k > 1 check that dim is the Q-dimension of S_k^new(N,chi) (using sage dimension formula)
@@ -329,10 +432,25 @@ class mf_newspaces(MfChecker):
         if rec['level'] < 3:
             dirchar = rec['level']
         else:
-            dirchar = get_dirchar(rec['level'], rec['conrey_indexes'][0], rec['char_order'])
-        return self._test_equality(rec['relative_dim'], dimension_new_cusp_forms(dirchar, rec['weight']), verbose)
+            dirchar = get_dirchar(
+                rec['level'],
+                rec['conrey_indexes'][0],
+                rec['char_order'])
+        return self._test_equality(
+            rec['relative_dim'], dimension_new_cusp_forms(
+                dirchar, rec['weight']), verbose)
 
-    @slow(ratio=0.01, report_slow=10, constraint={'weight':{'$gt':1}}, projection=['level', 'weight', 'char_degree', 'char_order', 'eis_dim', 'cusp_dim', 'mf_dim', 'conrey_indexes'])
+    @slow(ratio=0.01,
+          report_slow=10,
+          constraint={'weight': {'$gt': 1}},
+          projection=['level',
+                      'weight',
+                      'char_degree',
+                      'char_order',
+                      'eis_dim',
+                      'cusp_dim',
+                      'mf_dim',
+                      'conrey_indexes'])
     def check_dims(self, rec, verbose=False):
         """
         for k > 1 check each of eis_dim, eis_new_dim, cusp_dim, mf_dim, mf_new_dim using Sage dimension formulas (when applicable)
@@ -341,10 +459,19 @@ class mf_newspaces(MfChecker):
         if rec['level'] < 3:
             dirchar = rec['level']
         else:
-            dirchar = get_dirchar(rec['level'], rec['conrey_indexes'][0], rec['char_order'])
+            dirchar = get_dirchar(
+                rec['level'],
+                rec['conrey_indexes'][0],
+                rec['char_order'])
         k = rec['weight']
         m = rec['char_degree']
-        for func, key in [(dimension_eis, 'eis_dim'), (dimension_cusp_forms, 'cusp_dim'), (dimension_modular_forms, 'mf_dim')]:
-            if not self._test_equality(rec[key], func(dirchar, k)*m, verbose):
+        for func, key in [(dimension_eis, 'eis_dim'), (dimension_cusp_forms,
+                                                       'cusp_dim'), (dimension_modular_forms, 'mf_dim')]:
+            if not self._test_equality(
+                    rec[key],
+                    func(
+                        dirchar,
+                        k) * m,
+                    verbose):
                 return False
         return True

@@ -174,7 +174,8 @@ _meta_constraints_cols = (
 _meta_constraints_types = dict(
     zip(_meta_constraints_cols, ("text", "text", "text", "jsonb", "text"))
 )
-_meta_constraints_jsonb_idx = jsonb_idx(_meta_constraints_cols, _meta_constraints_types)
+_meta_constraints_jsonb_idx = jsonb_idx(
+    _meta_constraints_cols, _meta_constraints_types)
 
 
 def _meta_cols_types_jsonb_idx(meta_name):
@@ -292,7 +293,8 @@ class PostgresBase(object):
         This function will also log slow queries.
         """
         if not isinstance(query, Composable):
-            raise TypeError("You must use the psycopg2.sql module to execute queries")
+            raise TypeError(
+                "You must use the psycopg2.sql module to execute queries")
 
         if buffered:
             if commit is None:
@@ -307,32 +309,45 @@ class PostgresBase(object):
             if values_list:
                 if template is not None:
                     template = template.as_string(self.conn)
-                execute_values(cur, query.as_string(self.conn), values, template)
+                execute_values(
+                    cur, query.as_string(
+                        self.conn), values, template)
             else:
                 try:
                     cur.execute(query, values)
                 except (OperationalError, ProgrammingError, NotSupportedError, DataError, SyntaxError) as e:
                     try:
-                        context = " happens while executing {}".format(cur.mogrify(query, values))
+                        context = " happens while executing {}".format(
+                            cur.mogrify(query, values))
                     except Exception:
-                        context = " happens while executing {} with values {}".format(query, values)
-                    reraise(type(e), type(e)(str(e) + context), sys.exc_info()[2])
+                        context = " happens while executing {} with values {}".format(
+                            query, values)
+                    reraise(
+                        type(e),
+                        type(e)(
+                            str(e) +
+                            context),
+                        sys.exc_info()[2])
             if silent is False or (silent is None and not self._db._silenced):
                 t = time.time() - t
                 if t > self.slow_cutoff:
                     if values_list:
-                        query = query.as_string(self.conn).replace("%s", "VALUES_LIST")
+                        query = query.as_string(
+                            self.conn).replace(
+                            "%s", "VALUES_LIST")
                     elif values:
                         try:
                             query = cur.mogrify(query, values)
                         except Exception:
-                            # This shouldn't happen since the execution above was successful
+                            # This shouldn't happen since the execution above
+                            # was successful
                             query = query + str(values)
                     else:
                         query = query.as_string(self.conn)
-                    if isinstance(query, bytes): # PY3 compatibility
+                    if isinstance(query, bytes):  # PY3 compatibility
                         query = query.decode("utf-8")
-                    self.logger.info(query + " ran in \033[91m {0!s}s \033[0m".format(t))
+                    self.logger.info(
+                        query + " ran in \033[91m {0!s}s \033[0m".format(t))
                     if slow_note is not None:
                         self.logger.info(
                             "Replicate with db.%s.%s(%s)",
@@ -347,7 +362,8 @@ class PostgresBase(object):
                     raise
                 # Attempt to reset the connection
                 self._db.reset_connection()
-                if commit or (commit is None and self._db._nocommit_stack == 0):
+                if commit or (
+                        commit is None and self._db._nocommit_stack == 0):
                     return self._execute(
                         query,
                         values=values,
@@ -377,7 +393,10 @@ class PostgresBase(object):
 
         - ``tablename`` -- a string, the name of the table
         """
-        cur = self._execute(SQL("SELECT 1 from pg_tables where tablename=%s"), [tablename], silent=True)
+        cur = self._execute(
+            SQL("SELECT 1 from pg_tables where tablename=%s"),
+            [tablename],
+            silent=True)
         return cur.fetchone() is not None
 
     def _get_locks(self):
@@ -452,9 +471,12 @@ class PostgresBase(object):
                 "ExclusiveLock",
                 "AccessExclusiveLock",
             ]
-            bad_types = [locktype for locktype in types if locktype not in good_types]
+            bad_types = [
+                locktype for locktype in types if locktype not in good_types]
             if bad_types:
-                raise ValueError("Invalid lock type(s): %s" % (", ".join(bad_types)))
+                raise ValueError(
+                    "Invalid lock type(s): %s" %
+                    (", ".join(bad_types)))
         return [
             (locktype, pid)
             for (name, locktype, pid, t) in self._get_locks()
@@ -478,10 +500,8 @@ class PostgresBase(object):
         """
         if tablename:
             cur = self._execute(
-                SQL("SELECT 1 FROM pg_indexes WHERE indexname = %s AND tablename = %s"),
-                [indexname, tablename],
-                silent=True,
-            )
+                SQL("SELECT 1 FROM pg_indexes WHERE indexname = %s AND tablename = %s"), [
+                    indexname, tablename], silent=True, )
             return cur.fetchone() is not None
         else:
             cur = self._execute(
@@ -503,7 +523,8 @@ class PostgresBase(object):
 
         - ``name`` -- a string, the name of the relation
         """
-        cur = self._execute(SQL("SELECT 1 FROM pg_class where relname = %s"), [name])
+        cur = self._execute(
+            SQL("SELECT 1 FROM pg_class where relname = %s"), [name])
         return cur.fetchone() is not None
 
     def _constraint_exists(self, constraintname, tablename=None):
@@ -535,8 +556,7 @@ class PostgresBase(object):
             cur = self._execute(
                 SQL(
                     "SELECT table_name from information_schema.table_constraints "
-                    "WHERE constraint_name=%s"
-                ),
+                    "WHERE constraint_name=%s"),
                 [constraintname],
                 silent=True,
             )
@@ -594,9 +614,11 @@ class PostgresBase(object):
             tablename = self._constraint_exists(name + suffix)
             if tablename:
                 kind = "Constraint"
-                begin_renamer = SQL("ALTER TABLE {0} RENAME CONSTRAINT").format(Identifier(tablename))
+                begin_renamer = SQL("ALTER TABLE {0} RENAME CONSTRAINT").format(
+                    Identifier(tablename))
                 end_renamer = SQL("{0} TO {1}")
-                begin_command = SQL("ALTER TABLE {0}").format(Identifier(tablename))
+                begin_command = SQL("ALTER TABLE {0}").format(
+                    Identifier(tablename))
                 end_command = SQL("DROP CONSTRAINT {0}")
             elif self._index_exists(name + suffix):
                 kind = "Index"
@@ -621,10 +643,15 @@ class PostgresBase(object):
                 deprecated_name = name[: 64 - len(depsuffix)] + depsuffix
 
             self._execute(
-                begin_renamer + end_renamer.format(Identifier(name + suffix), Identifier(deprecated_name))
-            )
+                begin_renamer +
+                end_renamer.format(
+                    Identifier(
+                        name +
+                        suffix),
+                    Identifier(deprecated_name)))
 
-            command = begin_command + end_command.format(Identifier(deprecated_name))
+            command = begin_command + \
+                end_command.format(Identifier(deprecated_name))
 
             logging.warning(
                 "{} with name {} ".format(kind, name + suffix)
@@ -650,7 +677,8 @@ class PostgresBase(object):
         - ``kind`` -- either ``"Index"`` or ``"Constraint"`` (only used for error msg)
         - ``skip_dep`` -- if true, allow ``_depN`` as a suffix
         """
-        tests = [(r"_old[\d]+$", "_oldN"), (r"_tmp$", "_tmp"), ("_pkey$", "_pkey")]
+        tests = [(r"_old[\d]+$", "_oldN"),
+                 (r"_tmp$", "_tmp"), ("_pkey$", "_pkey")]
         if not skip_dep:
             tests.append((r"_dep[\d]+_$", "_depN"))
         for match, message in tests:
@@ -728,12 +756,12 @@ class PostgresBase(object):
             table_name = [table_name]
         for tname in table_name:
             if data_types is None or tname not in data_types:
-                # in case of an array data type, data_type only gives 'ARRAY', while 'udt_name::regtype' gives us 'base_type[]'
+                # in case of an array data type, data_type only gives 'ARRAY',
+                # while 'udt_name::regtype' gives us 'base_type[]'
                 cur = self._execute(
                     SQL(
                         "SELECT column_name, udt_name::regtype FROM information_schema.columns "
-                        "WHERE table_name = %s ORDER BY ordinal_position"
-                    ),
+                        "WHERE table_name = %s ORDER BY ordinal_position"),
                     [tname],
                 )
             else:
@@ -741,7 +769,9 @@ class PostgresBase(object):
             for rec in cur:
                 col = rec[0]
                 if col in col_type and col_type[col] != rec[1]:
-                    raise ValueError("Type mismatch on %s: %s vs %s" % (col, col_type[col], rec[1]))
+                    raise ValueError(
+                        "Type mismatch on %s: %s vs %s" %
+                        (col, col_type[col], rec[1]))
                 col_type[col] = rec[1]
                 if col != "id":
                     col_list.append(col)
@@ -749,7 +779,13 @@ class PostgresBase(object):
                     has_id = True
         return col_list, col_type, has_id
 
-    def _copy_to_select(self, select, filename, header="", sep="|", silent=False):
+    def _copy_to_select(
+            self,
+            select,
+            filename,
+            header="",
+            sep="|",
+            silent=False):
         """
         Using the copy_expert from psycopg2, exports the data from a select statement.
 
@@ -803,7 +839,9 @@ class PostgresBase(object):
         col_list, col_type, _ = self._column_types(table_name)
         columns_set.discard("id")
         if not (columns_set <= set(col_list)):
-            raise ValueError("{} is not a subset of {}".format(columns_set, col_list))
+            raise ValueError(
+                "{} is not a subset of {}".format(
+                    columns_set, col_list))
         header_cols = self._read_header_lines(F, sep=sep)
         names = [elt[0] for elt in header_cols]
         names_set = set(names)
@@ -836,10 +874,8 @@ class PostgresBase(object):
                     err += "Invalid types: "
                 else:
                     err += "Invalid type: "
-                err += ", ".join(
-                    "%s should be %s instead of %s" % (name, col_type[name], typ)
-                    for name, typ in wrong_type
-                )
+                err += ", ".join("%s should be %s instead of %s" %
+                                 (name, col_type[name], typ) for name, typ in wrong_type)
             raise ValueError(err)
         return names
 
@@ -864,7 +900,8 @@ class PostgresBase(object):
             with open(filename) as F:
                 if header:
                     # This consumes the first three lines
-                    columns = self._check_header_lines(F, table, set(columns), sep=sep)
+                    columns = self._check_header_lines(
+                        F, table, set(columns), sep=sep)
                     addid = "id" not in columns
                 else:
                     addid = False
@@ -896,7 +933,8 @@ class PostgresBase(object):
                         "ALTER TABLE {0} ALTER COLUMN {1} DROP DEFAULT"
                     ).format(Identifier(table), Identifier("id"))
                     self._execute(alter_table)
-                    drop_seq = SQL("DROP SEQUENCE {0}").format(Identifier(seq_name))
+                    drop_seq = SQL("DROP SEQUENCE {0}").format(
+                        Identifier(seq_name))
                     self._execute(drop_seq)
 
                 return addid, cur.rowcount
@@ -917,15 +955,16 @@ class PostgresBase(object):
                     table = table[:-len(suffix)]
             raise ValueError(
                 "Temporary table %s already exists. "
-                "Run db.%s.cleanup_from_reload() if you want to delete it and proceed."
-                % (tmp_table, table)
-            )
-        creator = SQL("CREATE TABLE {0} (LIKE {1})").format(Identifier(tmp_table), Identifier(table))
+                "Run db.%s.cleanup_from_reload() if you want to delete it and proceed." %
+                (tmp_table, table))
+        creator = SQL("CREATE TABLE {0} (LIKE {1})").format(
+            Identifier(tmp_table), Identifier(table))
         self._execute(creator)
 
     def _check_col_datatype(self, typ):
         if typ.lower() not in types_whitelist:
-            if not any(regexp.match(typ.lower()) for regexp in param_types_whitelist):
+            if not any(regexp.match(typ.lower())
+                       for regexp in param_types_whitelist):
                 raise RuntimeError("%s is not a valid type" % (typ))
 
     def _create_table(self, name, columns):
@@ -941,8 +980,10 @@ class PostgresBase(object):
         # FIXME make the code use this
         for col, typ in columns:
             self._check_col_datatype(typ)
-        table_col = SQL(", ").join(SQL("{0} %s" % typ).format(Identifier(col)) for col, typ in columns)
-        creator = SQL("CREATE TABLE {0} ({1})").format(Identifier(name), table_col)
+        table_col = SQL(", ").join(SQL("{0} %s" % typ).format(
+            Identifier(col)) for col, typ in columns)
+        creator = SQL("CREATE TABLE {0} ({1})").format(
+            Identifier(name), table_col)
         self._execute(creator)
 
     def _create_table_from_header(self, filename, name, sep, addid=True):
@@ -1010,7 +1051,8 @@ class PostgresBase(object):
 
             target_name = original_name + target
             try:
-                self._check_restricted_suffix(original_name, kind, skip_dep=True)
+                self._check_restricted_suffix(
+                    original_name, kind, skip_dep=True)
             except ValueError:
                 logging.warning(
                     "{} of {} with name {}".format(kind, tablename, name)
@@ -1026,7 +1068,10 @@ class PostgresBase(object):
             for table in tables:
                 tablename_old = table + source
                 tablename_new = table + target
-                self._execute(rename_table.format(Identifier(tablename_old), Identifier(tablename_new)))
+                self._execute(
+                    rename_table.format(
+                        Identifier(tablename_old),
+                        Identifier(tablename_new)))
 
                 done = set({})  # done constraints/indexes
                 # We threat pkey separately
@@ -1045,7 +1090,8 @@ class PostgresBase(object):
                 for constraint in self._list_constraints(tablename_new):
                     if constraint in done:
                         continue
-                    c_target = target_name(constraint, tablename_new, "Constraint")
+                    c_target = target_name(
+                        constraint, tablename_new, "Constraint")
                     self._execute(
                         rename_constraint.format(
                             Identifier(tablename_new),
@@ -1060,8 +1106,9 @@ class PostgresBase(object):
                         continue
                     i_target = target_name(index, tablename_new, "Index")
                     self._execute(
-                        rename_index.format(Identifier(index), Identifier(i_target))
-                    )
+                        rename_index.format(
+                            Identifier(index),
+                            Identifier(i_target)))
                     done.add(i_target)  # not really needed
 
     def _read_header_lines(self, F, sep=u"|"):
@@ -1087,9 +1134,8 @@ class PostgresBase(object):
             raise ValueError("The third line must be blank")
         if len(names) != len(types):
             raise ValueError(
-                "The first line specifies %s columns, while the second specifies %s"
-                % (len(names), len(types))
-            )
+                "The first line specifies %s columns, while the second specifies %s" %
+                (len(names), len(types)))
         return list(zip(names, types))
 
     ##################################################################
@@ -1161,10 +1207,8 @@ class PostgresBase(object):
 
         with DelayCommit(self, silence=True):
             # delete the current columns
-            self._execute(
-                SQL("DELETE FROM {} WHERE {} = %s").format(meta_name_sql, table_name_sql),
-                [search_table],
-            )
+            self._execute(SQL("DELETE FROM {} WHERE {} = %s").format(
+                meta_name_sql, table_name_sql), [search_table], )
 
             # insert new columns
             with open(filename, "r") as F:
@@ -1175,24 +1219,24 @@ class PostgresBase(object):
                     self.conn.rollback()
                     raise
 
-            version = self._get_current_meta_version(meta_name, search_table) + 1
+            version = self._get_current_meta_version(
+                meta_name, search_table) + 1
 
             # copy the new rows to history
             cols_sql = SQL(", ").join(map(Identifier, meta_cols))
-            rows = self._execute(
-                SQL("SELECT {} FROM {} WHERE {} = %s").format(cols_sql, meta_name_sql, table_name_sql),
-                [search_table],
-            )
+            rows = self._execute(SQL("SELECT {} FROM {} WHERE {} = %s").format(
+                cols_sql, meta_name_sql, table_name_sql), [search_table], )
 
             cols = meta_cols + ("version",)
             cols_sql = SQL(", ").join(map(Identifier, cols))
             place_holder = SQL(", ").join(Placeholder() * len(cols))
-            query = SQL("INSERT INTO {} ({}) VALUES ({})").format(meta_name_hist_sql, cols_sql, place_holder)
+            query = SQL("INSERT INTO {} ({}) VALUES ({})").format(
+                meta_name_hist_sql, cols_sql, place_holder)
 
             for row in rows:
                 row = [
-                    Json(elt) if i in jsonb_idx else elt for i, elt in enumerate(row)
-                ]
+                    Json(elt) if i in jsonb_idx else elt for i,
+                    elt in enumerate(row)]
                 self._execute(query, row + [version])
 
     def _revert_meta(self, meta_name, search_table, version=None):
@@ -1205,7 +1249,8 @@ class PostgresBase(object):
         meta_name_hist_sql = Identifier(meta_name + "_hist")
 
         # by the default goes back one step
-        currentversion = self._get_current_meta_version(meta_name, search_table)
+        currentversion = self._get_current_meta_version(
+            meta_name, search_table)
         if currentversion == -1:
             raise RuntimeError("No history to revert")
         if version is None:
@@ -1213,10 +1258,8 @@ class PostgresBase(object):
 
         with DelayCommit(self, silence=True):
             # delete current rows
-            self._execute(
-                SQL("DELETE FROM {} WHERE {} = %s").format(meta_name_sql, table_name_sql),
-                [search_table],
-            )
+            self._execute(SQL("DELETE FROM {} WHERE {} = %s").format(
+                meta_name_sql, table_name_sql), [search_table], )
 
             # copy data from history
             cols_sql = SQL(", ").join(map(Identifier, meta_cols))
@@ -1228,7 +1271,8 @@ class PostgresBase(object):
             )
 
             place_holder = SQL(", ").join(Placeholder() * len(meta_cols))
-            query = SQL("INSERT INTO {} ({}) VALUES ({})").format(meta_name_sql, cols_sql, place_holder)
+            query = SQL("INSERT INTO {} ({}) VALUES ({})").format(
+                meta_name_sql, cols_sql, place_holder)
 
             cols = meta_cols + ("version",)
             cols_sql = SQL(", ").join(map(Identifier, cols))
@@ -1237,6 +1281,8 @@ class PostgresBase(object):
                 meta_name_hist_sql, cols_sql, place_holder
             )
             for row in rows:
-                row = [Json(elt) if i in jsonb_idx else elt for i, elt in enumerate(row)]
+                row = [
+                    Json(elt) if i in jsonb_idx else elt for i,
+                    elt in enumerate(row)]
                 self._execute(query, row)
                 self._execute(query_hist, row + [currentversion + 1])

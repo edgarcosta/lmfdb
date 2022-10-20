@@ -4,6 +4,7 @@ from sage.structure.unique_representation import UniqueRepresentation
 
 class TdElt(object):
     _wrap_type = 'td'
+
     def _add_class(self, D, clsname):
         if 'class' in D:
             D['class'] = D['class'] + ' ' + clsname
@@ -28,6 +29,7 @@ class TdElt(object):
             self._add_class(kwds, 'nowrap')
         return self._wrap("td", **kwds)
 
+
 class Spacer(TdElt):
     def __init__(self, colspan=None, advanced=False):
         self.colspan = colspan
@@ -45,12 +47,13 @@ class Spacer(TdElt):
     def has_label(self, info=None):
         return False
 
+
 class RowSpacer(Spacer):
     def __init__(self, rowheight, advanced=False):
         self.rowheight = rowheight
         self.advanced = advanced
 
-    def tr(self, rowspan=0, **kwds): # used for row spacers
+    def tr(self, rowspan=0, **kwds):  # used for row spacers
         if rowspan is not None:
             kwds['style'] = "height:%spx" % rowspan
         return self._wrap("tr", **kwds)
@@ -141,18 +144,21 @@ class SearchBox(TdElt):
 
     def label_html(self, info=None):
         colspan = self.label_colspan if info is None else self.short_colspan
-        return self.td(colspan, rowspan=self.label_rowspan, nowrap=True) + self._label(info) + "</td>"
+        return self.td(colspan, rowspan=self.label_rowspan,
+                       nowrap=True) + self._label(info) + "</td>"
 
     def input_html(self, info=None):
         colspan = self.input_colspan if info is None else self.short_colspan
-        return self.td(colspan, rowspan=self.input_rowspan) + self._input(info) + "</td>"
+        return self.td(colspan, rowspan=self.input_rowspan) + \
+            self._input(info) + "</td>"
 
     def example_html(self, info=None):
         if self.example_span:
             return (
-                self.td(self.example_span_colspan)
-                + '<span class="formexample">e.g. %s</span></td>' % self.example_span
-            )
+                self.td(
+                    self.example_span_colspan) +
+                '<span class="formexample">e.g. %s</span></td>' %
+                self.example_span)
         elif self.example_col:
             return "<td></td>"
 
@@ -235,6 +241,7 @@ class TextBox(SearchBox):
             if self.name in info:
                 keys.append('value="%s"' % info[self.name])
         return '<input type="text" ' + " ".join(keys) + "/>"
+
 
 class SelectBox(SearchBox):
     """
@@ -329,11 +336,14 @@ class SelectBox(SearchBox):
                 value = ""
             else:
                 value = 'value="%s"' % value
-            opts.append("<option %s%s>%s</option>" % (value, selected, display))
+            opts.append(
+                "<option %s%s>%s</option>" %
+                (value, selected, display))
         return "        <select %s>\n%s\n        </select>" % (
             " ".join(keys),
             "".join("\n" + " " * 10 + opt for opt in opts),
         )
+
 
 class NoEg(SearchBox):
     def example_html(self, info=None):
@@ -342,11 +352,14 @@ class NoEg(SearchBox):
             + '<span class="formexample">%s</span></td>' % self.example_span
         )
 
+
 class TextBoxNoEg(NoEg, TextBox):
     pass
 
+
 class SelectBoxNoEg(NoEg, SelectBox):
     pass
+
 
 class HiddenBox(SearchBox):
     def _input(self, info=None):
@@ -357,6 +370,7 @@ class HiddenBox(SearchBox):
             keys.append('value="%s"' % info.get(self.name))
         return '<input type="hidden" %s>' % (" ".join(keys),)
 
+
 class CheckBox(SearchBox):
     def _input(self, info=None):
         keys = ['name="%s"' % self.name, 'value="yes"']
@@ -366,14 +380,17 @@ class CheckBox(SearchBox):
             keys.append("checked")
         return '<input type="checkbox" %s>' % (" ".join(keys),)
 
+
 class SneakyBox(SearchBox):
     """
     Only displayed in result refinement if the corresponding input is present.
     Intended for use in displaying statistics and jump boxes
     """
 
+
 class SneakyTextBox(TextBox, SneakyBox):
     pass
+
 
 class SkipBox(TextBox):
     def _input(self, info=None):
@@ -393,7 +410,7 @@ class TextBoxWithSelect(TextBox):
     def label_html(self, info=None):
         colspan = self.label_colspan if info is None else self.short_colspan
         return (
-                self.td(colspan, nowrap=True, style="text-align-last: justify;")
+            self.td(colspan, nowrap=True, style="text-align-last: justify;")
             + self._label(info)
             + '<span style="margin-left: 10px;"></span>'
             + self.select_box._input(info)
@@ -415,15 +432,18 @@ class DoubleSelectBox(SearchBox):
             + "</div>"
         )
 
+
 class ExcludeOnlyBox(SelectBox):
     _options = [("", ""),
                 ("exclude", "exclude"),
                 ("only", "only")]
 
+
 class YesNoBox(SelectBox):
     _options = [("", ""),
                 ("yes", "yes"),
                 ("no", "no")]
+
 
 class YesNoMaybeBox(SelectBox):
     _default_min_width = 130
@@ -434,10 +454,12 @@ class YesNoMaybeBox(SelectBox):
                 ("no", "no"),
                 ("unknown", "unknown")]
 
+
 class ParityBox(SelectBox):
     _options = [('', ''),
                 ('even', 'even'),
                 ('odd', 'odd')]
+
 
 class ParityMod(SelectBox):
     _default_min_width = 95
@@ -452,10 +474,12 @@ class SubsetBox(SelectBox):
                 ('exactly', 'exactly'),
                 ('subset', 'subset')]
 
+
 class SubsetNoExcludeBox(SelectBox):
     _options = [('', 'include'),
                 ('exactly', 'exactly'),
                 ('subset', 'subset')]
+
 
 class CountBox(TextBox):
     def __init__(self):
@@ -468,8 +492,10 @@ class CountBox(TextBox):
             example_value=True,
             example_span="")
 
+
 class SearchButton(SearchBox):
     _default_width = 170
+
     def __init__(self, value, description, **kwds):
         kwds['label'] = kwds.get('label', '')
         SearchBox.__init__(self, **kwds)
@@ -494,6 +520,7 @@ class SearchButton(SearchBox):
             onclick=onclick,
         )
 
+
 class SearchButtonWithSelect(SearchButton):
     def __init__(self, value, description, select_box, **kwds):
         self.select_box = select_box
@@ -512,6 +539,7 @@ class SearchButtonWithSelect(SearchButton):
             + "</td>"
         )
 
+
 class SearchArray(UniqueRepresentation):
     """
     This class is used to represent the grid of inputs in a browse or search array.
@@ -529,10 +557,11 @@ class SearchArray(UniqueRepresentation):
         for the search buttons
     - ``hidden`` -- returns a list of pairs giving the name and info key for the hidden inputs
     """
-    _ex_col_width = 170 # only used for box layout
+    _ex_col_width = 170  # only used for box layout
     sort_knowl = None
     noun = "result"
     plural_noun = "results"
+
     def sort_order(self, info):
         # Override this method to add a dropdown for sort order
         return None
@@ -541,14 +570,17 @@ class SearchArray(UniqueRepresentation):
         if info is None:
             return search_types
         st = self._st(info)
-        return [(st, "Search again")] + [(v, d) for v, d in search_types if v != st]
+        return [(st, "Search again")] + [(v, d)
+                                         for v, d in search_types if v != st]
 
     def search_types(self, info):
         # Override this method to change the displayed search buttons
         if info is None:
-            return [("List", "List of %s" % self.plural_noun), ("Random", "Random %s" % self.noun)]
+            return [("List", "List of %s" % self.plural_noun),
+                    ("Random", "Random %s" % self.noun)]
         else:
-            return [("List", "Search again"), ("Random", "Random %s" % self.noun)]
+            return [("List", "Search again"),
+                    ("Random", "Random %s" % self.noun)]
 
     def hidden(self, info):
         # Override this method to change the hidden inputs
@@ -570,13 +602,21 @@ class SearchArray(UniqueRepresentation):
             elif layout_type == 'vertical':
                 if any(box.has_label(info) for box in row):
                     labels = [box.label_html(info) for box in row]
-                    lines.append("".join("\n      " + label for label in labels))
-                inputs = [box.input_html(info) for box in row if (not isinstance(box, SneakyBox) or info is None or box.name in info)]
+                    lines.append(
+                        "".join(
+                            "\n      " +
+                            label for label in labels))
+                inputs = [
+                    box.input_html(info) for box in row if (
+                        not isinstance(
+                            box,
+                            SneakyBox) or info is None or box.name in info)]
                 lines.append("".join("\n      " + inp for inp in inputs))
             elif layout_type == 'horizontal':
                 cols = []
                 for box in row:
-                    if isinstance(box, SneakyBox) and info is not None and box.name not in info:
+                    if isinstance(
+                            box, SneakyBox) and info is not None and box.name not in info:
                         continue
                     cols.append(box.label_html(info))
                     cols.append(box.input_html(info))
@@ -588,13 +628,16 @@ class SearchArray(UniqueRepresentation):
                 top_cols = []
                 bot_cols = []
                 for box in row:
-                    if isinstance(box, SneakyBox) and info is not None and box.name not in info:
+                    if isinstance(
+                            box, SneakyBox) and info is not None and box.name not in info:
                         continue
                     top_cols.append(box.label_html(info))
                     bot_cols.append(box.input_html(info))
                     ex = box.example_html(info)
                     if ex:
-                        top_cols.append('<td width="%s"></td>' % self._ex_col_width)
+                        top_cols.append(
+                            '<td width="%s"></td>' %
+                            self._ex_col_width)
                         bot_cols.append(ex)
                 lines.append("".join("\n      " + col for col in top_cols))
                 lines.append("".join("\n      " + col for col in bot_cols))
@@ -614,14 +657,14 @@ class SearchArray(UniqueRepresentation):
             vheader = BasicSpacer("Variables")
             vheader.wrap_mixins = {"class": "table_h2"}
             array.append([vheader])
-            for i in [1,2]:
+            for i in [1, 2]:
                 cols = SelectBox(
                     name="col%s" % i,
                     id="col%s_select" % i,
                     label="",
                     width=150,
                     options=info["stats"]._dynamic_cols,
-                    extra=['onchange="set_buckets(this, \'buckets%s\')"'%i])
+                    extra=['onchange="set_buckets(this, \'buckets%s\')"' % i])
                 buckets = TextBox(
                     name="buckets%s" % i,
                     id="buckets%s" % i,
@@ -654,14 +697,21 @@ class SearchArray(UniqueRepresentation):
         if info is None:
             return ""
         else:
-            return "\n".join('<input type="hidden" name="%s" value="%s"/>' % (name, info.get(val)) for (name, val) in self.hidden(info))
+            return "\n".join(
+                '<input type="hidden" name="%s" value="%s"/>' %
+                (name, info.get(val)) for (
+                    name, val) in self.hidden(info))
 
     def main_table(self, info=None):
         layout_type = "horizontal" if info is None else "vertical"
-        s = self._print_table(self.main_array(info), info, layout_type=layout_type)
+        s = self._print_table(
+            self.main_array(info),
+            info,
+            layout_type=layout_type)
         dstats = self.dynstats_array(info)
         if dstats:
-            s += "\n" + self._print_table(dstats, info, layout_type=layout_type)
+            s += "\n" + self._print_table(dstats,
+                                          info, layout_type=layout_type)
         return s
 
     def has_advanced_inputs(self, info=None):
@@ -696,18 +746,26 @@ class SearchArray(UniqueRepresentation):
                         options=sort,
                         width=170)
                     buttons.append(sort_box)
-        return self._print_table([RowSpacer(22), buttons], info, layout_type="vertical")
+        return self._print_table(
+            [RowSpacer(22), buttons], info, layout_type="vertical")
 
     def html(self, info=None):
-        return "\n".join([self.hidden_inputs(info), self.main_table(info), self.buttons(info)])
+        return "\n".join([self.hidden_inputs(
+            info), self.main_table(info), self.buttons(info)])
 
     def jump_box(self, info):
-        jump_example = info.get("jump_example", getattr(self, "jump_example", ""))
+        jump_example = info.get(
+            "jump_example", getattr(
+                self, "jump_example", ""))
         jump_width = info.get("jump_width", getattr(self, "jump_width", 320))
         jump_egspan = info.get("jump_egspan", getattr(self, "jump_egspan", ""))
-        jump_prompt = info.get("jump_prompt", getattr(self, "jump_prompt", "Label"))
+        jump_prompt = info.get(
+            "jump_prompt", getattr(
+                self, "jump_prompt", "Label"))
         jump_knowl = info.get("jump_knowl", getattr(self, "jump_knowl", ""))
-        # We don't use SearchBoxes since we want the example to be below, and the button directly to the right of the input (regardless of how big the example is)
+        # We don't use SearchBoxes since we want the example to be below, and
+        # the button directly to the right of the input (regardless of how big
+        # the example is)
         return """<table><tr><td>%s</td><td><input type='text' name='jump' placeholder='%s' style='width:%spx;' value='%s'></td><td>
 <button type='submit'>Find</button></td><td></tr><tr><td></td><td colspan="2"><span class='formexample'>%s</span></td></tr></table>
-""" % (display_knowl(jump_knowl, jump_prompt),jump_example, jump_width, info.get("jump", ""), jump_egspan)
+""" % (display_knowl(jump_knowl, jump_prompt), jump_example, jump_width, info.get("jump", ""), jump_egspan)

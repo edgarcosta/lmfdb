@@ -1,5 +1,6 @@
 from lmfdb.tests import LmfdbTest
 
+
 class HomePageTest(LmfdbTest):
     # All tests should pass
     #
@@ -18,8 +19,10 @@ class HomePageTest(LmfdbTest):
         Check that the link to the stats page works.
         """
         homepage = self.tc.get("/EllipticCurve/Q/").get_data(as_text=True)
-        self.check(homepage, "/EllipticCurve/Q/stats",
-                   'Distribution of <a title="Rank of an elliptic curve over a number field [ec.rank]" knowl="ec.rank" kwargs="">rank</a>')
+        self.check(
+            homepage,
+            "/EllipticCurve/Q/stats",
+            'Distribution of <a title="Rank of an elliptic curve over a number field [ec.rank]" knowl="ec.rank" kwargs="">rank</a>')
 
     #
     # Link to random curve
@@ -57,10 +60,18 @@ class HomePageTest(LmfdbTest):
         r"""
         Check that the link to a specific curve works.
         """
-        self.check_args("/EllipticCurve/Q/?jump=11.a2", r'y^2+y=x^3-x^2-10x-20')
-        self.check_args("/EllipticCurve/Q/?jump=389.a", 'Elliptic curves in class 389.a')
-        self.check_args("/EllipticCurve/Q/?jump=%5B0%2C1%2C1%2C-2%2C0%5D", r'\Z^2')
-        self.check_args("/EllipticCurve/Q/?jump=%5B-3024%2C+46224%5D+", r'\Z^2')
+        self.check_args(
+            "/EllipticCurve/Q/?jump=11.a2",
+            r'y^2+y=x^3-x^2-10x-20')
+        self.check_args(
+            "/EllipticCurve/Q/?jump=389.a",
+            'Elliptic curves in class 389.a')
+        self.check_args(
+            "/EllipticCurve/Q/?jump=%5B0%2C1%2C1%2C-2%2C0%5D",
+            r'\Z^2')
+        self.check_args(
+            "/EllipticCurve/Q/?jump=%5B-3024%2C+46224%5D+",
+            r'\Z^2')
 
     #
     # Various search combinations
@@ -70,18 +81,25 @@ class HomePageTest(LmfdbTest):
         """
         self.check_args("/EllipticCurve/Q/?conductor=100-200&count=100",
                         '[0, -1, 1, -887, -10143]')
-        self.check_args_with_timeout("/EllipticCurve/Q/?rank=0&torsion=2&sha=4&count=100",
-                        '[0, -1, 0, -10560, -414180]')
-        self.check_args("/EllipticCurve/Q/?conductor=&jinv=-4096%2F11&count=100",
-                        '169136.i3')
-        self.check_args("/EllipticCurve/Q/?torsion_structure=%5B2%2C4%5D&sha=&count=100",
-                        '[0, 1, 0, -1664, -9804]')
-        self.check_args_with_timeout("/EllipticCurve/Q/?&surj_primes=&surj_quantifier=include&nonsurj_primes=2%2C3&count=100",
-                        '[1, -1, 1, -24575, 1488935]')
-        self.check_args_with_timeout("/EllipticCurve/Q/?&surj_primes=&surj_quantifier=exactly&nonsurj_primes=5&optimal=on&count=100",
-                        '[0, 0, 1, -75, 256]')
-        self.check_args("EllipticCurve/Q/?conductor=990&surj_quantifier=include&optimal=on",
-                        '990h1')
+        self.check_args_with_timeout(
+            "/EllipticCurve/Q/?rank=0&torsion=2&sha=4&count=100",
+            '[0, -1, 0, -10560, -414180]')
+        self.check_args(
+            "/EllipticCurve/Q/?conductor=&jinv=-4096%2F11&count=100",
+            '169136.i3')
+        self.check_args(
+            "/EllipticCurve/Q/?torsion_structure=%5B2%2C4%5D&sha=&count=100",
+            '[0, 1, 0, -1664, -9804]')
+        self.check_args_with_timeout(
+            "/EllipticCurve/Q/?&surj_primes=&surj_quantifier=include&nonsurj_primes=2%2C3&count=100",
+            '[1, -1, 1, -24575, 1488935]')
+        self.check_args_with_timeout(
+            "/EllipticCurve/Q/?&surj_primes=&surj_quantifier=exactly&nonsurj_primes=5&optimal=on&count=100",
+            '[0, 0, 1, -75, 256]')
+        self.check_args(
+            "EllipticCurve/Q/?conductor=990&surj_quantifier=include&optimal=on",
+            '990h1')
         L = self.tc.get("EllipticCurve/Q/?isogeny_degrees=13&search_type=List")
-        assert '[0, 0, 1, -849658625, 9532675710156]' in L.get_data(as_text=True)
+        assert '[0, 0, 1, -849658625, 9532675710156]' in L.get_data(
+            as_text=True)
         assert '[0, -1, 1, -10, -20]' not in L.get_data(as_text=True)

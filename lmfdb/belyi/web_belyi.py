@@ -21,7 +21,7 @@ geomtypelet_to_geomtypename_dict = {
 }
 
 
-def make_curve_latex(crv_str, nu = None):
+def make_curve_latex(crv_str, nu=None):
     if "nu" not in crv_str:
         R0 = QQ
     else:
@@ -32,20 +32,21 @@ def make_curve_latex(crv_str, nu = None):
     lhs = R(sides[0])
     rhs = R(sides[1])
     if nu and ("nu" in crv_str):
-       S = PolynomialRing(CC , 2, 'x,y')
-       # evaluate at nu, if given
-       new_lhs = dict()
-       new_rhs = dict()
-       for m, c in lhs.dict().items():
-           new_lhs[m] = c.subs(nu=nu)
-       for m, c in rhs.dict().items():
-           new_rhs[m] = c.subs(nu=nu)
-       lhs = S(new_lhs) # R, or something else, like CC[]?
-       rhs = S(new_rhs)
+        S = PolynomialRing(CC, 2, 'x,y')
+        # evaluate at nu, if given
+        new_lhs = dict()
+        new_rhs = dict()
+        for m, c in lhs.dict().items():
+            new_lhs[m] = c.subs(nu=nu)
+        for m, c in rhs.dict().items():
+            new_rhs[m] = c.subs(nu=nu)
+        lhs = S(new_lhs)  # R, or something else, like CC[]?
+        rhs = S(new_rhs)
     eqn_str = latex(lhs) + "=" + latex(rhs)
     return eqn_str
 
-def make_map_latex(map_str, nu = None):
+
+def make_map_latex(map_str, nu=None):
     if "nu" not in map_str:
         R0 = QQ
     else:
@@ -84,14 +85,14 @@ def make_map_latex(map_str, nu = None):
     den_new = den_new / den_gcd
     # evaluate at nu, if given
     if nu and ("nu" in map_str):
-        S = PolynomialRing(CC , 2, 'x,y')
+        S = PolynomialRing(CC, 2, 'x,y')
         lc = lc.subs(nu=nu)
         num_dict = dict()
         den_dict = dict()
         for m, c in num_new.dict().items():
-           num_dict[m] = c.subs(nu=nu)
+            num_dict[m] = c.subs(nu=nu)
         for m, c in den_new.dict().items():
-           den_dict[m] = c.subs(nu=nu)
+            den_dict[m] = c.subs(nu=nu)
         num_new = S(num_dict)
         den_new = S(den_dict)
     # make strings for lc, num, and den
@@ -146,9 +147,9 @@ class WebBelyiGalmap(object):
         """
         try:
             slabel = label.split("-")
-            if len(slabel) == 2: # passport label length
+            if len(slabel) == 2:  # passport label length
                 galmap = db.belyi_galmaps_fixed.lucky({"plabel": label})
-            elif len(slabel) == 3: # galmap label length
+            elif len(slabel) == 3:  # galmap label length
                 galmap = db.belyi_galmaps_fixed.lucky({"label": label})
             else:
                 raise ValueError("Invalid Belyi map label %s." % label)
@@ -157,8 +158,8 @@ class WebBelyiGalmap(object):
         if not galmap:
             if len(slabel) == 2:
                 raise KeyError(
-                    "Belyi map passport label %s not found in the database." % label
-                )
+                    "Belyi map passport label %s not found in the database." %
+                    label)
             else:
                 raise KeyError("Belyi map %s not found in database." % label)
         return WebBelyiGalmap(galmap, triple=triple)
@@ -167,10 +168,20 @@ class WebBelyiGalmap(object):
         from lmfdb.belyi.main import url_for_belyi_passport_label, url_for_belyi_galmap_label
 
         # all information about the map goes in the data dictionary
-        # most of the data from the database gets polished/formatted before we put it in the data dictionary
+        # most of the data from the database gets polished/formatted before we
+        # put it in the data dictionary
         data = self.data = {}
         # the stuff that does not need to be polished
-        for elt in ("label", "plabel", "triples_cyc", "orbit_size", "g", "abc", "deg", "primitivization", "is_primitive"):
+        for elt in (
+            "label",
+            "plabel",
+            "triples_cyc",
+            "orbit_size",
+            "g",
+            "abc",
+            "deg",
+            "primitivization",
+                "is_primitive"):
             data[elt] = galmap[elt]
         if triple:
             data["label"] += '-' + (triple).replace(' ', '')
@@ -180,7 +191,8 @@ class WebBelyiGalmap(object):
 
         data["geomtype"] = geomtypelet_to_geomtypename_dict[galmap["geomtype"]]
         data["lambdas"] = [str(c)[1:-1] for c in galmap["lambdas"]]
-        data["primitivization_url"] = url_for_belyi_galmap_label(data['primitivization'])
+        data["primitivization_url"] = url_for_belyi_galmap_label(
+            data['primitivization'])
 
         data["isQQ"] = False
         data["in_LMFDB"] = False
@@ -211,7 +223,7 @@ class WebBelyiGalmap(object):
         for i in range(0, len(data["triples_cyc"])):
             my_dict = {}
             triple_str = ', '.join(data['triples_cyc'][i])
-            triple_link = triple_str.replace(' ','')
+            triple_link = triple_str.replace(' ', '')
             if triple_link == triple:
                 self.triple = data['triples_cyc'][i]
                 self.embedding = CC(data['embeddings'][i])
@@ -227,14 +239,16 @@ class WebBelyiGalmap(object):
         if crv_str == "PP1":
             data["curve"] = r"\mathbb{P}^1"
         else:
-            data["curve"] = make_curve_latex(crv_str, nu = self.embedding)
+            data["curve"] = make_curve_latex(crv_str, nu=self.embedding)
 
-        data["map"] = make_map_latex(galmap["map"], nu = self.embedding)
+        data["map"] = make_map_latex(galmap["map"], nu=self.embedding)
         data["lambdas"] = [str(c)[1:-1] for c in galmap["lambdas"]]
 
         # Properties
-        self.plot = db.belyi_galmap_portraits.lucky({"label": galmap['label']},projection="portrait")
-        plot_link = '<a href="{0}"><img src="{0}" width="200" height="200" style="background-color: white;"/></a>'.format(self.plot)
+        self.plot = db.belyi_galmap_portraits.lucky(
+            {"label": galmap['label']}, projection="portrait")
+        plot_link = '<a href="{0}"><img src="{0}" width="200" height="200" style="background-color: white;"/></a>'.format(
+            self.plot)
         properties = [("Label", galmap["label"])]
         if triple:
             properties += [("Triple", "$%s$" % triple)]
@@ -249,12 +263,18 @@ class WebBelyiGalmap(object):
         self.properties = properties
 
         # Friends
-        self.friends = [("Passport", url_for_belyi_passport_label(galmap["plabel"]))]
+        self.friends = [
+            ("Passport",
+             url_for_belyi_passport_label(
+                 galmap["plabel"]))]
         if galmap['label'] != galmap['primitivization']:
-            self.friends.append(("Primitivization", url_for_belyi_galmap_label(galmap["primitivization"])))
+            self.friends.append(
+                ("Primitivization",
+                 url_for_belyi_galmap_label(
+                     galmap["primitivization"])))
         self.friends.extend(names_and_urls(galmap['friends']))
 
-        #add curve link, if in LMFDB
+        # add curve link, if in LMFDB
         if 'curve_label' in galmap.keys():
             data['curve_label'] = galmap['curve_label']
             for name, url in self.friends:
@@ -297,39 +317,41 @@ class WebBelyiGalmap(object):
         lambdasstr = "%s-%s-%s" % (sigma0, sigma1, sigmaoo)
         lambdasgstr = lambdasstr + "-" + gstr
         self.bread = [
-            ("Belyi Maps", url_for(".index")),
-            (groupstr, url_for(".by_url_belyi_search_group", group=groupstr)),
-            (
-                abcstr,
+            ("Belyi Maps",
+             url_for(".index")),
+            (groupstr,
+             url_for(
+                 ".by_url_belyi_search_group",
+                 group=groupstr)),
+            (abcstr,
                 url_for(
-                    ".by_url_belyi_search_group_triple", group=groupstr, abc=abcstr
-                ),
-            ),
-            (
-                lambdasgstr,
-                url_for(
-                    ".by_url_belyi_passport_label",
+                    ".by_url_belyi_search_group_triple",
                     group=groupstr,
-                    abc=abcstr,
-                    sigma0=sigma0,
-                    sigma1=sigma1,
-                    sigmaoo=sigmaoo,
-                    g=gstr,
-                ),
-            ),
-            (
-                letnum,
-                url_for(
-                    ".by_url_belyi_galmap_label",
-                    group=groupstr,
-                    abc=abcstr,
-                    sigma0=sigma0,
-                    sigma1=sigma1,
-                    sigmaoo=sigmaoo,
-                    g=gstr,
-                    letnum=letnum,
-                ),
-            ),
+                    abc=abcstr),
+             ),
+            (lambdasgstr,
+             url_for(
+                 ".by_url_belyi_passport_label",
+                 group=groupstr,
+                 abc=abcstr,
+                 sigma0=sigma0,
+                 sigma1=sigma1,
+                 sigmaoo=sigmaoo,
+                 g=gstr,
+             ),
+             ),
+            (letnum,
+             url_for(
+                 ".by_url_belyi_galmap_label",
+                 group=groupstr,
+                 abc=abcstr,
+                 sigma0=sigma0,
+                 sigma1=sigma1,
+                 sigmaoo=sigmaoo,
+                 g=gstr,
+                 letnum=letnum,
+             ),
+             ),
         ]
 
         # Title
@@ -381,10 +403,20 @@ class WebBelyiPassport(object):
         from lmfdb.belyi.main import url_for_belyi_galmap_label, url_for_belyi_passport_label
 
         # all information about the map goes in the data dictionary
-        # most of the data from the database gets polished/formatted before we put it in the data dictionary
+        # most of the data from the database gets polished/formatted before we
+        # put it in the data dictionary
         data = self.data = {}
 
-        for elt in ("plabel", "abc", "num_orbits", "g", "abc", "deg", "maxdegbf", "is_primitive", "primitivization"):
+        for elt in (
+            "plabel",
+            "abc",
+            "num_orbits",
+            "g",
+            "abc",
+            "deg",
+            "maxdegbf",
+            "is_primitive",
+                "primitivization"):
             data[elt] = passport[elt]
 
         nt = passport["group"].split("T")
@@ -393,7 +425,8 @@ class WebBelyiPassport(object):
         data["geomtype"] = geomtypelet_to_geomtypename_dict[passport["geomtype"]]
         data["lambdas"] = [str(c)[1:-1] for c in passport["lambdas"]]
         data["pass_size"] = passport["pass_size"]
-        data["primitivization_url"] = url_for_belyi_passport_label(data['primitivization'])
+        data["primitivization_url"] = url_for_belyi_passport_label(
+            data['primitivization'])
 
         # Permutation triples
         galmaps_for_plabel = db.belyi_galmaps_fixed.search(
@@ -455,26 +488,29 @@ class WebBelyiPassport(object):
         lambdasstr = "%s-%s-%s" % (sigma0, sigma1, sigmaoo)
         lambdasgstr = lambdasstr + "-" + gstr
         self.bread = [
-            ("Belyi Maps", url_for(".index")),
-            (groupstr, url_for(".by_url_belyi_search_group", group=groupstr)),
-            (
-                abcstr,
+            ("Belyi Maps",
+             url_for(".index")),
+            (groupstr,
+             url_for(
+                 ".by_url_belyi_search_group",
+                 group=groupstr)),
+            (abcstr,
                 url_for(
-                    ".by_url_belyi_search_group_triple", group=groupstr, abc=abcstr
-                ),
-            ),
-            (
-                lambdasgstr,
-                url_for(
-                    ".by_url_belyi_passport_label",
+                    ".by_url_belyi_search_group_triple",
                     group=groupstr,
-                    abc=abcstr,
-                    sigma0=sigma0,
-                    sigma1=sigma1,
-                    sigmaoo=sigmaoo,
-                    g=gstr,
-                ),
-            ),
+                    abc=abcstr),
+             ),
+            (lambdasgstr,
+             url_for(
+                 ".by_url_belyi_passport_label",
+                 group=groupstr,
+                 abc=abcstr,
+                 sigma0=sigma0,
+                 sigma1=sigma1,
+                 sigmaoo=sigmaoo,
+                 g=gstr,
+             ),
+             ),
         ]
 
         # Title
