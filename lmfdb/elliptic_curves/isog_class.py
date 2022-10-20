@@ -12,6 +12,7 @@ class ECisog_class():
     """
     Class for an isogeny class of elliptic curves over Q
     """
+
     def __init__(self, dbdata):
         """
         Arguments:

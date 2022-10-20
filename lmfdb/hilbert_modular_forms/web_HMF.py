@@ -28,6 +28,7 @@ class WebHMF():
     """
     Class for an Hilbert Modular Newform
     """
+
     def __init__(self, dbdata=None, label_or_field=None, L=None):
         """Arguments:
 

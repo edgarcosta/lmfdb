@@ -369,6 +369,7 @@ class CMF_download(Downloader):
       return N;
     end function;
     """
+
     def _magma_ConvertToHeckeField(self, newform, hecke_nf):
         begin = ['function ConvertToHeckeField(input: pass_field := false, Kf := [])',
                  '    if not pass_field then']

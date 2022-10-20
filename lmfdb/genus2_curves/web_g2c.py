@@ -745,6 +745,7 @@ class WebG2C():
         bread -- bread crumbs for home page (conductor, isogeny class id, discriminant, curve id)
         title -- title to display on home page
     """
+
     def __init__(self, curve, endo, tama, ratpts, clus, galrep, is_curve=True):
         self.make_object(curve, endo, tama, ratpts, clus, galrep, is_curve)
 

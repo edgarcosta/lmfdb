@@ -335,6 +335,7 @@ class LmfdbAnonymousUser(AnonymousUserMixin):
     The sole purpose of this Anonymous User is the 'is_admin' method
     and probably others.
     """
+
     def is_admin(self):
         return False
 

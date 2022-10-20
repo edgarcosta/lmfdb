@@ -783,6 +783,7 @@ class Knowl():
     - ``allow_deleted`` -- whether the knowl database should return data from deleted knowls with this ID.
     - ``timestamp`` -- desired version of knowl at the given timestamp
     """
+
     def __init__(self, ID, template_kwargs=None, data=None, editing=False, showing=False,
                  saving=False, renaming=False, allow_deleted=False, timestamp=None):
         self.template_kwargs = template_kwargs or {}

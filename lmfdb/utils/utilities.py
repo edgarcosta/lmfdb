@@ -691,6 +691,7 @@ class ValueSaver():
     """
     Takes a generator and saves values as they are generated so that values can be retrieved multiple times.
     """
+
     def __init__(self, source):
         self.source = source
         self.store = []
@@ -727,6 +728,7 @@ class Pagination():
     - ``endpoint`` -- an argument for ``url_for`` to get more pages
     - ``endpoint_params`` -- keyword arguments for the ``url_for`` call
     """
+
     def __init__(self, source, per_page, page, endpoint, endpoint_params):
         if isinstance(source, GeneratorType):
             source = ValueSaver(source)

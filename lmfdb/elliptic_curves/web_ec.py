@@ -209,6 +209,7 @@ class WebEC():
     """
     Class for an elliptic curve over Q
     """
+
     def __init__(self, dbdata):
         """
         Arguments:

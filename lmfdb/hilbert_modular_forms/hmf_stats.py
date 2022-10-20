@@ -13,6 +13,7 @@ class HMFstats(StatsDisplay):
     """
     Class for creating and displaying statistics for Hilbert modular forms
     """
+
     def __init__(self):
         self.nforms = db.hmf_forms.count()
 

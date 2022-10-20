@@ -76,8 +76,7 @@ def niceideals(F, ideals): #HNF + sage ideal + label
 def conjideals(ideals, auts): #(label,g) -> label
     cideals = {}
     from copy import copy
-    ideals = copy(ideals)
-    ideals.sort()
+    ideals = sorted(copy(ideals))
     for ig,g in enumerate(auts):
         gideals = copy(ideals)
         for I in gideals:
@@ -93,6 +92,7 @@ class HilbertNumberField(WebNumberField):
     Subclass of WebNumberField which also facilitates extraction of
     the number field data stored in the Hilbert modular forms database.
     """
+
     def __init__(self, label):
         self.Fdata = db.hmf_fields.lookup(label)
         self.ideals = self.Fdata['ideals']

@@ -18,6 +18,7 @@ class Sample_class (SageObject):
     A wrapper around a database entry providing various
     properties as a sage object.
     """
+
     def __init__(self, doc):
 
         self.__collection = doc.get('collection')

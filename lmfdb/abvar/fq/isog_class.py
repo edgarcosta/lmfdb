@@ -73,6 +73,7 @@ class AbvarFq_isoclass():
     """
     Class for an isogeny class of abelian varieties over a finite field
     """
+
     def __init__(self, dbdata):
         if "size" not in dbdata:
             dbdata["size"] = None

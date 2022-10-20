@@ -103,7 +103,7 @@ def constructor_logger(obj, args):
 
 # Compute Dirichlet coefficients from Euler factors.
 def an_from_data(euler_factors,upperbound=30):
-    if type(euler_factors[0][0]) is int:
+    if isinstance(euler_factors[0][0], int):
         R = ZZ
     else:
         R = euler_factors[0][0].parent()
@@ -329,7 +329,7 @@ def makeLfromdata(L):
 
     # Configure the data for the plot
     plot_delta = float(data['plot_delta'])
-    if type(data['plot_values'][0]) is str:
+    if isinstance(data['plot_values'][0], str):
         plot_values = [string2number(elt) for elt in data['plot_values']]
     else:
         plot_values = data['plot_values']
@@ -340,7 +340,7 @@ def makeLfromdata(L):
         neg_plot = [ [-1*pt[0], L.sign * pt[1]]
                      for pt in pos_plot ][1:]
     else:
-        if type(dual_L_data['plot_values'][0]) is str:
+        if isinstance(dual_L_data['plot_values'][0], str):
             dual_plot_values = [string2number(elt) for elt in dual_L_data['plot_values']]
         else:
             dual_plot_values = dual_L_data['plot_values']
@@ -452,6 +452,7 @@ class Lfunction_from_db(Lfunction):
 
     Compulsory parameters: Lhash or label
     """
+
     def __init__(self, **kwargs):
         constructor_logger(self, kwargs)
         argkeys = ({'url', 'label', 'Lhash'}).intersection(set(kwargs))
@@ -704,6 +705,7 @@ class Lfunction_Maass(Lfunction):
 
     Possible parameters: group,level,char,R,ap_id  (if data is in Lfunctions DB)
     """
+
     def __init__(self, **args):
         constructor_logger(self, args)
 
@@ -1227,6 +1229,7 @@ class ArtinLfunction(Lfunction):
     Compulsory parameters: label
 
     """
+
     def __init__(self, **args):
         constructor_logger(self, args)
 
@@ -1314,6 +1317,7 @@ class HypergeometricMotiveLfunction(Lfunction):
         family, for instance 'A2.2.2.2_B1.1.1.1'
         and t for instance 't1.2'
     """
+
     def __init__(self, **args):
         constructor_logger(self, args)
 

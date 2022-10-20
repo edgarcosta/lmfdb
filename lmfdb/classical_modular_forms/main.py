@@ -1263,6 +1263,7 @@ class CMF_stats(StatsDisplay):
     """
     Class for creating and displaying statistics for classical modular forms
     """
+
     def __init__(self):
         self.nforms = comma(db.mf_newforms.count())
         self.nspaces = comma(db.mf_newspaces.count({'num_forms':{'$gt':0}}))

@@ -40,6 +40,7 @@ class Configuration():
       - ``writeargstofile`` - a boolean, if config file doesn't exist, it determines if command line arguments are written to the config file instead of the default arguments
       - ``readargs`` - a boolean, if determines if command line arguments are read
     """
+
     def __init__(self, parser=None, defaults={}, writeargstofile=False, readargs=None):
         if readargs is None:
             import __main__ as main
