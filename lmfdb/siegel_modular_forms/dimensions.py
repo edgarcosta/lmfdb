@@ -32,19 +32,25 @@ def parse_dim_args(dim_args, default_dim_args):
     args = {}
     if 'k' in res:
         if res['k'][-1] > MAXWT:
-            flash_error("<span style='color:black'>$k$</span> cannot exceed %s.", MAXWT)
+            flash_error(
+                "<span style='color:black'>$k$</span> cannot exceed %s.",
+                MAXWT)
             raise ValueError("dim_args")
         if len(res['k']) > MAXWTRANGE:
-            flash_error("range for <span style='color:black'>$k$</span> cannot include more than %s values.", MAXWTRANGE)
+            flash_error(
+                "range for <span style='color:black'>$k$</span> cannot include more than %s values.",
+                MAXWTRANGE)
             raise ValueError("dim_args")
         args = {'k_range': res['k']}
     if 'j' in res:
         if res['j'][-1] > MAXJ:
-            flash_error("<span style='color:black'>$j$</span> cannot exceed %s.", MAXJ)
+            flash_error(
+                "<span style='color:black'>$j$</span> cannot exceed %s.", MAXJ)
             raise ValueError("dim_args")
         args['j_range'] = [j for j in res['j'] if j % 2 == 0]
         if not args['j_range']:
-            flash_error("<span style='color:black'>$j$</span> should be a nonnegative even integer.")
+            flash_error(
+                "<span style='color:black'>$j$</span> should be a nonnegative even integer.")
             raise ValueError("dim_args")
     return args
 
@@ -213,8 +219,11 @@ def _dimension_Gamma_2(wt_range, j, group='Gamma(2)'):
     """
     partitions = ['6', '51', '42', '411', '33', '321',
                   '3111', '222', '2211', '21111', '111111']
-    latex_names = {'Gamma(2)': r'\Gamma(2)', 'Gamma0(2)': r'\Gamma_0(2)',
-                   'Gamma1(2)': r'\Gamma_1(2)', 'Sp4(Z)': r'\mathrm{Sp}(4,\mathbb{Z})'}
+    latex_names = {
+        'Gamma(2)': r'\Gamma(2)',
+        'Gamma0(2)': r'\Gamma_0(2)',
+        'Gamma1(2)': r'\Gamma_1(2)',
+        'Sp4(Z)': r'\mathrm{Sp}(4,\mathbb{Z})'}
 
     if j % 2:
         dct = {k: {h: [0, 0, 0] for h in partitions} for k in wt_range}
@@ -235,16 +244,24 @@ def _dimension_Gamma_2(wt_range, j, group='Gamma(2)'):
         return headers, dct
 
     if j >= 2 and wt_range[0] < 4:
-        raise NotImplementedError(r"Dimensions of \(M_{k,j}(%s)\) for <span style='color:black'>\(k<4\)</span> and <span style='color:black'>\(j\ge 2\)</span> not implemented" % latex_names.get(group, group))
+        raise NotImplementedError(
+            r"Dimensions of \(M_{k,j}(%s)\) for <span style='color:black'>\(k<4\)</span> and <span style='color:black'>\(j\ge 2\)</span> not implemented" %
+            latex_names.get(
+                group,
+                group))
 
     query = {'sym_power': str(j), 'group': 'Gamma(2)', 'space': 'total'}
     db_total = db.smf_dims.lucky(query)
     if not db_total:
-        raise NotImplementedError(r'Dimensions of \(M_{k,j}\) for \(j=%d\) not implemented' % j)
+        raise NotImplementedError(
+            r'Dimensions of \(M_{k,j}\) for \(j=%d\) not implemented' %
+            j)
     query['space'] = 'cusp'
     db_cusp = db.smf_dims.lucky(query)
     if not db_cusp:
-        raise NotImplementedError(r'Dimensions of \(M_{k,j}\) for \(j=%d\) not implemented' % j)
+        raise NotImplementedError(
+            r'Dimensions of \(M_{k,j}\) for \(j=%d\) not implemented' %
+            j)
 
     P = PowerSeriesRing(ZZ, default_prec=wt_range[-1] + 1, names=('t'))
     Qt = FunctionField(QQ, names=('t'))
@@ -260,7 +277,8 @@ def _dimension_Gamma_2(wt_range, j, group='Gamma(2)'):
         dct = {k: {p: [total[p][k], total[p][k] - cusp[p][k], cusp[p][k]]
                    for p in partitions} for k in wt_range}
         for k in dct:
-            dct[k]['All'] = [sum(dct[k][p][i] for p in dct[k]) for i in range(3)]
+            dct[k]['All'] = [sum(dct[k][p][i] for p in dct[k])
+                             for i in range(3)]
 
         partitions.insert(0, 'All')
         headers = partitions
@@ -275,7 +293,8 @@ def _dimension_Gamma_2(wt_range, j, group='Gamma(2)'):
                        sum(cusp[q][k] for q in ps[p])]
                    for p in ps} for k in wt_range}
         for k in dct:
-            dct[k]['All'] = [sum(dct[k][p][i] for p in dct[k]) for i in range(3)]
+            dct[k]['All'] = [sum(dct[k][p][i] for p in dct[k])
+                             for i in range(3)]
 
         headers = list(ps)
         headers.sort(reverse=True)
@@ -319,7 +338,11 @@ def dimension_Sp6Z(wt_range):
 
 
 def _dimension_Sp6Z(wt_range):
-    headers = ['Total', 'Miyawaki lifts I', 'Miyawaki lifts II (conjectured)', 'Other']
+    headers = [
+        'Total',
+        'Miyawaki lifts I',
+        'Miyawaki lifts II (conjectured)',
+        'Other']
     dct = {}
     for k in wt_range:
         dims = __dimension_Sp6Z(k)
@@ -342,15 +365,15 @@ def __dimension_Sp6Z(wt):
     S = PowerSeriesRing(ZZ, default_prec=max(2 * wt - 1, 1), names=('y',))
     (y,) = S._first_ngens(1)
     H_all = 1 / ((1 - x ** 4) * (1 - x ** 12) ** 2 * (1 - x ** 14) * (1 - x ** 18) *
-                (1 - x ** 20) * (1 - x ** 30)) * (
-                    1 + x ** 6 + x ** 10 + x ** 12 + 3 * x ** 16 + 2 * x ** 18 + 2 * x ** 20 +
-                    5 * x ** 22 + 4 * x ** 24 + 5 * x ** 26 + 7 * x ** 28 + 6 * x ** 30 + 9 * x ** 32 +
-                    10 * x ** 34 + 10 * x ** 36 + 12 * x ** 38 + 14 * x ** 40 + 15 * x ** 42 + 16 * x ** 44 +
-                    18 * x ** 46 + 18 * x ** 48 + 19 * x ** 50 + 21 * x ** 52 + 19 * x ** 54 + 21 * x ** 56 +
-                    21 * x ** 58 + 19 * x ** 60 + 21 * x ** 62 + 19 * x ** 64 + 18 * x ** 66 + 18 * x ** 68 +
-                    16 * x ** 70 + 15 * x ** 72 + 14 * x ** 74 + 12 * x ** 76 + 10 * x ** 78 + 10 * x ** 80 +
-                    9 * x ** 82 + 6 * x ** 84 + 7 * x ** 86 + 5 * x ** 88 + 4 * x ** 90 + 5 * x ** 92 +
-                    2 * x ** 94 + 2 * x ** 96 + 3 * x ** 98 + x ** 102 + x ** 104 + x ** 108 + x ** 114)
+                 (1 - x ** 20) * (1 - x ** 30)) * (
+        1 + x ** 6 + x ** 10 + x ** 12 + 3 * x ** 16 + 2 * x ** 18 + 2 * x ** 20 +
+        5 * x ** 22 + 4 * x ** 24 + 5 * x ** 26 + 7 * x ** 28 + 6 * x ** 30 + 9 * x ** 32 +
+        10 * x ** 34 + 10 * x ** 36 + 12 * x ** 38 + 14 * x ** 40 + 15 * x ** 42 + 16 * x ** 44 +
+        18 * x ** 46 + 18 * x ** 48 + 19 * x ** 50 + 21 * x ** 52 + 19 * x ** 54 + 21 * x ** 56 +
+        21 * x ** 58 + 19 * x ** 60 + 21 * x ** 62 + 19 * x ** 64 + 18 * x ** 66 + 18 * x ** 68 +
+        16 * x ** 70 + 15 * x ** 72 + 14 * x ** 74 + 12 * x ** 76 + 10 * x ** 78 + 10 * x ** 80 +
+        9 * x ** 82 + 6 * x ** 84 + 7 * x ** 86 + 5 * x ** 88 + 4 * x ** 90 + 5 * x ** 92 +
+        2 * x ** 94 + 2 * x ** 96 + 3 * x ** 98 + x ** 102 + x ** 104 + x ** 108 + x ** 114)
 
     H_noncusp = 1 / (1 - x ** 4) / (1 - x ** 6) / (1 - x ** 10) / (1 - x ** 12)
     H_E = y ** 12 / (1 - y ** 4) / (1 - y ** 6)
@@ -389,7 +412,8 @@ def _dimension_Sp8Z(wt):
         ('Total', 'Ikeda lifts', 'Miyawaki lifts', 'Other')
     """
     if wt > 16:
-        raise NotImplementedError(r'Dimensions of $M_{k}(Sp(8,Z))$ for \(k > 16\) not implemented')
+        raise NotImplementedError(
+            r'Dimensions of $M_{k}(Sp(8,Z))$ for \(k > 16\) not implemented')
     if wt == 8:
         return (1, 1, 0, 0)
     if wt == 10:
@@ -464,8 +488,8 @@ def _dimension_Gamma0_4_half(k):
     R = PowerSeriesRing(ZZ, default_prec=k, names=('x',))
     (x,) = R._first_ngens(1)
     H_all = 1 / (1 - x) / (1 - x ** 2) ** 2 / (1 - x ** 3)
-    H_cusp = (2 * x ** 5 + x ** 7 + x ** 9 - 2 * x ** 11 + 4 * x ** 6 - x ** 8 + x ** 10 - 3 *
-              x ** 12 + x ** 14) / (1 - x ** 2) ** 2 / (1 - x ** 6)
+    H_cusp = (2 * x ** 5 + x ** 7 + x ** 9 - 2 * x ** 11 + 4 * x ** 6 - x **
+              8 + x ** 10 - 3 * x ** 12 + x ** 14) / (1 - x ** 2) ** 2 / (1 - x ** 6)
     a, c = H_all[k - 1], H_cusp[k - 1]
     return (a, a - c, c)
 
@@ -548,7 +572,8 @@ def _dimension_Gamma0_4_psi_4(wt):
     H_all_even = (x ** 12 + x ** 14) / (1 - x ** 2) ** 3 / (1 - x ** 6)
     if not wt % 2:
         return (H_all_even[wt],)
-    raise NotImplementedError(r'Dimensions of $M_{k}(\Gamma_0(4), \psi_4)$ for odd $k$ not implemented')
+    raise NotImplementedError(
+        r'Dimensions of $M_{k}(\Gamma_0(4), \psi_4)$ for odd $k$ not implemented')
 
 
 ####################################################################
@@ -615,7 +640,8 @@ def _dimension_Gamma0_3(wt):
     """
     R = PowerSeriesRing(ZZ, 'x')
     x = R.gen().O(wt + 1)
-    H_all = (1 + 2 * x**4 + x**6 + x**15 * (1 + 2 * x**2 + x**6)) / (1 - x**2) / (1 - x**4) / (1 - x**6)**2
+    H_all = (1 + 2 * x**4 + x**6 + x**15 * (1 + 2 * x**2 + x**6)) / \
+        (1 - x**2) / (1 - x**4) / (1 - x**6)**2
     return (H_all[wt],)
 
 
@@ -649,7 +675,8 @@ def _dimension_Dummy_0(wt):
     """
     # Here goes your code ike e.g.:
     if wt > 37:
-        raise NotImplementedError(r'Dimensions of $Dummy_0$ for \(k > 37\) not implemented')
+        raise NotImplementedError(
+            r'Dimensions of $Dummy_0$ for \(k > 37\) not implemented')
     a, b, c = 1728, 28, 37
 
     return (a, b, c)

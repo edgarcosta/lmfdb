@@ -12,11 +12,30 @@ from sage.databases.cremona import cremona_letter_code
 from lmfdb import db
 from lmfdb.logger import make_logger
 from lmfdb.utils import (
-    to_dict, flash_error, integer_options, display_knowl, coeff_to_poly,
-    SearchArray, TextBox, TextBoxWithSelect, SkipBox, CheckBox, CheckboxSpacer, YesNoBox,
-    parse_ints, parse_string_start, parse_subset, parse_submultiset, parse_bool, parse_bool_unknown,
-    search_wrap, count_wrap, YesNoMaybeBox, CountBox, SubsetBox, SelectBox
-)
+    to_dict,
+    flash_error,
+    integer_options,
+    display_knowl,
+    coeff_to_poly,
+    SearchArray,
+    TextBox,
+    TextBoxWithSelect,
+    SkipBox,
+    CheckBox,
+    CheckboxSpacer,
+    YesNoBox,
+    parse_ints,
+    parse_string_start,
+    parse_subset,
+    parse_submultiset,
+    parse_bool,
+    parse_bool_unknown,
+    search_wrap,
+    count_wrap,
+    YesNoMaybeBox,
+    CountBox,
+    SubsetBox,
+    SelectBox)
 from lmfdb.utils.interesting import interesting_knowls
 from lmfdb.api import datapage
 from . import abvarfq_page
@@ -33,6 +52,7 @@ logger = make_logger("abvarfq")
 #    Top level
 #########################
 
+
 def get_bread(*breads):
     bc = [
         ("Abelian varieties", url_for(".abelian_varieties")),
@@ -41,6 +61,7 @@ def get_bread(*breads):
     for z in breads:
         bc.append(z)
     return bc
+
 
 def learnmore_list():
     return [
@@ -51,6 +72,8 @@ def learnmore_list():
     ]
 
 # Return the learnmore list with the matchstring entry removed
+
+
 def learnmore_list_remove(matchstring):
     return [t for t in learnmore_list() if t[0].find(matchstring) < 0]
 
@@ -62,6 +85,7 @@ def learnmore_list_remove(matchstring):
 @abvarfq_page.route("/download_all/<label>")
 def download_all(label):
     return AbvarFq_download().download_all(label)
+
 
 @abvarfq_page.route("/download_curves/<label>")
 def download_curves(label):
@@ -77,14 +101,17 @@ def abelian_varieties():
     info = to_dict(request.args, search_array=AbvarSearchArray())
     if request.args:
         # hidden_search_type for prev/next buttons
-        info["search_type"] = search_type = info.get("search_type", info.get("hst", "List"))
+        info["search_type"] = search_type = info.get(
+            "search_type", info.get("hst", "List"))
         if search_type == "Counts":
             return abelian_variety_count(info)
         elif search_type in ['List', 'Random']:
             return abelian_variety_search(info)
         else:
-            flash_error("Invalid search type; if you did not enter it in the URL please report")
+            flash_error(
+                "Invalid search type; if you did not enter it in the URL please report")
     return abelian_variety_browse(info)
+
 
 @abvarfq_page.route("/<int:g>/")
 def abelian_varieties_by_g(g):
@@ -93,6 +120,7 @@ def abelian_varieties_by_g(g):
         D["g"] = g
     D["bread"] = get_bread((str(g), url_for(".abelian_varieties_by_g", g=g)))
     return abelian_variety_search(D)
+
 
 @abvarfq_page.route("/<int:g>/<int:q>/")
 def abelian_varieties_by_gq(g, q):
@@ -106,6 +134,7 @@ def abelian_varieties_by_gq(g, q):
         (str(q), url_for(".abelian_varieties_by_gq", g=g, q=q)),
     )
     return abelian_variety_search(D)
+
 
 @abvarfq_page.route("/<int:g>/<int:q>/<iso>")
 def abelian_varieties_by_gqi(g, q, iso):
@@ -130,7 +159,11 @@ def abelian_varieties_by_gqi(g, q, iso):
     ]
 
     if hasattr(cl, "curves") and cl.curves:
-        downloads.append(('Curves to text', url_for('.download_curves', label=label)))
+        downloads.append(
+            ('Curves to text',
+             url_for(
+                 '.download_curves',
+                 label=label)))
     downloads.append(("Underlying data", url_for('.AV_data', label=label)))
 
     return render_template(
@@ -138,12 +171,15 @@ def abelian_varieties_by_gqi(g, q, iso):
         properties=cl.properties(),
         friends=cl.friends(),
         downloads=downloads,
-        title='Abelian variety isogeny class %s over $%s$'%(label, cl.field()),
+        title='Abelian variety isogeny class %s over $%s$' %
+        (label,
+         cl.field()),
         bread=bread,
         cl=cl,
         learnmore=learnmore_list(),
-        KNOWL_ID='av.fq.%s'%label
-    )
+        KNOWL_ID='av.fq.%s' %
+        label)
+
 
 def url_for_label(label):
     label = label.replace(" ", "")
@@ -154,6 +190,7 @@ def url_for_label(label):
         return redirect(url_for(".abelian_varieties"))
     g, q, iso = split_label(label)
     return url_for(".abelian_varieties_by_gqi", g=g, q=q, iso=iso)
+
 
 def download_search(info):
     dltype = info["Submit"]
@@ -174,8 +211,10 @@ def download_search(info):
         delim = "magma"
         filename = "weil_polynomials.m"
     s = com1 + "\n"
-    s += com + " Weil polynomials downloaded from the LMFDB on %s.\n" % (mydate)
-    s += com + " Below is a list (called data), collecting the weight 1 L-polynomial\n"
+    s += com + \
+        " Weil polynomials downloaded from the LMFDB on %s.\n" % (mydate)
+    s += com + \
+        " Below is a list (called data), collecting the weight 1 L-polynomial\n"
     s += com + " attached to each isogeny class of an abelian variety.\n"
     s += "\n" + com2
     s += "\n"
@@ -202,17 +241,27 @@ def download_search(info):
     strIO.seek(0)
     return send_file(strIO, download_name=filename, as_attachment=True)
 
+
 @abvarfq_page.route("/data/<label>")
 def AV_data(label):
     if not lmfdb_label_regex.fullmatch(label):
         return abort(404, f"Invalid label {label}")
     bread = get_bread((label, url_for_label(label)), ("Data", " "))
-    extension_labels = list(db.av_fq_endalg_factors.search({"base_label": label}, "extension_label", sort=["extension_degree"]))
-    tables = ["av_fq_isog", "av_fq_endalg_factors"] + ["av_fq_endalg_data"] * len(extension_labels)
+    extension_labels = list(db.av_fq_endalg_factors.search(
+        {"base_label": label}, "extension_label", sort=["extension_degree"]))
+    tables = ["av_fq_isog", "av_fq_endalg_factors"] + \
+        ["av_fq_endalg_data"] * len(extension_labels)
     labels = [label, label] + extension_labels
-    label_cols = ["label", "base_label"] + ["extension_label"] * len(extension_labels)
+    label_cols = ["label", "base_label"] + \
+        ["extension_label"] * len(extension_labels)
     sorts = [[], ["extension_degree"]] + [[]] * len(extension_labels)
-    return datapage(labels, tables, title=f"Abelian variety isogeny class data - {label}", bread=bread, label_cols=label_cols, sorts=sorts)
+    return datapage(
+        labels,
+        tables,
+        title=f"Abelian variety isogeny class data - {label}",
+        bread=bread,
+        label_cols=label_cols,
+        sorts=sorts)
 
 
 class AbvarSearchArray(SearchArray):
@@ -279,7 +328,7 @@ class AbvarSearchArray(SearchArray):
             knowl="lf.newton_polygon",
             example="[0,0,1/2]",
             colspan=(1, 3, 1),
-            width=3*190 - 30,
+            width=3 * 190 - 30,
             short_width=160,
             short_label="Slopes",
             advanced=True,
@@ -296,7 +345,7 @@ class AbvarSearchArray(SearchArray):
             knowl="ag.fq.point_counts",
             example="[75,7125]",
             colspan=(1, 3, 1),
-            width=3*190 - 30,
+            width=3 * 190 - 30,
             short_width=160,
             short_label="Points on variety",
             advanced=True,
@@ -307,7 +356,7 @@ class AbvarSearchArray(SearchArray):
             knowl="av.fq.curve_point_counts",
             example="[9,87]",
             colspan=(1, 3, 1),
-            width=3*190 - 30,
+            width=3 * 190 - 30,
             short_width=160,
             short_label="Points on curve",
             advanced=True,
@@ -322,7 +371,7 @@ class AbvarSearchArray(SearchArray):
             example="4.0.29584.2",
             example_span="4.0.29584.2 or Qzeta8",
             colspan=(1, 3, 1),
-            width=3*190 - 30,
+            width=3 * 190 - 30,
             short_width=160,
             advanced=True,
         )
@@ -334,20 +383,21 @@ class AbvarSearchArray(SearchArray):
             example_span="C4, or 8T12, a list of "
             + display_knowl("nf.galois_group.name", "group names"),
             colspan=(1, 3, 1),
-            width=3*190 - 30,
+            width=3 * 190 - 30,
             short_width=160,
             advanced=True,
         )
-        #size = TextBox(
+        # size = TextBox(
         #    "size",
         #    label="Isogeny class size",
         #    knowl="av.fq.isogeny_class_size",
         #    example="1",
         #    example_col=False,
         #    advanced=True,
-        #)
+        # )
         gdshort = display_knowl("av.endomorphism_field", "End.") + " degree"
-        gdlong = "Degree of " + display_knowl("av.endomorphism_field", "endomorphism_field")
+        gdlong = "Degree of " + \
+            display_knowl("av.endomorphism_field", "endomorphism_field")
         geom_deg = TextBox(
             "geom_deg",
             label=gdlong,
@@ -407,11 +457,11 @@ class AbvarSearchArray(SearchArray):
             label="(Geometrically) Squarefree",
             short_label="(Geom.) Sq.free",
             options=[('', ''),
-            ('Yes', 'yes'),
-            ('YesAndGeom', 'yes; and geom.'),
-            ('YesNotGeom', 'yes; not geom.'),
-            ('No', 'no'),
-            ('NotGeom', 'not geom.')],
+                     ('Yes', 'yes'),
+                     ('YesAndGeom', 'yes; and geom.'),
+                     ('YesNotGeom', 'yes; not geom.'),
+                     ('No', 'no'),
+                     ('NotGeom', 'not geom.')],
             advanced=True
         )
         primitive = YesNoBox(
@@ -430,14 +480,17 @@ class AbvarSearchArray(SearchArray):
             label="Jacobian",
             knowl="ag.jacobian"
         )
-        uglabel = "Use %s in the following inputs" % display_knowl("av.decomposition", "Geometric decomposition")
+        uglabel = "Use %s in the following inputs" % display_knowl(
+            "av.decomposition", "Geometric decomposition")
         use_geom_decomp = CheckBox(
             "use_geom_decomp",
             label=uglabel,
             short_label=uglabel
         )
-        use_geom_index = CheckboxSpacer(use_geom_decomp, colspan=4, advanced=True)
-        use_geom_refine = CheckboxSpacer(use_geom_decomp, colspan=5, advanced=True)
+        use_geom_index = CheckboxSpacer(
+            use_geom_decomp, colspan=4, advanced=True)
+        use_geom_refine = CheckboxSpacer(
+            use_geom_decomp, colspan=5, advanced=True)
 
         def long_label(d):
             return nbsp("av.decomposition", f"Dimension {d} factors")
@@ -522,8 +575,8 @@ class AbvarSearchArray(SearchArray):
             select_box=simple_quantifier,
             knowl="av.decomposition",
             colspan=(1, 3, 2),
-            width=3*190 - 30,
-            short_width=2*190 - 30,
+            width=3 * 190 - 30,
+            short_width=2 * 190 - 30,
             example="1.2.b,1.2.b,2.2.a_b",
             advanced=True,
         )
@@ -570,6 +623,7 @@ class AbvarSearchArray(SearchArray):
             ('Counts', 'Counts table'),
             ('Random', 'Random isogeny class')])
 
+
 def common_parse(info, query):
     parse_ints(info, query, "q", name="base field")
     parse_ints(info, query, "p", name="base cardinality")
@@ -579,21 +633,51 @@ def common_parse(info, query):
     parse_bool(info, query, "geom_simple", qfield="is_geometrically_simple")
     parse_bool(info, query, "primitive", qfield="is_primitive")
     parse_bool_unknown(info, query, "jacobian", qfield="has_jacobian")
-    parse_bool_unknown(info, query, "polarizable", qfield="has_principal_polarization")
+    parse_bool_unknown(
+        info,
+        query,
+        "polarizable",
+        qfield="has_principal_polarization")
     parse_ints(info, query, "p_rank")
     parse_ints(info, query, "p_rank_deficit")
     parse_ints(info, query, "angle_rank")
-    parse_ints(info, query, "jac_cnt", qfield="jacobian_count", name="Number of Jacobians")
-    parse_ints(info, query, "hyp_cnt", qfield="hyp_count", name="Number of Hyperelliptic Jacobians")
+    parse_ints(
+        info,
+        query,
+        "jac_cnt",
+        qfield="jacobian_count",
+        name="Number of Jacobians")
+    parse_ints(info, query, "hyp_cnt", qfield="hyp_count",
+               name="Number of Hyperelliptic Jacobians")
     parse_ints(info, query, "twist_count")
     parse_ints(info, query, "max_twist_degree")
     parse_ints(info, query, "size")
     parse_newton_polygon(info, query, "newton_polygon", qfield="slopes")
-    parse_string_start(info, query, "initial_coefficients", qfield="poly_str", initial_segment=["1"])
-    parse_string_start(info, query, "abvar_point_count", qfield="abvar_counts_str", first_field="abvar_count")
-    parse_string_start(info, query, "curve_point_count", qfield="curve_counts_str", first_field="curve_count")
+    parse_string_start(
+        info,
+        query,
+        "initial_coefficients",
+        qfield="poly_str",
+        initial_segment=["1"])
+    parse_string_start(
+        info,
+        query,
+        "abvar_point_count",
+        qfield="abvar_counts_str",
+        first_field="abvar_count")
+    parse_string_start(
+        info,
+        query,
+        "curve_point_count",
+        qfield="curve_counts_str",
+        first_field="curve_count")
     if info.get("simple_quantifier") in ["subset", "exactly"]:
-        parse_subset(info, query, "simple_factors", qfield="simple_distinct", mode=info.get("simple_quantifier"))
+        parse_subset(
+            info,
+            query,
+            "simple_factors",
+            qfield="simple_distinct",
+            mode=info.get("simple_quantifier"))
     else:
         parse_submultiset(info, query, "simple_factors")
     if info.get("use_geom_decomp") == "on":
@@ -605,9 +689,15 @@ def common_parse(info, query):
         nf_qfield = "number_fields"
         gal_qfield = "galois_groups"
     for n in range(1, 6):
-        parse_ints(info, query, "dim%s_factors" % n, qfield="%s%s_factors" % (dimstr, n))
+        parse_ints(
+            info, query, "dim%s_factors" %
+            n, qfield="%s%s_factors" %
+            (dimstr, n))
     for n in range(1, 4):
-        parse_ints(info, query, "dim%s_distinct" % n, qfield="%s%s_distinct" % (dimstr, n))
+        parse_ints(
+            info, query, "dim%s_distinct" %
+            n, qfield="%s%s_distinct" %
+            (dimstr, n))
     parse_nf_string(info, query, "number_field", qfield=nf_qfield)
     parse_galgrp(info, query, "galois_group", qfield=gal_qfield)
 
@@ -629,8 +719,9 @@ def common_parse(info, query):
         elif info['geom_squarefree'] == 'NotGeom':
             query['is_geometrically_squarefree'] = False
 
+
 def jump(info):
-    jump_box = info["jump"].strip() # only called when this present
+    jump_box = info["jump"].strip()  # only called when this present
     try:
         validate_label(jump_box)
     except ValueError:
@@ -642,25 +733,31 @@ def jump(info):
             if deg % 2 == 1:
                 raise ValueError
         except Exception:
-            flash_error ("%s is not valid input.  Expected a label or Weil polynomial.", jump_box)
+            flash_error(
+                "%s is not valid input.  Expected a label or Weil polynomial.",
+                jump_box)
             return redirect(url_for(".abelian_varieties"))
-        g = deg//2
+        g = deg // 2
         lead = cdict[deg]
-        if lead == 1: # accept monic normalization
+        if lead == 1:  # accept monic normalization
             lead = cdict[0]
-            cdict = {deg-exp: coeff for (exp, coeff) in cdict.items()}
+            cdict = {deg - exp: coeff for (exp, coeff) in cdict.items()}
         if cdict.get(0) != 1:
-            flash_error ("%s is not valid input.  Polynomial must have constant or leading coefficient 1", jump_box)
+            flash_error(
+                "%s is not valid input.  Polynomial must have constant or leading coefficient 1",
+                jump_box)
             return redirect(url_for(".abelian_varieties"))
         try:
             q = lead.nth_root(g)
             if not ZZ(q).is_prime_power():
                 raise ValueError
             for i in range(1, g):
-                if cdict.get(2*g-i, 0) != q**(g-i) * cdict.get(i, 0):
+                if cdict.get(2 * g - i, 0) != q**(g - i) * cdict.get(i, 0):
                     raise ValueError
         except ValueError:
-            flash_error ("%s is not valid input.  Expected a label or Weil polynomial.", jump_box)
+            flash_error(
+                "%s is not valid input.  Expected a label or Weil polynomial.",
+                jump_box)
             return redirect(url_for(".abelian_varieties"))
 
         def extended_code(c):
@@ -668,21 +765,84 @@ def jump(info):
                 return 'a' + cremona_letter_code(-c)
             return cremona_letter_code(c)
 
-        jump_box = "%s.%s.%s" % (g, q, "_".join(extended_code(cdict.get(i, 0)) for i in range(1, g+1)))
+        jump_box = "%s.%s.%s" % (g,
+                                 q,
+                                 "_".join(
+                                     extended_code(
+                                         cdict.get(
+                                             i,
+                                             0)) for i in range(
+                                         1,
+                                         g + 1)))
     return by_label(jump_box)
 
-abvar_columns = SearchColumns([
-    LinkCol("label", "ab.fq.lmfdb_label", "Label", url_for_label, default=True),
-    MathCol("g", "ag.dimension", "Dimension", default=True),
-    MathCol("field", "ag.base_field", "Base field", default=True),
-    MathCol("p", "ag.base_field", "Base char.", short_title="base characteristic"),
-    MathCol("formatted_polynomial", "av.fq.l-polynomial", "L-polynomial", short_title="L-polynomial", default=True),
-    MathCol("p_rank", "av.fq.p_rank", "$p$-rank", default=True),
-    MathCol("p_rank_deficit", "av.fq.p_rank", "$p$-rank deficit"),
-    MathCol("curve_count", "av.fq.curve_point_counts", "points on curve"),
-    MathCol("abvar_count", "ag.fq.point_counts", "points on variety"),
-    SearchCol("decomposition_display_search", "av.decomposition", "Isogeny factors", default=True)],
-    db_cols=["label", "g", "q", "poly", "p_rank", "p_rank_deficit", "is_simple", "simple_distinct", "simple_multiplicities", "is_primitive", "primitive_models", "curve_count", "abvar_count"])
+
+abvar_columns = SearchColumns(
+    [
+        LinkCol(
+            "label",
+            "ab.fq.lmfdb_label",
+            "Label",
+            url_for_label,
+            default=True),
+        MathCol(
+            "g",
+            "ag.dimension",
+            "Dimension",
+            default=True),
+        MathCol(
+            "field",
+            "ag.base_field",
+            "Base field",
+            default=True),
+        MathCol(
+            "p",
+            "ag.base_field",
+            "Base char.",
+            short_title="base characteristic"),
+        MathCol(
+            "formatted_polynomial",
+            "av.fq.l-polynomial",
+            "L-polynomial",
+            short_title="L-polynomial",
+            default=True),
+        MathCol(
+            "p_rank",
+            "av.fq.p_rank",
+            "$p$-rank",
+            default=True),
+        MathCol(
+            "p_rank_deficit",
+            "av.fq.p_rank",
+            "$p$-rank deficit"),
+        MathCol(
+            "curve_count",
+            "av.fq.curve_point_counts",
+            "points on curve"),
+        MathCol(
+            "abvar_count",
+            "ag.fq.point_counts",
+            "points on variety"),
+        SearchCol(
+            "decomposition_display_search",
+            "av.decomposition",
+            "Isogeny factors",
+            default=True)],
+    db_cols=[
+        "label",
+        "g",
+        "q",
+        "poly",
+        "p_rank",
+        "p_rank_deficit",
+        "is_simple",
+        "simple_distinct",
+        "simple_multiplicities",
+        "is_primitive",
+        "primitive_models",
+        "curve_count",
+        "abvar_count"])
+
 
 @search_wrap(
     table=db.av_fq_isog,
@@ -700,6 +860,7 @@ abvar_columns = SearchColumns([
 )
 def abelian_variety_search(info, query):
     common_parse(info, query)
+
 
 @count_wrap(
     template="abvarfq-count-results.html",
@@ -725,16 +886,21 @@ def abelian_variety_count(info, query):
 
     av_stats = AbvarFqStats()
     if "g" in info:
-        info["row_heads"] = integer_options(info["g"], contained_in=av_stats.gs)
+        info["row_heads"] = integer_options(
+            info["g"], contained_in=av_stats.gs)
     else:
         info["row_heads"] = av_stats.gs
     if "q" in info:
-        info["col_heads"] = integer_options(info["q"], contained_in=av_stats.qs)
+        info["col_heads"] = integer_options(
+            info["q"], contained_in=av_stats.qs)
     else:
         info["col_heads"] = av_stats.qs
     if "p" in query:
         ps = integer_options(info["p"], contained_in=av_stats.qs)
-        info["col_heads"] = [q for q in info["col_heads"] if any(q % p == 0 for p in ps)]
+        info["col_heads"] = [
+            q for q in info["col_heads"] if any(
+                q %
+                p == 0 for p in ps)]
     if not info["col_heads"]:
         raise ValueError("Must include at least one base field")
     info["na_msg"] = '"n/a" means that the isogeny classes of abelian varieties of this dimension over this field are not in the database yet.'
@@ -742,9 +908,11 @@ def abelian_variety_count(info, query):
     info["col_label"] = r"Cardinality of base field \(q\)"
     info["url_func"] = url_generator
 
+
 def abelian_variety_browse(info):
     info["stats"] = AbvarFqStats()
-    info["q_ranges"] = ["2", "3", "4", "5", "7", "8", "9", "16", "17", "19", "23", "25", "27-211", "223-1024"]
+    info["q_ranges"] = ["2", "3", "4", "5", "7", "8", "9",
+                        "16", "17", "19", "23", "25", "27-211", "223-1024"]
     return render_template(
         "abvarfq-index.html",
         title="Isogeny classes of abelian varieties over finite fields",
@@ -752,6 +920,7 @@ def abelian_variety_browse(info):
         bread=get_bread(),
         learnmore=learnmore_list(),
     )
+
 
 def search_input_error(info=None, bread=None):
     if info is None:
@@ -768,6 +937,7 @@ def search_input_error(info=None, bread=None):
         learnmore=learnmore_list()
     )
 
+
 @abvarfq_page.route("/stats")
 def statistics():
     title = "Abelian variety isogeny classes: Statistics"
@@ -778,6 +948,7 @@ def statistics():
         bread=get_bread(("Statistics", " ")),
         learnmore=learnmore_list(),
     )
+
 
 @abvarfq_page.route("/dynamic_stats")
 def dynamic_statistics():
@@ -792,9 +963,11 @@ def dynamic_statistics():
         learnmore=learnmore_list(),
     )
 
+
 @abvarfq_page.route("/<label>")
 def by_label(label):
     return redirect(url_for_label(label))
+
 
 @abvarfq_page.route("/random")
 @redirect_no_cache
@@ -802,6 +975,7 @@ def random_class():
     label = db.av_fq_isog.random()
     g, q, iso = split_label(label)
     return url_for(".abelian_varieties_by_gqi", g=g, q=q, iso=iso)
+
 
 @abvarfq_page.route("/interesting")
 def interesting():
@@ -813,6 +987,7 @@ def interesting():
         bread=get_bread(("Interesting", " ")),
         learnmore=learnmore_list()
     )
+
 
 @abvarfq_page.route("/Source")
 def how_computed_page():
@@ -828,6 +1003,7 @@ def how_computed_page():
         learnmore=learnmore_list_remove("Source"),
     )
 
+
 @abvarfq_page.route("/Completeness")
 def completeness_page():
     t = "Completeness of Weil polynomial data"
@@ -839,6 +1015,7 @@ def completeness_page():
         bread=bread,
         learnmore=learnmore_list_remove("Completeness"),
     )
+
 
 @abvarfq_page.route("/Reliability")
 def reliability_page():
@@ -852,6 +1029,7 @@ def reliability_page():
         learnmore=learnmore_list_remove("Reliability"),
     )
 
+
 @abvarfq_page.route("/Labels")
 def labels_page():
     t = "Labels for isogeny classes of abelian varieties"
@@ -864,10 +1042,13 @@ def labels_page():
         learnmore=learnmore_list_remove("Labels"),
     )
 
+
 lmfdb_label_regex = re.compile(r"(\d+)\.(\d+)\.([a-z_]+)")
+
 
 def split_label(lab):
     return lmfdb_label_regex.match(lab).groups()
+
 
 def abvar_label(g, q, iso):
     return "%s.%s.%s" % (g, q, iso)

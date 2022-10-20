@@ -12,31 +12,35 @@ def elist_formatter(elist):
     return f"${''.join(p+e for (p,e) in zip('pqrsl', edisp))}$"
 
 
-pqr_re = re.compile(r"^(1)|(p(\^\{(\d+)\})?)(q(\^\{(\d+)\})?)?(r(\^\{(\d+)\})?)?(s(\^\{(\d+)\})?)?(l(\^\{(\d+)\})?)?$")
+pqr_re = re.compile(
+    r"^(1)|(p(\^\{(\d+)\})?)(q(\^\{(\d+)\})?)?(r(\^\{(\d+)\})?)?(s(\^\{(\d+)\})?)?(l(\^\{(\d+)\})?)?$")
 
 
 def elist_qformatter(elist):
     if isinstance(elist, list):
         return "exponents_of_order=" + str(elist).replace(" ", "")
-    M = pqr_re.fullmatch(elist.replace("$",""))
+    M = pqr_re.fullmatch(elist.replace("$", ""))
     if M is None:
         raise ValueError(elist)
     L = []
-    if M.group(1) is not None: # nontrivial group
+    if M.group(1) is not None:  # nontrivial group
         for i in range(2, len(M.groups()), 3):
             if M.group(i) is not None:
-                L.append(1 if M.group(i+1) is None else int(M.group(i+2)))
+                L.append(1 if M.group(i + 1) is None else int(M.group(i + 2)))
     return elist_qformatter(L)
+
 
 def nilp_formatter(nilp):
     if nilp == -1:
         return "not"
     return str(nilp)
 
+
 def nilp_qformatter(nilp):
     if nilp == "not":
         return "nilpotent=no"
     return f"nilpotency_class={nilp}"
+
 
 stype_lookup = {
     0: "cyclic",
@@ -89,16 +93,23 @@ group_knowls = {
     "rank": "group.rank",
 }
 
+
 def stype_insert_knowls(s):
     L = re.split("(,? ?(?:(?:and)|(?:or)|(?:not))? )", s)
     for i in range(len(L)):
-        if i%2 == 0 and L[i] in group_knowls:
+        if i % 2 == 0 and L[i] in group_knowls:
             L[i] = display_knowl(group_knowls[L[i]], L[i])
     return "".join(L)
-stype_klookup = {stype: stype_insert_knowls(desc) for (stype, desc) in stype_lookup.items()}
+
+
+stype_klookup = {
+    stype: stype_insert_knowls(desc) for (
+        stype, desc) in stype_lookup.items()}
+
 
 def stype_formatter(stype):
     return stype_klookup[stype]
+
 
 def stype_qformatter(stype):
     if isinstance(stype, str):
@@ -107,13 +118,31 @@ def stype_qformatter(stype):
                 return stype_qlookup[k]
     return stype_qlookup[stype]
 
+
 class GroupStats(StatsDisplay):
     extent_knowl = "rcs.cande.groups.abstract"
     table = db.gps_groups
     baseurl_func = ".index"
     buckets = {
-        "aut_order": ["1-7", "8-32", "33-128", "129-512", "513-2048", "2049-8192", "8193-65536","65537-"],
-        "outer_order": ["1", "2-7", "8-32", "33-128", "129-512", "513-2048", "2049-8192", "8193-65536","65537-"],
+        "aut_order": [
+            "1-7",
+            "8-32",
+            "33-128",
+            "129-512",
+            "513-2048",
+            "2049-8192",
+            "8193-65536",
+            "65537-"],
+        "outer_order": [
+            "1",
+            "2-7",
+            "8-32",
+            "33-128",
+            "129-512",
+            "513-2048",
+            "2049-8192",
+            "8193-65536",
+            "65537-"],
     }
     knowls = group_knowls
     short_display = {
@@ -177,8 +206,11 @@ class GroupStats(StatsDisplay):
 
     @lazy_attribute
     def short_summary(self):
-        return fr'The database currently contains {comma(db.gps_groups.count())} {display_knowl("group", "groups")} of {display_knowl("group.order", "order")} $n\leq {db.gps_groups.max("order")}$ together with {comma(db.gps_subgroups.count())} of their {display_knowl("group.subgroup", "subgroups")} and {comma(db.gps_char.count())} of their {display_knowl("group.representation.character", "irreducible complex characters")}.  You can <a href="{url_for(".statistics")}">browse further statistics</a>.'# or <a href="{url_for(".dynamic_statistics")}">create your own</a>.'
+        # or <a href="{url_for(".dynamic_statistics")}">create your own</a>.'
+        return fr'The database currently contains {comma(db.gps_groups.count())} {display_knowl("group", "groups")} of {display_knowl("group.order", "order")} $n\leq {db.gps_groups.max("order")}$ together with {comma(db.gps_subgroups.count())} of their {display_knowl("group.subgroup", "subgroups")} and {comma(db.gps_char.count())} of their {display_knowl("group.representation.character", "irreducible complex characters")}.  You can <a href="{url_for(".statistics")}">browse further statistics</a>.'
 
     @lazy_attribute
     def summary(self):
-        return fr'The database currently contains {comma(db.gps_groups.count())} {display_knowl("group", "groups")} of {display_knowl("group.order", "order")} $n\leq {db.gps_groups.max("order")}$ together with {comma(db.gps_subgroups.count())} of their {display_knowl("group.subgroup", "subgroups")} and {comma(db.gps_char.count())} of their {display_knowl("group.representation.character", "irreducible complex characters")}.' #  In addition to the statistics below, you can also <a href="{url_for(".dynamic_statistics")}">create your own</a>.'
+        # In addition to the statistics below, you can also <a
+        # href="{url_for(".dynamic_statistics")}">create your own</a>.'
+        return fr'The database currently contains {comma(db.gps_groups.count())} {display_knowl("group", "groups")} of {display_knowl("group.order", "order")} $n\leq {db.gps_groups.max("order")}$ together with {comma(db.gps_subgroups.count())} of their {display_knowl("group.subgroup", "subgroups")} and {comma(db.gps_char.count())} of their {display_knowl("group.representation.character", "irreducible complex characters")}.'

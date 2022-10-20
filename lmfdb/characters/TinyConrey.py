@@ -3,6 +3,7 @@ from sage.all import (gcd, Mod, Integer, Integers, Rational, pari, Pari,
 from sage.misc.cachefunc import cached_method
 from sage.modular.dirichlet import DirichletCharacter
 
+
 def symbol_numerator(cond, parity):
     # Reference: Sect. 9.3, Montgomery, Hugh L; Vaughan, Robert C. (2007).
     # Multiplicative number theory. I. Classical theory. Cambridge Studies in
@@ -78,11 +79,11 @@ class ConreyCharacter():
     """
 
     def __init__(self, modulus, number):
-        assert gcd(modulus, number)==1
+        assert gcd(modulus, number) == 1
         self.modulus = Integer(modulus)
         self.number = Integer(number)
         self.G = Pari("znstar({},1)".format(modulus))
-        self.chi_pari = pari("znconreylog(%s,%d)"%(self.G,self.number))
+        self.chi_pari = pari("znconreylog(%s,%d)" % (self.G, self.number))
         self.chi_0 = None
         self.indlabel = None
 
@@ -97,7 +98,7 @@ class ConreyCharacter():
 
     @cached_method
     def conductor(self):
-        B = pari("znconreyconductor(%s,%s,&chi0)"%(self.G, self.chi_pari))
+        B = pari("znconreyconductor(%s,%s,&chi0)" % (self.G, self.chi_pari))
         if B.type() == 't_INT':
             # means chi is primitive
             self.chi_0 = self.chi_pari
@@ -106,7 +107,7 @@ class ConreyCharacter():
         else:
             self.chi_0 = pari("chi0")
             G_0 = Pari("znstar({},1)".format(B))
-            self.indlabel = int(pari("znconreyexp(%s,%s)"%(G_0,self.chi_0)))
+            self.indlabel = int(pari("znconreyexp(%s,%s)" % (G_0, self.chi_0)))
             return int(B[0])
 
     def is_primitive(self):
@@ -116,12 +117,12 @@ class ConreyCharacter():
     def parity(self):
         number = self.number
         par = 0
-        for p,e in self.modfactor():
+        for p, e in self.modfactor():
             if p == 2:
                 if number % 4 == 3:
                     par = 1 - par
             else:
-                phi2 = (p-1)/Integer(2) * p **(e-1)
+                phi2 = (p - 1) / Integer(2) * p ** (e - 1)
                 if Mod(number, p ** e)**phi2 != 1:
                     par = 1 - par
         return par
@@ -146,8 +147,11 @@ class ConreyCharacter():
         p = self.parity()
         return kronecker_symbol(symbol_numerator(c, p))
 
-    def conreyangle(self,x):
-        return Rational(pari("chareval(%s,znconreylog(%s,%d),%d)"%(self.G,self.G,self.number,x)))
+    def conreyangle(self, x):
+        return Rational(
+            pari(
+                "chareval(%s,znconreylog(%s,%d),%d)" %
+                (self.G, self.G, self.number, x)))
 
     def gauss_sum_numerical(self, a):
         # There seems to be a bug in pari when a is a multiple of the modulus,
@@ -158,13 +162,16 @@ class ConreyCharacter():
             else:
                 return Integer(0)
         else:
-            return pari("znchargauss(%s,%s,a=%d)"%(self.G,self.chi_pari,a))
+            return pari("znchargauss(%s,%s,a=%d)" % (self.G, self.chi_pari, a))
 
     def sage_zeta_order(self, order):
-        return 1 if self.modulus <= 2 else lcm(2,order)
+        return 1 if self.modulus <= 2 else lcm(2, order)
 
     def sage_character(self, order, genvalues):
-        H = DirichletGroup(self.modulus, base_ring=CyclotomicField(self.sage_zeta_order(order)))
+        H = DirichletGroup(
+            self.modulus, base_ring=CyclotomicField(
+                self.sage_zeta_order(order)))
         M = H._module
-        order_corrected_genvalues = get_sage_genvalues(self.modulus, order, genvalues, self.sage_zeta_order(order))
-        return DirichletCharacter(H,M(order_corrected_genvalues))
+        order_corrected_genvalues = get_sage_genvalues(
+            self.modulus, order, genvalues, self.sage_zeta_order(order))
+        return DirichletCharacter(H, M(order_corrected_genvalues))

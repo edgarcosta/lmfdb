@@ -95,8 +95,7 @@ class WebHyperGeometricFamily():
                 else:
                     ab[1 - wh][d] += 1
         gamma[1] = [-1 * z for z in gamma[1]]
-        gamma = gamma[1] + gamma[0]
-        gamma.sort()
+        gamma = sorted(gamma[1] + gamma[0])
         return gamma
 
     @lazy_attribute
@@ -187,7 +186,8 @@ class WebHyperGeometricFamily():
 
     @lazy_attribute
     def plot_link(self):
-        return '<a href="{0}"><img src="{0}" width="150" height="150"/></a>'.format(self.plot())
+        return '<a href="{0}"><img src="{0}" width="150" height="150"/></a>'.format(
+            self.plot())
 
     @lazy_attribute
     def properties(self):
@@ -227,7 +227,8 @@ class WebHyperGeometricFamily():
             myB = m1[3][1]
             if not myA and not myB:  # myA = myB = []
                 return [abstract_group_display_knowl("1.1", "$C_1$"), 1]
-            mono = db.hgm_families.lucky({'A': myA, 'B': myB}, projection="mono")
+            mono = db.hgm_families.lucky(
+                {'A': myA, 'B': myB}, projection="mono")
             if mono is None:
                 return ['??', 1]
             newthing = mono[pind[ell]]
@@ -301,7 +302,8 @@ class WebHyperGeometricFamily():
 
     @lazy_attribute
     def maxp(self):
-        return -1 if not self.euler_factors else max(self.euler_factors)  # max of keys
+        # max of keys
+        return -1 if not self.euler_factors else max(self.euler_factors)
 
     @lazy_attribute
     def hodge_polygon(self):
@@ -374,6 +376,8 @@ class WebHyperGeometricFamily():
         if tlist is None:
             if plist is None:
                 plist = self.defaultp
-            return [('p', p, 't', self.table_euler_factors_p(p)) for p in plist]
+            return [('p', p, 't', self.table_euler_factors_p(p))
+                    for p in plist]
         else:
-            return [('t', t, 'p', self.table_euler_factors_t(t, plist)) for t in tlist]
+            return [('t', t, 'p', self.table_euler_factors_t(t, plist))
+                    for t in tlist]

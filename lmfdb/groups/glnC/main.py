@@ -2,7 +2,7 @@
 
 import re
 
-from flask import render_template, request, url_for, redirect #, send_file, abort
+from flask import render_template, request, url_for, redirect  # , send_file, abort
 # from sage.all import ZZ, latex, Permutation
 
 from lmfdb import db
@@ -57,7 +57,13 @@ def index():
         return group_search(info)
     info['order_list'] = ['1-10', '20-100', '101-200']
 
-    return render_template("glnC-index.html", title=r'Finite subgroups of $\GL(n,\C)$', bread=bread, info=info, learnmore=learnmore_list(), credit=credit_string)
+    return render_template(
+        "glnC-index.html",
+        title=r'Finite subgroups of $\GL(n,\C)$',
+        bread=bread,
+        info=info,
+        learnmore=learnmore_list(),
+        credit=credit_string)
 
 
 @glnC_page.route("/random")
@@ -118,11 +124,12 @@ glnC_columns = SearchColumns([
     db_cols=["label", "group", "order", "dim"])
 
 
-glnC_columns.dummy_download=True
+glnC_columns.dummy_download = True
 
 
 def glnC_postprocess(res, info, query):
-    tex_names = {rec["label"]: rec["tex_name"] for rec in db.gps_groups.search({"label": {"$in": [gp["group"] for gp in res]}}, ["label", "tex_name"])}
+    tex_names = {rec["label"]: rec["tex_name"] for rec in db.gps_groups.search(
+        {"label": {"$in": [gp["group"] for gp in res]}}, ["label", "tex_name"])}
     for gp in res:
         gp["tex_name"] = tex_names[gp["group"]]
     return res
@@ -153,7 +160,8 @@ def render_glnC_group(args):
         label = clean_input(args['label'])
         info = db.gps_crep.lucky({'label': label})
         info['groupname'] = '${}$'.format(group_names_pretty(info['group']))
-        info['groupknowl'] = abstract_group_display_knowl(info['group'], info['groupname'])
+        info['groupknowl'] = abstract_group_display_knowl(
+            info['group'], info['groupname'])
         N = info['cyc_order_mat']
         info['dispmat'] = lambda z: dispmat(N, z)
 
@@ -178,7 +186,7 @@ def render_glnC_group(args):
 
 
 def make_knowl(title, knowlid):
-    return '<a title="%s" knowl="%s">%s</a>'%(title, knowlid, title)
+    return '<a title="%s" knowl="%s">%s</a>' % (title, knowlid, title)
 
 
 @glnC_page.route("/Completeness")

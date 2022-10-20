@@ -45,10 +45,8 @@ class LmfdbTest(unittest2.TestCase):
     def check_args_with_timeout(self, path, text):
         timeout_error = "The search query took longer than expected!"
         data = self.tc.get(path, follow_redirects=True).get_data(as_text=True)
-        assert (text in data) or (timeout_error in data), "%s not in the %s" % (
-            text,
-            path,
-        )
+        assert (text in data) or (
+            timeout_error in data), "%s not in the %s" % (text, path, )
 
     def not_check_args(self, path, text):
         page = self.tc.get(path, follow_redirects=True).get_data(as_text=True)
@@ -63,11 +61,16 @@ class LmfdbTest(unittest2.TestCase):
         request = Request(path, headers=headers)
         assert path in homepage
         try:
-            assert text in urlopen(request, context=context).read().decode("utf-8")
+            assert text in urlopen(
+                request, context=context).read().decode("utf-8")
         except URLError as e:
-            if e.errno in [errno.ETIMEDOUT, errno.ECONNREFUSED, errno.EHOSTDOWN]:
+            if e.errno in [
+                errno.ETIMEDOUT,
+                errno.ECONNREFUSED,
+                    errno.EHOSTDOWN]:
                 pass
-            elif "Connection refused" in str(e):  # not every error comes with a errno
+            # not every error comes with a errno
+            elif "Connection refused" in str(e):
                 pass
             else:
                 print(e)
@@ -123,4 +126,5 @@ class LmfdbTest(unittest2.TestCase):
           sage code. This then allows the developer
           to implement subsequent checks.
         """
-        return self.check_sage_compiles_and_extract_variables(sage_code)[my_name]
+        return self.check_sage_compiles_and_extract_variables(sage_code)[
+            my_name]

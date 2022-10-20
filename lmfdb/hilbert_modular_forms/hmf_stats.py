@@ -9,10 +9,12 @@ from sage.misc.cachefunc import cached_method
 
 logger = make_logger("hmf")
 
+
 class HMFstats(StatsDisplay):
     """
     Class for creating and displaying statistics for Hilbert modular forms
     """
+
     def __init__(self):
         self.nforms = db.hmf_forms.count()
 
@@ -27,8 +29,22 @@ class HMFstats(StatsDisplay):
          'totaler': totaler(),
          'proportioner': proportioners.per_col_total},
     ]
-    buckets = {'level_norm': ['1', '2-10', '11-100', '101-1000', '1001-10000'],
-               'dimension': ['1', '2', '3', '4', '5-10', '11-20', '21-100', '101-1000']}
+    buckets = {
+        'level_norm': [
+            '1',
+            '2-10',
+            '11-100',
+            '101-1000',
+            '1001-10000'],
+        'dimension': [
+            '1',
+            '2',
+            '3',
+            '4',
+            '5-10',
+            '11-20',
+            '21-100',
+            '101-1000']}
     knowls = {'level_norm': 'mf.hilbert.level_norm',
               'dimension': 'mf.hilbert.dimension',
               'deg': 'nf.degree'}
@@ -36,14 +52,21 @@ class HMFstats(StatsDisplay):
 
     @property
     def short_summary(self):
-        return self.summary + "  Here are some <a href='%s'>further statistics</a>." % (url_for(".statistics"),)
+        return self.summary + \
+            "  Here are some <a href='%s'>further statistics</a>." % (url_for(".statistics"),)
 
     @property
     def summary(self):
         hmf_knowl = '<a knowl="mf.hilbert">Hilbert modular forms</a>'
         nf_knowl = '<a knowl="nf.totally_real">totally real number fields</a>'
         deg_knowl = '<a knowl="nf.degree">degree</a>'
-        return "The database currently contains %s %s over %s %s of %s 2 to %s." % (comma(self.nforms), hmf_knowl, self.counts()["nfields"], nf_knowl, deg_knowl, self.counts()["maxdeg"])
+        return "The database currently contains %s %s over %s %s of %s 2 to %s." % (comma(
+            self.nforms),
+            hmf_knowl,
+            self.counts()["nfields"],
+            nf_knowl,
+            deg_knowl,
+            self.counts()["maxdeg"])
 
     def degree_summary(self, d):
         stats = self.statistics(d)
@@ -51,20 +74,18 @@ class HMFstats(StatsDisplay):
         nf_knowl = '<a knowl="nf.totally_real">totally real number fields</a>'
         deg_knowl = '<a knowl="nf.degree">degree</a>'
         level_knowl = '<a knowl="mf.hilbert.level_norm">level norm</a>'
-        return ''.join([r'The database currently contains %s ' % stats['nforms'],
-                        hmf_knowl,
-                        r' defined over %s ' % stats['nfields'],
-                        nf_knowl,
-                        r' of %s %s, with ' % (deg_knowl, d),
-                        level_knowl,
-                        r' up to %s.' % stats['maxnorm']])
+        return ''.join([r'The database currently contains %s ' %
+                        stats['nforms'], hmf_knowl, r' defined over %s ' %
+                        stats['nfields'], nf_knowl, r' of %s %s, with ' %
+                        (deg_knowl, d), level_knowl, r' up to %s.' %
+                        stats['maxnorm']])
 
     @cached_method
     def counts(self):
         counts = {}
 
-        counts['nforms']  = self.nforms
-        counts['nforms_c']  = comma(self.nforms)
+        counts['nforms'] = self.nforms
+        counts['nforms_c'] = comma(self.nforms)
 
         attrs = ["degree", "discriminant", "label"]
         fields = list(db.hmf_fields.search({}, attrs, sort=attrs))
@@ -75,9 +96,11 @@ class HMFstats(StatsDisplay):
         counts["nfields_c"] = comma(len(fields))
         counts["maxdeg"] = max(degrees)
         counts["max_deg_c"] = comma(max(degrees))
-        counts["fields_by_degree"] = {d: [F["label"] for F in by_deg[d]] for d in degrees}
+        counts["fields_by_degree"] = {d: [F["label"]
+                                          for F in by_deg[d]] for d in degrees}
         counts["nfields_by_degree"] = {d: len(by_deg[d]) for d in degrees}
-        counts["max_disc_by_degree"] = {d: max(F["discriminant"] for F in by_deg[d]) for d in degrees}
+        counts["max_disc_by_degree"] = {
+            d: max(F["discriminant"] for F in by_deg[d]) for d in degrees}
         return counts
 
     @cached_method

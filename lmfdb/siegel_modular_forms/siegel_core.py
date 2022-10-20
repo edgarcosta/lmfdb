@@ -50,7 +50,8 @@ def _dimension_Sp4Z_2(wt):
     H = 1 / (1 - x ** 4) / (1 - x ** 6) / (1 - x ** 10) / (1 - x ** 12)
     V = 1 / (1 - x ** 6) / (1 - x ** 10) / (1 - x ** 12)
     # W = 1 / (1 - x ** 10) / (1 - x ** 12)
-    a = H[wt - 10] + H[wt - 14] + H[wt - 16] + V[wt - 16] + V[wt - 18] + V[wt - 22]
+    a = H[wt - 10] + H[wt - 14] + H[wt - 16] + \
+        V[wt - 16] + V[wt - 18] + V[wt - 22]
     return (a, uk, uk)
 
 
@@ -69,7 +70,7 @@ def _dimension_Sp6Z(wt):
     R = PowerSeriesRing(ZZ, default_prec=2 * wt - 1, names=('y',))
     (y,) = R._first_ngens(1)
     H_all = 1 / ((1 - x ** 4) * (1 - x ** 12) ** 2 * (1 - x ** 14) * (1 - x ** 18) *
-                (1 - x ** 20) * (1 - x ** 30)) * (
+                 (1 - x ** 20) * (1 - x ** 30)) * (
         1 + x ** 6 + x ** 10 + x ** 12 + 3 * x ** 16 + 2 * x ** 18 + 2 * x ** 20 +
         5 * x ** 22 + 4 * x ** 24 + 5 * x ** 26 + 7 * x ** 28 + 6 * x ** 30 + 9 * x ** 32 +
         10 * x ** 34 + 10 * x ** 36 + 12 * x ** 38 + 14 * x ** 40 + 15 * x ** 42 + 16 * x ** 44 +
@@ -206,8 +207,8 @@ def _dimension_Gamma0_3(wt):
     """
     R = PowerSeriesRing(ZZ, default_prec=wt + 1, names=('x',))
     (x,) = R._first_ngens(1)
-    H_all = (1 + 2 * x ** 4 + x ** 6 + x ** 15 * (1 + 2 * x ** 2 + x ** 6)) / (1 - x ** 2) / (1 -
-                                                                                              x ** 4) / (1 - x ** 6) ** 2
+    H_all = (1 + 2 * x ** 4 + x ** 6 + x ** 15 * (1 + 2 * x ** 2 + \
+             x ** 6)) / (1 - x ** 2) / (1 - x ** 4) / (1 - x ** 6) ** 2
     # H_cusp  = ??
     # H_Kl   = ??
     # H_MS = ??
@@ -312,12 +313,13 @@ def _dimension_Gamma0_4_half(k):
     R = PowerSeriesRing(ZZ, default_prec=k, names=('x',))
     (x,) = R._first_ngens(1)
     H_all = 1 / (1 - x) / (1 - x ** 2) ** 2 / (1 - x ** 3)
-    H_cusp = (2 * x ** 5 + x ** 7 + x ** 9 - 2 * x ** 11 + 4 * x ** 6 - x ** 8 + x ** 10 - 3 *
-              x ** 12 + x ** 14) / (1 - x ** 2) ** 2 / (1 - x ** 6)
+    H_cusp = (2 * x ** 5 + x ** 7 + x ** 9 - 2 * x ** 11 + 4 * x ** 6 - x **
+              8 + x ** 10 - 3 * x ** 12 + x ** 14) / (1 - x ** 2) ** 2 / (1 - x ** 6)
     a, c = H_all[k - 1], H_cusp[k - 1]
     return (a, a - c, c)
 
-# David's code for the dimension of S_k(K(p)), originally written by Cris in Maple #########
+# David's code for the dimension of S_k(K(p)), originally written by Cris
+
 
 _sage_const_3 = ZZ(3)
 _sage_const_2 = ZZ(2)
@@ -335,18 +337,19 @@ _sage_const_10 = ZZ(10)
 
 
 def H1(k, p):
-    return (p ** _sage_const_2 + _sage_const_1) * (_sage_const_2 * k - _sage_const_2) * (_sage_const_2 * k - _sage_const_3) * (_sage_const_2 * k - _sage_const_4) / (_sage_const_2 ** _sage_const_9 * _sage_const_3 ** _sage_const_3 * _sage_const_5)
+    return (p ** _sage_const_2 + _sage_const_1) * (_sage_const_2 * k - _sage_const_2) * (_sage_const_2 * k - _sage_const_3) * \
+        (_sage_const_2 * k - _sage_const_4) / (_sage_const_2 ** _sage_const_9 * _sage_const_3 ** _sage_const_3 * _sage_const_5)
 
 
 def H2(k, p):
-    S1 = ((-_sage_const_1) ** k) * (_sage_const_2 * k - _sage_const_2) * (_sage_const_2 * k -
-                                                                          _sage_const_4) / (_sage_const_2 ** _sage_const_8 * _sage_const_3 ** _sage_const_2)
+    S1 = ((-_sage_const_1) ** k) * (_sage_const_2 * k - _sage_const_2) * (_sage_const_2 * \
+          k - _sage_const_4) / (_sage_const_2 ** _sage_const_8 * _sage_const_3 ** _sage_const_2)
     if p == _sage_const_2:
-        S2 = ((-_sage_const_1) ** k) * (_sage_const_2 * k - _sage_const_2) * (_sage_const_2 *
-                                                                              k - _sage_const_4) / (_sage_const_2 ** _sage_const_9)
+        S2 = ((-_sage_const_1) ** k) * (_sage_const_2 * k - _sage_const_2) * \
+            (_sage_const_2 * k - _sage_const_4) / (_sage_const_2 ** _sage_const_9)
     else:
-        S2 = ((-_sage_const_1) ** k) * (_sage_const_2 * k - _sage_const_2) * (_sage_const_2 *
-                                                                              k - _sage_const_4) / (_sage_const_2 ** _sage_const_7 * _sage_const_3)
+        S2 = ((-_sage_const_1) ** k) * (_sage_const_2 * k - _sage_const_2) * \
+            (_sage_const_2 * k - _sage_const_4) / (_sage_const_2 ** _sage_const_7 * _sage_const_3)
     return S1 + S2
 
 
@@ -431,7 +434,8 @@ def tink12(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, k):
 
 
 def LS5(p):  # Gives the Legendre Symbol (5/p)
-    return tink5(_sage_const_0, _sage_const_1, -_sage_const_1, -_sage_const_1, _sage_const_1, p)
+    return tink5(_sage_const_0, _sage_const_1, -
+                 _sage_const_1, -_sage_const_1, _sage_const_1, p)
 
 
 def LS2(p):
@@ -455,9 +459,15 @@ def LSminus3(p):  # Gives the Legendre Symbol (-3/p) ==(p/3)
 def H3(k, p):
     S = _sage_const_0
     S1 = _sage_const_0
-    S1 = tink4(k - _sage_const_2, _sage_const_1 - k, _sage_const_2 - k, k - _sage_const_1, k)
+    S1 = tink4(
+        k - _sage_const_2,
+        _sage_const_1 - k,
+        _sage_const_2 - k,
+        k - _sage_const_1,
+        k)
     if p == _sage_const_2:
-        S = _sage_const_5 * S1 / (_sage_const_2 ** _sage_const_5 * _sage_const_3)
+        S = _sage_const_5 * S1 / \
+            (_sage_const_2 ** _sage_const_5 * _sage_const_3)
     else:
         S = S1 / (_sage_const_2 ** _sage_const_4 * _sage_const_3)
     return S
@@ -466,29 +476,47 @@ def H3(k, p):
 def H4(k, p):
     S = _sage_const_0
     S1 = _sage_const_0
-    S1 = tink3(_sage_const_2 * k - _sage_const_3, _sage_const_1 - k, _sage_const_2 - k, k)
+    S1 = tink3(
+        _sage_const_2 *
+        k -
+        _sage_const_3,
+        _sage_const_1 -
+        k,
+        _sage_const_2 -
+        k,
+        k)
     if p == _sage_const_3:
-        S = _sage_const_5 * S1 / (_sage_const_2 ** _sage_const_2 * _sage_const_3 ** _sage_const_3)
+        S = _sage_const_5 * S1 / \
+            (_sage_const_2 ** _sage_const_2 * _sage_const_3 ** _sage_const_3)
     else:
-        S = S1 / (_sage_const_2 ** _sage_const_2 * _sage_const_3 ** _sage_const_3)
+        S = S1 / (_sage_const_2 ** _sage_const_2 *
+                  _sage_const_3 ** _sage_const_3)
     return S
 
 
 def H5(k, p):
     S = _sage_const_0
-    S = tink6(-_sage_const_1, _sage_const_1 - k, _sage_const_2 - k, _sage_const_1, k - _sage_const_1,
-              k - _sage_const_2, k) / (_sage_const_2 ** _sage_const_2 * _sage_const_3 ** _sage_const_2)
+    S = tink6(-_sage_const_1,
+              _sage_const_1 - k,
+              _sage_const_2 - k,
+              _sage_const_1,
+              k - _sage_const_1,
+              k - _sage_const_2,
+              k) / (_sage_const_2 ** _sage_const_2 * _sage_const_3 ** _sage_const_2)
     return S
 
 
 def H6(k, p):
     S = _sage_const_0
     if ((p % _sage_const_4) == _sage_const_1):
-        S = _sage_const_5 * (_sage_const_2 * k - _sage_const_3) * (p + _sage_const_1) / (_sage_const_2 ** _sage_const_7 * _sage_const_3) + (-_sage_const_1) ** k * (p + _sage_const_1) / (_sage_const_2 ** _sage_const_7)
+        S = _sage_const_5 * (_sage_const_2 * k - _sage_const_3) * (p + _sage_const_1) / (_sage_const_2 ** _sage_const_7 * \
+                             _sage_const_3) + (-_sage_const_1) ** k * (p + _sage_const_1) / (_sage_const_2 ** _sage_const_7)
     if ((p % _sage_const_4) == _sage_const_3):
-        S = (_sage_const_2 * k - _sage_const_3) * (p - _sage_const_1) / (_sage_const_2 ** _sage_const_7) + _sage_const_5 * (-_sage_const_1) ** k * (p - _sage_const_1) / (_sage_const_2 ** _sage_const_7 * _sage_const_3)
+        S = (_sage_const_2 * k - _sage_const_3) * (p - _sage_const_1) / (_sage_const_2 ** _sage_const_7) + \
+            _sage_const_5 * (-_sage_const_1) ** k * (p - _sage_const_1) / (_sage_const_2 ** _sage_const_7 * _sage_const_3)
     if p == _sage_const_2:
-        S = _sage_const_3 * (_sage_const_2 * k - _sage_const_3) / (_sage_const_2 ** _sage_const_7) + _sage_const_7 * (-_sage_const_1) ** k / (_sage_const_2 ** _sage_const_7 * _sage_const_3)
+        S = _sage_const_3 * (_sage_const_2 * k - _sage_const_3) / (_sage_const_2 ** _sage_const_7) + \
+            _sage_const_7 * (-_sage_const_1) ** k / (_sage_const_2 ** _sage_const_7 * _sage_const_3)
     return S
 
 
@@ -497,26 +525,29 @@ def H7(k, p):
     S1 = _sage_const_0
     S1 = tink3(_sage_const_0, -_sage_const_1, _sage_const_1, k)
     if ((p % _sage_const_3) == _sage_const_1):
-        S = (_sage_const_2 * k - _sage_const_3) * (p + _sage_const_1) / (_sage_const_2 * _sage_const_3 ** _sage_const_3) + S1 * (p + _sage_const_1) / (_sage_const_2 ** _sage_const_2 * _sage_const_3 ** _sage_const_3)
+        S = (_sage_const_2 * k - _sage_const_3) * (p + _sage_const_1) / (_sage_const_2 * _sage_const_3 **
+                                                                         _sage_const_3) + S1 * (p + _sage_const_1) / (_sage_const_2 ** _sage_const_2 * _sage_const_3 ** _sage_const_3)
     if ((p % _sage_const_3) == _sage_const_2):
-        S = (_sage_const_2 * k - _sage_const_3) * (p - _sage_const_1) / (_sage_const_2 ** _sage_const_2 * _sage_const_3 ** _sage_const_3) + S1 * (p - _sage_const_1) / (_sage_const_2 * _sage_const_3 ** _sage_const_3)
+        S = (_sage_const_2 * k - _sage_const_3) * (p - _sage_const_1) / (_sage_const_2 ** _sage_const_2 * \
+             _sage_const_3 ** _sage_const_3) + S1 * (p - _sage_const_1) / (_sage_const_2 * _sage_const_3 ** _sage_const_3)
     if p == _sage_const_3:
-        S = _sage_const_5 * (_sage_const_2 * k - _sage_const_3) / (_sage_const_2 ** _sage_const_2 *
-                                                                   _sage_const_3 ** _sage_const_3) + S1 / (_sage_const_3 ** _sage_const_3)
+        S = _sage_const_5 * (_sage_const_2 * k - _sage_const_3) / (_sage_const_2 ** _sage_const_2 * \
+                             _sage_const_3 ** _sage_const_3) + S1 / (_sage_const_3 ** _sage_const_3)
     return S
 
 
 def H8(k, p):
     S = _sage_const_0
-    S = tink12(_sage_const_1, _sage_const_0, _sage_const_0, -_sage_const_1, -_sage_const_1, -_sage_const_1, -_sage_const_1, _sage_const_0, _sage_const_0, _sage_const_1, _sage_const_1, _sage_const_1, k) / (_sage_const_2 * _sage_const_3)
+    S = tink12(_sage_const_1, _sage_const_0, _sage_const_0, -_sage_const_1, -_sage_const_1, -_sage_const_1, -_sage_const_1,
+               _sage_const_0, _sage_const_0, _sage_const_1, _sage_const_1, _sage_const_1, k) / (_sage_const_2 * _sage_const_3)
     return S
 
 
 def H9(k, p):
     S = _sage_const_0
     S1 = _sage_const_0
-    S1 = tink6(
-        _sage_const_1, _sage_const_0, _sage_const_0, -_sage_const_1, _sage_const_0, _sage_const_0, k)
+    S1 = tink6(_sage_const_1, _sage_const_0, _sage_const_0, -
+               _sage_const_1, _sage_const_0, _sage_const_0, k)
     if p == _sage_const_2:
         S = S1 / (_sage_const_2 * _sage_const_3 ** _sage_const_2)
     else:
@@ -527,7 +558,8 @@ def H9(k, p):
 def H10(k, p):
     S = _sage_const_0
     S1 = _sage_const_0
-    S1 = tink5(_sage_const_1, _sage_const_0, _sage_const_0, -_sage_const_1, _sage_const_0, k)
+    S1 = tink5(_sage_const_1, _sage_const_0, _sage_const_0, -
+               _sage_const_1, _sage_const_0, k)
     S = (LS5(p) + _sage_const_1) * S1 / _sage_const_5
     return S
 
@@ -547,11 +579,25 @@ def H12(k, p):
     S1 = _sage_const_0
     S2 = _sage_const_0
     S3 = _sage_const_0
-    S1 = tink3(_sage_const_0, _sage_const_1, -_sage_const_1, k) / (_sage_const_2 * _sage_const_3)
+    S1 = tink3(_sage_const_0, _sage_const_1, -_sage_const_1, k) / \
+        (_sage_const_2 * _sage_const_3)
     S2 = (-_sage_const_1) ** k / (_sage_const_2 * _sage_const_3)
-    S3 = (-_sage_const_1) ** k / (_sage_const_2 ** _sage_const_2 * _sage_const_3)
-    S = tink12(_sage_const_0, S1, _sage_const_0, _sage_const_0, _sage_const_0, _sage_const_0,
-               _sage_const_0, _sage_const_0, _sage_const_0, _sage_const_0, _sage_const_0, S2, p)
+    S3 = (-_sage_const_1) ** k / \
+        (_sage_const_2 ** _sage_const_2 * _sage_const_3)
+    S = tink12(
+        _sage_const_0,
+        S1,
+        _sage_const_0,
+        _sage_const_0,
+        _sage_const_0,
+        _sage_const_0,
+        _sage_const_0,
+        _sage_const_0,
+        _sage_const_0,
+        _sage_const_0,
+        _sage_const_0,
+        S2,
+        p)
     if p == _sage_const_2:
         S = S3
     if p == _sage_const_3:
@@ -568,8 +614,8 @@ def H(k, p):
 def I1(k, p):
     S = _sage_const_0
     S1 = _sage_const_0
-    S1 = tink6(
-        _sage_const_0, _sage_const_1, _sage_const_1, _sage_const_0, -_sage_const_1, -_sage_const_1, k)
+    S1 = tink6(_sage_const_0, _sage_const_1, _sage_const_1,
+               _sage_const_0, -_sage_const_1, -_sage_const_1, k)
     S = S1 / _sage_const_6
     return S
 
@@ -587,11 +633,16 @@ def I3(k, p):
     S1 = _sage_const_0
     S2 = _sage_const_0
     S3 = _sage_const_0
-    S1 = tink3(-_sage_const_2, _sage_const_1, _sage_const_1, k) / (_sage_const_3 ** _sage_const_2)
-    S2 = _sage_const_2 * tink3(-_sage_const_1, _sage_const_1, _sage_const_0, k) / (
-        _sage_const_3 ** _sage_const_2)
-    S3 = _sage_const_2 * tink3(-_sage_const_1, _sage_const_0, _sage_const_1, k) / (
-        _sage_const_3 ** _sage_const_2)
+    S1 = tink3(-_sage_const_2, _sage_const_1, _sage_const_1, k) / \
+        (_sage_const_3 ** _sage_const_2)
+    S2 = _sage_const_2 * tink3(-_sage_const_1,
+                               _sage_const_1,
+                               _sage_const_0,
+                               k) / (_sage_const_3 ** _sage_const_2)
+    S3 = _sage_const_2 * tink3(-_sage_const_1,
+                               _sage_const_0,
+                               _sage_const_1,
+                               k) / (_sage_const_3 ** _sage_const_2)
     S = tink3(_sage_const_0, S2, S3, p)
     if p == _sage_const_3:
         S = S1
@@ -611,23 +662,28 @@ def I5(k, p):
 
 
 def I6(k, p):
-    return (_sage_const_2 - LSminus1(p)) * (-_sage_const_1) ** k / (_sage_const_2 ** _sage_const_4)
+    return (_sage_const_2 - LSminus1(p)) * (-_sage_const_1) ** k / \
+        (_sage_const_2 ** _sage_const_4)
 
 
 def I7(k, p):
-    return -(-_sage_const_1) ** k * (_sage_const_2 * k - _sage_const_3) / (_sage_const_2 ** _sage_const_3 * _sage_const_3)
+    return -(-_sage_const_1) ** k * (_sage_const_2 * k - _sage_const_3) / \
+        (_sage_const_2 ** _sage_const_3 * _sage_const_3)
 
 
 def I8(k, p):
-    return -p * (_sage_const_2 * k - _sage_const_3) / (_sage_const_2 ** _sage_const_4 * _sage_const_3 ** _sage_const_2)
+    return -p * (_sage_const_2 * k - _sage_const_3) / \
+        (_sage_const_2 ** _sage_const_4 * _sage_const_3 ** _sage_const_2)
 
 
 def I9(k, p):
-    return QQ(-_sage_const_1) / (_sage_const_2 ** _sage_const_3 * _sage_const_3)
+    return QQ(-_sage_const_1) / (_sage_const_2 **
+                                 _sage_const_3 * _sage_const_3)
 
 
 def I10(k, p):
-    return (p + _sage_const_1) / (_sage_const_2 ** _sage_const_3 * _sage_const_3)
+    return (p + _sage_const_1) / \
+        (_sage_const_2 ** _sage_const_3 * _sage_const_3)
 
 
 def I11(k, p):

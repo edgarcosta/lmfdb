@@ -48,7 +48,8 @@ class SearchCol:
         self.th_content = self.td_content = ""
 
         for key, val in kwds.items():
-            assert hasattr(self, key) and key.startswith("th_") or key.startswith("td_")
+            assert hasattr(self, key) and key.startswith(
+                "th_") or key.startswith("td_")
             setattr(self, key, getattr(self, key) + val)
 
     def get(self, rec):
@@ -69,7 +70,8 @@ class SearchCol:
         return self.title
 
     def show(self, info, rank=None):
-        if (self.contingent is None or self.contingent(info)) and (rank is None or rank == 0):
+        if (self.contingent is None or self.contingent(
+                info)) and (rank is None or rank == 0):
             yield self
 
 
@@ -86,7 +88,15 @@ class SpacerCol(SearchCol):
 
 
 class MathCol(SearchCol):
-    def __init__(self, name, knowl, title, default=False, align="center", orig=None, **kwds):
+    def __init__(
+            self,
+            name,
+            knowl,
+            title,
+            default=False,
+            align="center",
+            orig=None,
+            **kwds):
         super().__init__(name, knowl, title, default, align, **kwds)
         self.orig = [orig if (orig is not None) else name]
 
@@ -95,18 +105,34 @@ class MathCol(SearchCol):
 
 
 class FloatCol(MathCol):
-    def __init__(self, name, knowl, title, prec=3, default=False, align="center", **kwds):
+    def __init__(
+            self,
+            name,
+            knowl,
+            title,
+            prec=3,
+            default=False,
+            align="center",
+            **kwds):
         super().__init__(name, knowl, title, default, align, **kwds)
         self.prec = prec
 
     def get(self, rec):
         val = super().get(rec)
-        # We mix string processing directives so that we can use variable precision
+        # We mix string processing directives so that we can use variable
+        # precision
         return f"%.{self.prec}f" % val
 
 
 class CheckCol(SearchCol):
-    def __init__(self, name, knowl, title, default=False, align="center", **kwds):
+    def __init__(
+            self,
+            name,
+            knowl,
+            title,
+            default=False,
+            align="center",
+            **kwds):
         super().__init__(name, knowl, title, default, align, **kwds)
 
     def display(self, rec):
@@ -114,7 +140,14 @@ class CheckCol(SearchCol):
 
 
 class CheckMaybeCol(SearchCol):
-    def __init__(self, name, knowl, title, default=False, align="center", **kwds):
+    def __init__(
+            self,
+            name,
+            knowl,
+            title,
+            default=False,
+            align="center",
+            **kwds):
         super().__init__(name, knowl, title, default, align, **kwds)
 
     def display(self, rec):
@@ -124,7 +157,15 @@ class CheckMaybeCol(SearchCol):
 
 
 class LinkCol(SearchCol):
-    def __init__(self, name, knowl, title, url_for, default=False, align="left", **kwds):
+    def __init__(
+            self,
+            name,
+            knowl,
+            title,
+            url_for,
+            default=False,
+            align="left",
+            **kwds):
         super().__init__(name, knowl, title, default, align, **kwds)
         self.url_for = url_for
 
@@ -223,9 +264,11 @@ class ColGroup(SearchCol):
 
 
 class SearchColumns:
-    above_results = ""  # Can add text above the Results (1-50 of ...) if desired
+    # Can add text above the Results (1-50 of ...) if desired
+    above_results = ""
     above_table = ""  # Can add text above the results table if desired
-    dummy_download = False  # change this to include dummy_download_search_results.html instead
+    # change this to include dummy_download_search_results.html instead
+    dummy_download = False
     below_download = ""  # Can add text above the bottom download links
     languages = None
 
@@ -252,6 +295,7 @@ class SearchColumns:
 
     def columns_shown(self, info, rank=None):
         # By default, this doesn't depend on info
-        # rank is None in the body of the table, and 0..(maxrank-1) in the header
+        # rank is None in the body of the table, and 0..(maxrank-1) in the
+        # header
         for C in self.columns:
             yield from C.show(info, rank)

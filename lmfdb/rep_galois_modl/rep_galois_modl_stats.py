@@ -19,7 +19,8 @@ def get_stats():
 
 def rep_galois_modl_summary():
     counts = get_stats().counts()
-    return r"<p>The database currently contains %s <a title='mod &#x2113; Galois representation'[rep_galois_modl.definition]' knowl='rep_galois_modl.definition' kwargs=''>mod &#x2113; Galois representations</a>.</p>" % (str(counts['nrep_galois_modl_c']))
+    return r"<p>The database currently contains %s <a title='mod &#x2113; Galois representation'[rep_galois_modl.definition]' knowl='rep_galois_modl.definition' kwargs=''>mod &#x2113; Galois representations</a>.</p>" % (
+        str(counts['nrep_galois_modl_c']))
 
 
 @app.context_processor
@@ -36,8 +37,8 @@ class rep_galois_modlstats():
         logger.debug("Computing rep_galois_modl counts...")
         counts = {}
         nrep_galois_modl = db.modlgal_reps.count()
-        counts['nrep_galois_modl']  = nrep_galois_modl
-        counts['nrep_galois_modl_c']  = comma(nrep_galois_modl)
+        counts['nrep_galois_modl'] = nrep_galois_modl
+        counts['nrep_galois_modl_c'] = comma(nrep_galois_modl)
         logger.debug("... finished computing rep_galois_modl counts.")
         return counts
 

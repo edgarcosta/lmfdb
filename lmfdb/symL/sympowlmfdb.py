@@ -51,8 +51,10 @@ import os
 
 from sage.structure.sage_object import SageObject
 from sage.all import pager, Integer, PolynomialRing, RationalField
-# The next line triggers a Deprecation Warning but the import from sage.misc.verbose only works in Sage >=9.2
+# The next line triggers a Deprecation Warning but the import from
+# sage.misc.verbose only works in Sage >=9.2
 from sage.misc.all import verbose
+
 
 class SympowLMFDB(SageObject):
     r"""
@@ -66,6 +68,7 @@ class SympowLMFDB(SageObject):
     this class. Type ``sympow.help()`` for a list of
     commands and how to call them.
     """
+
     def _repr_(self):
         """
         Returns a string describing this calculator module
@@ -89,7 +92,11 @@ class SympowLMFDB(SageObject):
         return w
 
     def _curve_str(self, E):
-        return '-curve "%s"' % (str(list(E.minimal_model().a_invariants())).replace(' ', ''))
+        return '-curve "%s"' % (str(
+            list(
+                E.minimal_model().a_invariants())).replace(
+            ' ',
+            ''))
 
     def L(self, E, n, prec):
         r"""
@@ -162,20 +169,23 @@ class SympowLMFDB(SageObject):
 
         bad_primes_l = [i for i in vv if re.match(r'sp %d: Euler' % n, i)]
 
-        bad_primes = [(Integer(i.split()[5]),
-                       R(i.split()[7]).coefficients(sparse=False)) for i in bad_primes_l]
+        bad_primes = [
+            (Integer(
+                i.split()[5]), R(
+                i.split()[7]).coefficients(
+                sparse=False)) for i in bad_primes_l]
 
         cond_rootn_string = [i for i in vv if re.search('conductor', i)].pop()
         cond_rootn_string = cond_rootn_string.replace(',', ' ')
 
-        conductor, root = Integer(
-            cond_rootn_string.split()[5]), Integer(cond_rootn_string.split()[-1])
+        conductor, root = Integer(cond_rootn_string.split()[5]), Integer(
+            cond_rootn_string.split()[-1])
 
         return bad_primes, conductor, root
         # j = v.rfind(': ')
         # if i == -1:
-            # print self._fix_err(v)
-            # raise RuntimeError, "failed to compute symmetric power"
+        # print self._fix_err(v)
+        # raise RuntimeError, "failed to compute symmetric power"
         # x = v[i+2:]
 
     def Lderivs(self, E, n, prec, d):

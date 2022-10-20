@@ -17,7 +17,8 @@ def make_tableaux_crystal(crystal):
     from sage.all_cmdline import CrystalOfTableaux
     cartan, rank, weight = crystal.split("-")
     weight = weight.split(".")
-    return CrystalOfTableaux([str(cartan), int(rank)], shape=tuple(map(int, weight)))
+    return CrystalOfTableaux([str(cartan), int(rank)],
+                             shape=tuple(map(int, weight)))
 
 
 def make_path_crystal(crystal):
@@ -31,7 +32,11 @@ def make_path_crystal(crystal):
 def show(crystal):
     C = make_tableaux_crystal(crystal)
     bc = get_bread([(crystal, url_for('.show', crystal=crystal))])
-    return render_template("crystals.html", crystal=C, crystal_string=crystal, bread=bc)
+    return render_template(
+        "crystals.html",
+        crystal=C,
+        crystal_string=crystal,
+        bread=bc)
 
 
 @crystals_page.route("/search")
@@ -92,8 +97,14 @@ def show_littelmann(crystal):
     max_element = str(C.cardinality())
     bc = get_bread([(crystal, url_for('.show', crystal=crystal)),
                     ('Littelmann', url_for('.show_littelmann', crystal=crystal))])
-    return render_template("littelmann-paths.html", title="Littelmann Paths",
-                           crystal=crystal, C=C, max_element=max_element, max_i=max_i, bread=bc)
+    return render_template(
+        "littelmann-paths.html",
+        title="Littelmann Paths",
+        crystal=crystal,
+        C=C,
+        max_element=max_element,
+        max_i=max_i,
+        bread=bc)
 
 
 @crystals_page.route("/littelmann-image")
@@ -148,4 +159,7 @@ def littelmann_recenter(crystal):
 @crystals_page.route("/")
 def index():
     bread = get_bread()
-    return render_template("crystals-index.html", title="Crystals", bread=bread)
+    return render_template(
+        "crystals-index.html",
+        title="Crystals",
+        bread=bread)

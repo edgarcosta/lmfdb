@@ -44,13 +44,15 @@ class LMFDBSearchTable(PostgresSearchTable):
         current = knowldb.get_column_descriptions(self.search_table)
         current = {col: kwl.content for col, kwl in current.items()}
         if not drop and description is None:
-            # We want to allow the set of columns to be out of date temporarily, on prod for example
+            # We want to allow the set of columns to be out of date
+            # temporarily, on prod for example
             if col is None:
                 for col in allcols:
                     if col not in current:
                         current[col] = "(description not yet updated on this server)"
                 return current
-            return current.get(col, "(description not yet updated on this server)")
+            return current.get(
+                col, "(description not yet updated on this server)")
         else:
             if not (drop or col is None or col in allcols):
                 raise ValueError(f"{col} is not a column of this table")
@@ -62,12 +64,15 @@ class LMFDBSearchTable(PostgresSearchTable):
                 assert isinstance(description, dict)
                 for col in description:
                     if col not in allcols:
-                        raise ValueError(f"{col} is not a column of this table")
+                        raise ValueError(
+                            f"{col} is not a column of this table")
                     assert isinstance(description[col], str)
-                    knowldb.set_column_description(self.search_table, col, description[col])
+                    knowldb.set_column_description(
+                        self.search_table, col, description[col])
             else:
                 assert isinstance(description, str)
-                knowldb.set_column_description(self.search_table, col, description)
+                knowldb.set_column_description(
+                    self.search_table, col, description)
 
     def port_column_knowls(self, other_table, keep_old=True):
         """
@@ -84,11 +89,14 @@ class LMFDBSearchTable(PostgresSearchTable):
             for col, knowl in knowls.items():
                 if col in self.col_type:
                     if keep_old:
-                        new_knowl = knowl.copy(ID=f'columns.{self.search_table}.{col}', timestamp=datetime.datetime.utcnow())
+                        new_knowl = knowl.copy(
+                            ID=f'columns.{self.search_table}.{col}',
+                            timestamp=datetime.datetime.utcnow())
                         who = self._db.login()
                         new_knowl.save(who, most_recent=knowl, minor=True)
                     else:
-                        knowldb.actually_rename(knowl, new_name=f'columns.{self.search_table}.{col}')
+                        knowldb.actually_rename(
+                            knowl, new_name=f'columns.{self.search_table}.{col}')
                 elif not keep_old:
                     knowldb.delete(knowl)
 
@@ -97,9 +105,12 @@ class LMFDBSearchTable(PostgresSearchTable):
         Check whether verifications have been enabled in this session (by importing db from lmfdb.verify and implementing an appropriate file).
         """
         if not self._db.is_verifying:
-            raise ValueError("Verification not enabled by default; import db from lmfdb.verify to enable")
+            raise ValueError(
+                "Verification not enabled by default; import db from lmfdb.verify to enable")
         if self._verifier is None:
-            raise ValueError("No verifications defined for this table; add a class {0} in lmfdb/verify/{0}.py to enable".format(self.search_table))
+            raise ValueError(
+                "No verifications defined for this table; add a class {0} in lmfdb/verify/{0}.py to enable".format(
+                    self.search_table))
 
     def verify(
         self,
@@ -141,8 +152,14 @@ class LMFDBSearchTable(PostgresSearchTable):
         """
         self._check_verifications_enabled()
         if ratio is not None and check is None:
-            raise ValueError("You can only provide a ratio if you specify a check")
-        lmfdb_root = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+            raise ValueError(
+                "You can only provide a ratio if you specify a check")
+        lmfdb_root = os.path.abspath(
+            os.path.join(
+                os.path.dirname(
+                    os.path.realpath(__file__)),
+                "..",
+                ".."))
         if logdir is None:
             logdir = os.path.join(lmfdb_root, "logs", "verification")
         if not os.path.exists(logdir):
@@ -156,14 +173,20 @@ class LMFDBSearchTable(PostgresSearchTable):
                 os.makedirs(olddir)
 
             def move_to_old(tname):
-                for suffix in [".log", ".errors", ".progress", ".started", ".done"]:
+                for suffix in [
+                    ".log",
+                    ".errors",
+                    ".progress",
+                    ".started",
+                        ".done"]:
                     filename = os.path.join(logdir, tname + suffix)
                     if os.path.exists(filename):
                         n = 0
                         oldfile = os.path.join(olddir, tname + str(n) + suffix)
                         while os.path.exists(oldfile):
                             n += 1
-                            oldfile = os.path.join(olddir, tname + str(n) + suffix)
+                            oldfile = os.path.join(
+                                olddir, tname + str(n) + suffix)
                         shutil.move(filename, oldfile)
 
             if speedtype == "all":
@@ -177,9 +200,10 @@ class LMFDBSearchTable(PostgresSearchTable):
             ]
             if len(tabletypes) == 0:
                 raise ValueError(
-                    "No checks of type %s defined for %s"
-                    % (", ".join(typ.__name__ for typ in types), self.search_table)
-                )
+                    "No checks of type %s defined for %s" %
+                    (", ".join(
+                        typ.__name__ for typ in types),
+                        self.search_table))
             for tname in tabletypes:
                 move_to_old(tname)
             if parallel:
@@ -205,15 +229,21 @@ class LMFDBSearchTable(PostgresSearchTable):
                     pipe = subprocess.Popen(cmd)
                 else:
                     DEVNULL = open(os.devnull, "wb")
-                    pipe = subprocess.Popen(cmd, stdout=DEVNULL, stderr=DEVNULL)
+                    pipe = subprocess.Popen(
+                        cmd, stdout=DEVNULL, stderr=DEVNULL)
                 if follow:
                     from lmfdb.verify.follower import Follower
 
                     try:
-                        Follower(logdir, tabletypes, follow, poll_interval).follow()
+                        Follower(
+                            logdir,
+                            tabletypes,
+                            follow,
+                            poll_interval).follow()
                     finally:
                         # kill the subprocess
-                        # From the man page, the following will terminate child processes
+                        # From the man page, the following will terminate child
+                        # processes
                         if pipe.poll() is None:
                             pipe.send_signal(signal.SIGTERM)
                             pipe.send_signal(signal.SIGTERM)
@@ -222,9 +252,13 @@ class LMFDBSearchTable(PostgresSearchTable):
             else:
                 for typ in types:
                     if verifier.get_checks_count(typ) == 0:
-                        print("No %s checks defined for %s" % (typ.__name__, self.search_table))
+                        print(
+                            "No %s checks defined for %s" %
+                            (typ.__name__, self.search_table))
                     else:
-                        print("Starting %s checks for %s" % (typ.__name__, self.search_table))
+                        print(
+                            "Starting %s checks for %s" %
+                            (typ.__name__, self.search_table))
                         verifier.run(typ, logdir, label)
         else:
             msg = "Starting check %s" % check
@@ -281,9 +315,10 @@ class LMFDBSearchTable(PostgresSearchTable):
             typ = verifier.speedtype(typ)
             if verifier.get_checks_count(typ) > 0:
                 name = color + typ.__name__ + stop
-                print("\n{0} checks (default {1:.0%} of rows, {2}s timeout)".format(
-                        name, float(typ.ratio), typ.timeout
-                ))
+                print(
+                    "\n{0} checks (default {1:.0%} of rows, {2}s timeout)".format(
+                        name, float(
+                            typ.ratio), typ.timeout))
                 for checkname, check in inspect.getmembers(verifier.__class__):
                     if isinstance(check, typ):
                         show_check(checkname, check, typ)
@@ -293,6 +328,7 @@ class LMFDBSearchTable(PostgresSearchTable):
         if "force_description" not in kwds:
             kwds["force_description"] = True
         return super().add_column(*args, **kwds)
+
 
 class LMFDBDatabase(PostgresDatabase):
     """
@@ -329,7 +365,8 @@ class LMFDBDatabase(PostgresDatabase):
                 "in the logging section of your config.ini file."
             )
             uid = input("Username: ")
-            selecter = SQL("SELECT username FROM userdb.users WHERE username = %s")
+            selecter = SQL(
+                "SELECT username FROM userdb.users WHERE username = %s")
             cur = self._execute(selecter, [uid])
             if cur.rowcount == 0:
                 raise ValueError("That username not present in database!")
@@ -349,9 +386,10 @@ class LMFDBDatabase(PostgresDatabase):
         uid = self.login()
         inserter = SQL(
             "INSERT INTO userdb.dbrecord (username, time, tablename, operation, data) "
-            "VALUES (%s, %s, %s, %s, %s)"
-        )
-        self._execute(inserter, [uid, datetime.datetime.utcnow(), tablename, operation, data])
+            "VALUES (%s, %s, %s, %s, %s)")
+        self._execute(
+            inserter, [
+                uid, datetime.datetime.utcnow(), tablename, operation, data])
 
     def verify(
         self,
@@ -378,10 +416,17 @@ class LMFDBDatabase(PostgresDatabase):
         - ``debug`` -- if False, will redirect stdout and stderr for the spawned process to /dev/null.
         """
         if not self.is_verifying:
-            raise ValueError("Verification not enabled by default; import db from lmfdb.verify to enable")
+            raise ValueError(
+                "Verification not enabled by default; import db from lmfdb.verify to enable")
         if parallel <= 0:
-            raise ValueError("Non-parallel runs not supported for whole database")
-        lmfdb_root = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+            raise ValueError(
+                "Non-parallel runs not supported for whole database")
+        lmfdb_root = os.path.abspath(
+            os.path.join(
+                os.path.dirname(
+                    os.path.realpath(__file__)),
+                "..",
+                ".."))
         if logdir is None:
             logdir = os.path.join(lmfdb_root, "logs", "verification")
         if not os.path.exists(logdir):
@@ -404,8 +449,21 @@ class LMFDBDatabase(PostgresDatabase):
             # Shouldn't occur....
             raise ValueError("No verification tests defined!")
         parallel = min(parallel, len(tabletypes))
-        cmd = os.path.abspath(os.path.join(os.path.abspath(__file__), "..", "verify", "verify_tables.py"))
-        cmd = ["sage", "-python", cmd, "-j%s" % int(parallel), logdir, "all", speedtype]
+        cmd = os.path.abspath(
+            os.path.join(
+                os.path.abspath(__file__),
+                "..",
+                "verify",
+                "verify_tables.py"))
+        cmd = [
+            "sage",
+            "-python",
+            cmd,
+            "-j%s" %
+            int(parallel),
+            logdir,
+            "all",
+            speedtype]
         if debug:
             pipe = subprocess.Popen(cmd)
         else:
@@ -418,7 +476,8 @@ class LMFDBDatabase(PostgresDatabase):
                 Follower(logdir, tabletypes, follow, poll_interval).follow()
             finally:
                 # kill the subprocess
-                # From the man page, the following will terminate child processes
+                # From the man page, the following will terminate child
+                # processes
                 pipe.send_signal(signal.SIGTERM)
                 pipe.send_signal(signal.SIGTERM)
         else:
@@ -428,7 +487,7 @@ class LMFDBDatabase(PostgresDatabase):
         """
         This function clears all stats and counts (extra=False) from tables where statistics have been added, then adds all relevant statistics.
         """
-        from . import website # loads all the modules
+        from . import website  # loads all the modules
         assert website
         from lmfdb.utils.display_stats import StatsDisplay
 
@@ -442,7 +501,9 @@ class LMFDBDatabase(PostgresDatabase):
         with DelayCommit(self):
             cleared_tables = set()
             for disp in all_subs:
-                print("Resetting statistics for %s" % (disp.table.search_table))
+                print(
+                    "Resetting statistics for %s" %
+                    (disp.table.search_table))
                 tbls = set()
                 if disp.table not in cleared_tables:
                     tbls.add(disp.table)
@@ -457,7 +518,9 @@ class LMFDBDatabase(PostgresDatabase):
     @overrides(PostgresDatabase)
     def create_table(self, name, *args, **kwargs):
         if "_" not in name:
-            raise ValueError("Table name '%s' must contain an underscore; first part gives the LMFDB section" % name,)
+            raise ValueError(
+                "Table name '%s' must contain an underscore; first part gives the LMFDB section" %
+                name,)
         if "force_description" not in kwargs:
             kwargs["force_description"] = True
         return PostgresDatabase.create_table(self, name, *args, **kwargs)

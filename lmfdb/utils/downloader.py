@@ -46,50 +46,50 @@ class Downloader():
     decorator on your search function.
     """
     # defaults, edit as desired in inherited class
-    lang_key = 'Submit' # name of the HTML button/link starting the download
+    lang_key = 'Submit'  # name of the HTML button/link starting the download
     languages = ['magma', 'sage', 'gp', 'text']
     comment_prefix = {
-            'magma':'//',
-            'sage':'#',
-            'gp':'\\\\',
-            'text':'#'
-            }
+        'magma': '//',
+        'sage': '#',
+        'gp': '\\\\',
+        'text': '#'
+    }
     assignment_defn = {
-            'magma':':=',
-            'sage':' = ',
-            'gp':' = ',
-            'text':'='
-            }
-    line_end = {'magma':';',
-            'sage':'',
-            'gp':'',
-            'text':''
-            }
-    delim_start = {'magma':'[*',
-            'sage':'[',
-            'gp':'[',
-            'text':' ['
-            }
-    delim_end = {'magma':'*]',
-            'sage':']',
-            'gp':']',
-            'text':' ]'}
+        'magma': ':=',
+        'sage': ' = ',
+        'gp': ' = ',
+        'text': '='
+    }
+    line_end = {'magma': ';',
+                'sage': '',
+                'gp': '',
+                'text': ''
+                }
+    delim_start = {'magma': '[*',
+                   'sage': '[',
+                   'gp': '[',
+                   'text': ' ['
+                   }
+    delim_end = {'magma': '*]',
+                 'sage': ']',
+                 'gp': ']',
+                 'text': ' ]'}
     start_and_end = {
-            'magma':['[*','*]'],
-            'sage':['[',']'],
-            'gp':['{[',']}'],
-            'text':['[',']']}
-    file_suffix = {'magma':'.m','sage':'.sage','gp':'.gp','text':'.txt'}
-    function_start = {'magma':['function make_data()'],
-                      'sage':['def make_data():'],
-                      'gp':['make_data() = ','{']}
-    function_end = {'magma':['end function;'],
-                    'gp':['}']}
+        'magma': ['[*', '*]'],
+        'sage': ['[', ']'],
+        'gp': ['{[', ']}'],
+        'text': ['[', ']']}
+    file_suffix = {'magma': '.m', 'sage': '.sage', 'gp': '.gp', 'text': '.txt'}
+    function_start = {'magma': ['function make_data()'],
+                      'sage': ['def make_data():'],
+                      'gp': ['make_data() = ', '{']}
+    function_end = {'magma': ['end function;'],
+                    'gp': ['}']}
     none = {'gp': 'null', 'sage': 'None', 'text': 'NULL', 'magma': '[]'}
     make_data_comment = {
         'magma': 'To create a list of {short_name}, type "{var_name}:= make_data();"',
-        'sage':'To create a list of {short_name}, type "{var_name} = make_data()"',
-        'gp':'To create a list of {short_name}, type "{var_name} = make_data()"',
+        'sage': 'To create a list of {short_name}, type "{var_name} = make_data()"',
+        'gp': 'To create a list of {short_name}, type "{var_name} = make_data()"',
     }
 
     def to_lang(self, lang, inp, level=0, prepend=''):
@@ -111,13 +111,15 @@ class Downloader():
                 begin = start + '\\\n'
             else:
                 begin = start
-            return begin + sep.join(self.to_lang(lang, c, level=level + 1) for c in inp) + end
+            return begin + \
+                sep.join(self.to_lang(lang, c, level=level + 1) for c in inp) + end
         except TypeError:
             # not an iterable object
             return str(inp)
 
     def assign(self, lang, name, elt, level=0, prepend=''):
-        return name + ' ' + self.assignment_defn[lang] + ' ' + self.to_lang(lang, elt, level, prepend) + self.line_end[lang] + '\n'
+        return name + ' ' + self.assignment_defn[lang] + ' ' + self.to_lang(
+            lang, elt, level, prepend) + self.line_end[lang] + '\n'
 
     def get(self, name, default=None):
         if hasattr(self, name):
@@ -142,7 +144,13 @@ class Downloader():
         bIO.seek(0)
         return send_file(bIO, download_name=filename, as_attachment=True)
 
-    def _wrap_generator(self, generator, filebase, lang='text', title=None, add_ext=True):
+    def _wrap_generator(
+            self,
+            generator,
+            filebase,
+            lang='text',
+            title=None,
+            add_ext=True):
         """
         As for _wrap, but uses a stream.  For use with large files.
 
@@ -174,18 +182,19 @@ class Downloader():
         Generate download file for a list of search results determined by the
         ``query`` field in ``info``.
         """
-        lang = info.get(self.lang_key,'text').strip()
+        lang = info.get(self.lang_key, 'text').strip()
         filename = self.get('filename_base', self.table.search_table)
         label_col = self.table._label_col
         title = self.get('title', self.table.search_table)
         short_name = self.get('short_name', title.split(' ')[-1].lower())
-        var_name = self.get('var_name', short_name.replace('_',' '))
-        make_data_comment = self.get('make_data_comment',{}).get(lang)
+        var_name = self.get('var_name', short_name.replace('_', ' '))
+        make_data_comment = self.get('make_data_comment', {}).get(lang)
         if make_data_comment:
-            make_data_comment = make_data_comment.format(short_name=short_name, var_name=var_name)
-        func_start = self.get('function_start',{}).get(lang,[])
-        func_body = self.get('function_body',{}).get(lang,[])
-        func_end = self.get('function_end',{}).get(lang,[])
+            make_data_comment = make_data_comment.format(
+                short_name=short_name, var_name=var_name)
+        func_start = self.get('function_start', {}).get(lang, [])
+        func_body = self.get('function_body', {}).get(lang, [])
+        func_end = self.get('function_end', {}).get(lang, [])
         if isinstance(self.columns, str):
             proj = [self.columns]
         elif isinstance(self.columns, list):
@@ -202,7 +211,7 @@ class Downloader():
             proj = [label_col] + proj
         # set up column wrappers
         cw = self.get('column_wrappers', {})
-        identity = lambda x: x
+        def identity(x): return x
         for col in wo_label:
             if col not in cw:
                 cw[col] = identity
@@ -213,15 +222,19 @@ class Downloader():
             if label_col:
                 label_list = [res[label_col] for res in data]
             if onecol:
-                res_list = [cw[wo_label[0]](res.get(wo_label[0])) for res in data]
+                res_list = [cw[wo_label[0]](res.get(wo_label[0]))
+                            for res in data]
             else:
-                res_list = [[cw[col](res.get(col)) for col in wo_label] for res in data]
+                res_list = [[cw[col](res.get(col))
+                             for col in wo_label] for res in data]
         except Exception as err:
             return abort(404, "Unable to parse query: %s" % err)
         c = self.comment_prefix[lang]
-        s = c + ' Query "%s" returned %d %s.\n\n' %(str(info.get('query')), len(data), short_name if len(data) == 1 else short_name)
+        s = c + ' Query "%s" returned %d %s.\n\n' % (str(info.get('query')), len(
+            data), short_name if len(data) == 1 else short_name)
         if label_col:
-            s += c + ' Below are two lists, one called labels, and one called data (in matching order).\n'
+            s += c + \
+                ' Below are two lists, one called labels, and one called data (in matching order).\n'
             s += c + ' Each entry in the data list has the form:\n'
         else:
             s += c + ' Each entry in the following data list has the form:\n'
@@ -239,7 +252,7 @@ class Downloader():
                 s += c + ' %s\n' % line
         if make_data_comment and func_body:
             s += c + '\n'
-            s += c + ' ' + make_data_comment  + '\n'
+            s += c + ' ' + make_data_comment + '\n'
         s += '\n'
         s += self.assign(lang, "labels", label_list)
         s += '\n\n'

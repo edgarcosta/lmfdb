@@ -28,6 +28,7 @@ from lmfdb.number_fields.web_number_field import nf_display_knowl, field_pretty
 from lmfdb.galois_groups.transitive_group import transitive_group_display_knowl
 from lmfdb.abvar.fq.web_abvar import av_display_knowl, av_data  # , av_knowl_guts
 
+
 def maxq(g, p):
     # This should eventually move to stats
     maxspec = {
@@ -42,37 +43,47 @@ def maxq(g, p):
     else:
         return maxgen[g]
 
+
 logger = make_logger("abvarfq")
 
 #########################
 #   Label manipulation
 #########################
 
+
 def validate_label(label):
     parts = label.split(".")
     if len(parts) != 3:
-        raise ValueError("it must be of the form g.q.iso, with g a dimension and q a prime power")
+        raise ValueError(
+            "it must be of the form g.q.iso, with g a dimension and q a prime power")
     g, q, iso = parts
     try:
         g = int(g)
     except ValueError:
-        raise ValueError("it must be of the form g.q.iso, where g is an integer")
+        raise ValueError(
+            "it must be of the form g.q.iso, where g is an integer")
     try:
         q = Integer(q)
         if not q.is_prime_power():
             raise ValueError
     except ValueError:
-        raise ValueError("it must be of the form g.q.iso, where g is a prime power")
+        raise ValueError(
+            "it must be of the form g.q.iso, where g is a prime power")
     coeffs = iso.split("_")
     if len(coeffs) != g:
-        raise ValueError("the final part must be of the form c1_c2_..._cg, with g=%s components" % (g))
+        raise ValueError(
+            "the final part must be of the form c1_c2_..._cg, with g=%s components" %
+            (g))
     if not all(c.isalpha() and c == c.lower() for c in coeffs):
-        raise ValueError("the final part must be of the form c1_c2_..._cg, with each ci consisting of lower case letters")
+        raise ValueError(
+            "the final part must be of the form c1_c2_..._cg, with each ci consisting of lower case letters")
+
 
 class AbvarFq_isoclass():
     """
     Class for an isogeny class of abelian varieties over a finite field
     """
+
     def __init__(self, dbdata):
         if "size" not in dbdata:
             dbdata["size"] = None
@@ -93,9 +104,11 @@ class AbvarFq_isoclass():
             raise ValueError("Label not found in database")
 
     def make_class(self):
-        self.decompositioninfo = decomposition_display(list(zip(self.simple_distinct, self.simple_multiplicities)))
+        self.decompositioninfo = decomposition_display(
+            list(zip(self.simple_distinct, self.simple_multiplicities)))
         self.basechangeinfo = self.basechange_display()
-        self.formatted_polynomial = list_to_factored_poly_otherorder(self.polynomial, galois=False, vari="x")
+        self.formatted_polynomial = list_to_factored_poly_otherorder(
+            self.polynomial, galois=False, vari="x")
         if self.is_simple and QQ['x'](self.polynomial).is_irreducible():
             self.expanded_polynomial = ''
         else:
@@ -159,15 +172,11 @@ class AbvarFq_isoclass():
             P = pts[i]
             Q = pts[i + 1]
             for x in range(P[0], Q[0] + 1):
-                L += line(
-                    [(x, P[1]), (x, P[1] + (x - P[0]) * (Q[1] - P[1]) / (Q[0] - P[0]))],
-                    color="grey",
-                )
+                L += line([(x, P[1]), (x, P[1] + (x - P[0]) * \
+                          (Q[1] - P[1]) / (Q[0] - P[0]))], color="grey", )
             for y in range(P[1], Q[1]):
-                L += line(
-                    [(P[0] + (y - P[1]) * (Q[0] - P[0]) / (Q[1] - P[1]), y), (Q[0], y)],
-                    color="grey",
-                )
+                L += line([(P[0] + (y - P[1]) * (Q[0] - P[0]) /
+                            (Q[1] - P[1]), y), (Q[0], y)], color="grey", )
         L += line(pts, thickness=2)
         L.axes(False)
         L.set_aspect_ratio(1)
@@ -189,7 +198,12 @@ class AbvarFq_isoclass():
         P += points(pts, size=300, rgbcolor="darkblue")
         P.axes(False)
         P.set_aspect_ratio(1)
-        return encode_plot(P, pad=0, pad_inches=None, transparent=True, axes_pad=0.04)
+        return encode_plot(
+            P,
+            pad=0,
+            pad_inches=None,
+            transparent=True,
+            axes_pad=0.04)
 
     def _make_jacpol_property(self):
         ans = []
@@ -218,9 +232,11 @@ class AbvarFq_isoclass():
             ("Primitive", "yes" if self.is_primitive else "no"),
         ]
         if self.has_principal_polarization != 0:
-            props += [("Principally polarizable", "yes" if self.has_principal_polarization == 1 else "no")]
+            props += [("Principally polarizable",
+                       "yes" if self.has_principal_polarization == 1 else "no")]
         if self.has_jacobian != 0:
-            props += [("Contains a Jacobian", "yes" if self.has_jacobian == 1 else "no")]
+            props += [("Contains a Jacobian",
+                       "yes" if self.has_jacobian == 1 else "no")]
         return props
 
     # at some point we were going to display the weil_numbers instead of the frobenius angles
@@ -248,8 +264,19 @@ class AbvarFq_isoclass():
             poly = coeff_to_poly(self.poly, "T")
             if self.r > 1:
                 poly = poly.subs(poly.parent().gen()**self.r)
-            poly = str(poly).replace(" ", "").replace("**","%5E").replace("*","").replace("+", "%2B")
-            friends.append(("L-functions", url_for("l_functions.rational") + f"?search_type=Euler&motivic_weight=1&degree={2*self.g*self.r}&n={dispcols}&euler_constraints=F{self.p}%3D{poly}"))
+            poly = str(poly).replace(
+                " ",
+                "").replace(
+                "**",
+                "%5E").replace(
+                "*",
+                "").replace(
+                "+",
+                "%2B")
+            friends.append(
+                ("L-functions",
+                 url_for("l_functions.rational") +
+                    f"?search_type=Euler&motivic_weight=1&degree={2*self.g*self.r}&n={dispcols}&euler_constraints=F{self.p}%3D{poly}"))
         return friends
 
     def frob_angles(self):
@@ -309,7 +336,8 @@ class AbvarFq_isoclass():
                 ans += '<a href="{1}">{0}</a>'.format(simp, url)
                 ans += " "
             else:
-                ans += '<a href="{1}">{0}</a>'.format(simp, url) + "<sup> {0} </sup> ".format(e)
+                ans += '<a href="{1}">{0}</a>'.format(
+                    simp, url) + "<sup> {0} </sup> ".format(e)
         return '<span>' + ans + '</span>'
 
     def alg_clo_field(self):
@@ -340,12 +368,14 @@ class AbvarFq_isoclass():
         ]
 
     def display_endo_info(self, degree, do_describe=True):
-        # When degree > 1 we find the factorization by looking at the extension database
+        # When degree > 1 we find the factorization by looking at the extension
+        # database
         if degree > 1:
             factors = self.endo_extension_by_deg(degree)
             if not factors:
                 return "The data at degree %s is missing." % degree, do_describe
-            ans = "The base change of $A$ to ${0}$ is ".format(self.ext_field(degree))
+            ans = "The base change of $A$ to ${0}$ is ".format(
+                self.ext_field(degree))
         else:
             factors = list(zip(self.simple_distinct,
                                self.simple_multiplicities))
@@ -383,15 +413,18 @@ class AbvarFq_isoclass():
         base_endo_info, do_describe = self.display_endo_info(1)
         ans = g2_table(self.field(), base_endo_info, True)
         if self.geometric_extension_degree != 1:
-            geometric_endo_info, do_describe = self.display_endo_info(self.geometric_extension_degree, do_describe)
+            geometric_endo_info, do_describe = self.display_endo_info(
+                self.geometric_extension_degree, do_describe)
             ans += g2_table(self.alg_clo_field(), geometric_endo_info, True)
-        ans += "All geometric endomorphisms are defined over ${0}$.\n".format(self.ext_field(self.geometric_extension_degree))
+        ans += "All geometric endomorphisms are defined over ${0}$.\n".format(
+            self.ext_field(self.geometric_extension_degree))
         if self.relevant_degs():
             ans += "<br>\n<b>Remainder of endomorphism lattice by field</b>\n"
             ans += "<ul>\n"
             for deg in self.relevant_degs():
                 ans += "<li>"
-                new_endo_info, do_describe = self.display_endo_info(deg, do_describe)
+                new_endo_info, do_describe = self.display_endo_info(
+                    deg, do_describe)
                 ans += g2_table(self.ext_field(deg), new_endo_info, False)
                 ans += "</li>\n"
             ans += "</ul>\n"
@@ -405,7 +438,8 @@ class AbvarFq_isoclass():
             ans = '<table class = "ntdata">\n'
             ans += "<tr><td>Subfield</td><td>Primitive Model</td></tr>\n"
             for model in models:
-                ans += '  <tr><td class="center">${0}$</td><td>'.format(self.field(model.split(".")[1]))
+                ans += '  <tr><td class="center">${0}$</td><td>'.format(
+                    self.field(model.split(".")[1]))
                 ans += av_display_knowl(model) + " "
                 ans += "</td></tr>\n"
             ans += "</table>\n"
@@ -427,7 +461,8 @@ class AbvarFq_isoclass():
                     bc = av_display_knowl(twist[1])
                 else:
                     bc = "(not in LMFDB)"
-                ans += "<tr><td>%s</td><td style='center'>$%s$</td><td>%s</td></tr>\n" % (av_display_knowl(twist[0]), str(twist[2]), bc)
+                ans += "<tr><td>%s</td><td style='center'>$%s$</td><td>%s</td></tr>\n" % (
+                    av_display_knowl(twist[0]), str(twist[2]), bc)
                 i += 1
         ans += "</tbody></table>\n"
         return ans
@@ -452,9 +487,11 @@ class AbvarFq_isoclass():
         else:
             return ""
 
+
 @app.context_processor
 def ctx_decomposition():
     return {"av_data": av_data}
+
 
 def describe_end_algebra(p, extension_label):
     # This should eventually be done with a join, but okay for now
@@ -468,14 +505,16 @@ def describe_end_algebra(p, extension_label):
     ans = ["", ""]
     if center == "1.1.1.1" and divalg_dim == 4:
         ans[0] = "B"
-        ans[1] = r"the quaternion algebra over {0} ramified at ${1}$ and $\infty$.".format(nf_display_knowl(center, field_pretty(center)), p)
+        ans[1] = r"the quaternion algebra over {0} ramified at ${1}$ and $\infty$.".format(
+            nf_display_knowl(center, field_pretty(center)), p)
     elif int(center.split(".")[1]) > 0:
         ans[0] = "B"
         if divalg_dim == 4:
             ans[1] = "the quaternion algebra"
         else:
             ans[1] = "the division algebra of dimension " + str(divalg_dim)
-        ans[1] += " over {0} ramified at both real infinite places.".format(nf_display_knowl(center, field_pretty(center)))
+        ans[1] += " over {0} ramified at both real infinite places.".format(
+            nf_display_knowl(center, field_pretty(center)))
     elif divalg_dim == 1:
         ans[0] = "K"
         ans[1] = nf_display_knowl(center, field_pretty(center)) + "."
@@ -485,10 +524,12 @@ def describe_end_algebra(p, extension_label):
             ans[1] = "the quaternion algebra"
         else:
             ans[1] = "the division algebra of dimension " + str(divalg_dim)
-        ans[1] += " over {0} with the following ramification data at primes above ${1}$, and unramified at all archimedean places:".format(nf_display_knowl(center, field_pretty(center)), p)
+        ans[1] += " over {0} with the following ramification data at primes above ${1}$, and unramified at all archimedean places:".format(
+            nf_display_knowl(center, field_pretty(center)), p)
         ans[1] += '</td></tr><tr><td><table class = "ntdata"><tr><td>$v$</td>'
         for prime in places:
-            ans[1] += '<td class="center"> {0} </td>'.format(primeideal_display(p, prime))
+            ans[1] += '<td class="center"> {0} </td>'.format(
+                primeideal_display(p, prime))
         ans[1] += r"</tr><tr><td>$\operatorname{inv}_v$</td>"
         for inv in brauer_invariants:
             ans[1] += '<td class="center">${0}$</td>'.format(inv)
@@ -498,6 +539,7 @@ def describe_end_algebra(p, extension_label):
         ans[1] += r"where $\pi$ is a root of ${0}$.\n".format(center_poly)
     return ans
 
+
 def primeideal_display(p, prime_ideal):
     ans = "($ {0} $".format(p)
     if prime_ideal == ["0"]:
@@ -506,6 +548,7 @@ def primeideal_display(p, prime_ideal):
     else:
         ans += "," + web_latex(coeff_to_poly(prime_ideal, "pi")) + ")"
         return ans
+
 
 def decomposition_display(factors):
     if len(factors) == 1 and factors[0][1] == 1:
@@ -519,23 +562,30 @@ def decomposition_display(factors):
             factor_str += "<sup> {0} </sup>".format(factor[1])
     return factor_str
 
+
 def no_endo_data():
     return "The endomorphism data for this class is not currently in the database."
+
 
 def g2_table(field, entry, is_bold):
     if is_bold:
         ans = "<b>Endomorphism algebra over ${0}$</b>\n".format(field)
     else:
         ans = "Endomorphism algebra over ${0}$\n".format(field)
-    ans += '<table class="g2" style="margin-top: 5px;margin-bottom: 5px;">\n<tr><td>{0}</td></tr>\n</table>\n'.format(entry)
+    ans += '<table class="g2" style="margin-top: 5px;margin-bottom: 5px;">\n<tr><td>{0}</td></tr>\n</table>\n'.format(
+        entry)
     return ans
+
 
 def matrix_display(factor, end_alg):
     if end_alg[0] == "K" and end_alg[1] != factor[0] + ".":
-        ans = r"$\mathrm{{M}}_{{{0}}}(${1}$)$".format(factor[1], end_alg[1][:-1])
+        ans = r"$\mathrm{{M}}_{{{0}}}(${1}$)$".format(
+            factor[1], end_alg[1][:-1])
     else:
-        ans = r"$\mathrm{{M}}_{{{0}}}({1})$, where ${1}$ is {2}".format(factor[1], end_alg[0], end_alg[1])
+        ans = r"$\mathrm{{M}}_{{{0}}}({1})$, where ${1}$ is {2}".format(
+            factor[1], end_alg[0], end_alg[1])
     return ans
+
 
 def non_simple_loop(p, factors):
     ans = '<ul style="margin-top: 5px;margin-bottom: 8px;">\n'

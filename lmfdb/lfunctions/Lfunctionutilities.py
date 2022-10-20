@@ -18,6 +18,7 @@ from lmfdb.lfunctions import logger
 # Functions for displaying numbers in correct format etc.
 ###############################################################
 
+
 def p2sage(s):
     """Convert s to something sensible in Sage.  Can handle objects
     (including strings) representing integers, reals, complexes (in
@@ -28,7 +29,7 @@ def p2sage(s):
     if type(z) in [list, tuple]:
         return [p2sage(t) for t in z]
     else:
-        Qa = PolynomialRing(RationalField(),"a")
+        Qa = PolynomialRing(RationalField(), "a")
         for f in [ZZ, RR, CC, Qa]:
             try:
                 return f(z)
@@ -39,29 +40,34 @@ def p2sage(s):
                     return f(str(z))
                 except (ValueError, TypeError, NameError, SyntaxError):
                     pass
-        if z!='??':
+        if z != '??':
             logger.error('Error converting "{}" in p2sage'.format(z))
         return z
 
+
 def string2number(s):
     # a start to replace p2sage (used for the parameters in the FE)
-    strs = str(s).replace(' ','')
+    strs = str(s).replace(' ', '')
     try:
         if 'e' in strs:
-            # check for e(m/n) := exp(2*pi*i*m/n), used by Dirichlet characters, for example
-            r = re.match(r'^\$?e\\left\(\\frac\{(?P<num>\d+)\}\{(?P<den>\d+)\}\\right\)\$?$',strs)
+            # check for e(m/n) := exp(2*pi*i*m/n), used by Dirichlet
+            # characters, for example
+            r = re.match(
+                r'^\$?e\\left\(\\frac\{(?P<num>\d+)\}\{(?P<den>\d+)\}\\right\)\$?$',
+                strs)
             if not r:
-                r = re.match(r'^e\((?P<num>\d+)/(?P<den>\d+)\)$',strs)
+                r = re.match(r'^e\((?P<num>\d+)/(?P<den>\d+)\)$', strs)
             if r:
-                q = Rational(r.groupdict()['num'])/Rational(r.groupdict()['den'])
-                return CDF(exp(2*pi*I*q))
+                q = Rational(r.groupdict()['num']) / \
+                    Rational(r.groupdict()['den'])
+                return CDF(exp(2 * pi * I * q))
         if 'I' in strs:
             return CDF(strs)
-        elif (type(s) is list or type(s) is tuple) and len(s) == 2:
+        elif (isinstance(s, list) or isinstance(s, tuple)) and len(s) == 2:
             return CDF(tuple(s))
         elif '/' in strs:
             return Rational(strs)
-        elif strs=='0.5':  # Temporary fix because 0.5 in db for EC
+        elif strs == '0.5':  # Temporary fix because 0.5 in db for EC
             return Rational('1/2')
         elif '.' in strs:
             return float(strs)
@@ -98,7 +104,7 @@ def seriescoeff(coeff, index, seriescoefftype, seriestype, digits):
                 coeff = CDF(-I)
             else:
                 coeff = string2number(coeff)
-        if type(coeff) == complex:
+        if isinstance(coeff, complex):
             rp = coeff.real
             ip = coeff.imag
         else:
@@ -114,16 +120,21 @@ def seriescoeff(coeff, index, seriescoefftype, seriestype, digits):
         parenthesis = True
     else:
         parenthesis = False
-    coeff_display = display_complex(rp, ip, digits, method="truncate", parenthesis=parenthesis)
+    coeff_display = display_complex(
+        rp,
+        ip,
+        digits,
+        method="truncate",
+        parenthesis=parenthesis)
 
     # deal with the zero case
     if coeff_display == "0":
-        if seriescoefftype=="literal":
+        if seriescoefftype == "literal":
             return "0"
         else:
             return ""
 
-    if seriescoefftype=="literal":
+    if seriescoefftype == "literal":
         return coeff_display
 
     if seriescoefftype == "factor":
@@ -132,7 +143,7 @@ def seriescoeff(coeff, index, seriescoefftype, seriestype, digits):
         elif coeff_display == "-1":
             return "-"
 
-    #add signs and fix spacing
+    # add signs and fix spacing
     if seriescoefftype in ["series", "serieshtml"]:
         if coeff_display == "1":
             coeff_display = " + "
@@ -141,7 +152,7 @@ def seriescoeff(coeff, index, seriescoefftype, seriestype, digits):
         # purely real or complex number that starts with -
         elif coeff_display[0] == '-':
             # add spacings around the minus
-            coeff_display = coeff_display.replace('-',' - ')
+            coeff_display = coeff_display.replace('-', ' - ')
         else:
             ans += " + "
     elif seriescoefftype == 'signed' and coeff_display[0] != '-':
@@ -151,7 +162,7 @@ def seriescoeff(coeff, index, seriescoefftype, seriestype, digits):
     ans += coeff_display
 
     if seriescoefftype == "serieshtml":
-        ans = ans.replace('i',"<em>i</em>").replace('-',"&minus;")
+        ans = ans.replace('i', "<em>i</em>").replace('-', "&minus;")
         if coeff_display[-1] not in [')', ' ']:
             ans += "&middot;"
     if seriescoefftype in ["series", "serieshtml", "signed"]:
@@ -194,11 +205,12 @@ def lfuncDShtml(L, fmt):
     maxcoeffs = 20
     if L.selfdual:
         numperline = 9  # Actually, we want 8 per line, and one extra addition to counter to ensure
-                        # we add only one newline
+        # we add only one newline
         maxcoeffs = 30
     ans = ""
     # Changes to account for very sparse series, only count actual nonzero terms to decide when to go to next line
-    # This actually jumps by 2 whenever we add a newline, to ensure we just add one new line
+    # This actually jumps by 2 whenever we add a newline, to ensure we just
+    # add one new line
     nonzeroterms = 1
 #    if fmt == "analytic" or fmt == "langlands":
     if fmt in ["analytic", "langlands", "arithmetic"]:
@@ -220,7 +232,7 @@ def lfuncDShtml(L, fmt):
             ans += "</span>"
         else:
             ans += "<span class='term'>"
-            ans += '$'+L.texname+'$'
+            ans += '$' + L.texname + '$'
             ans += "&thinsp;"
             ans += "&nbsp;=&nbsp;"
             ans += "1<sup></sup>" + "&nbsp;"
@@ -234,15 +246,20 @@ def lfuncDShtml(L, fmt):
 
         for n in range(1, ds_length):
             if fmt == "arithmetic":
-                tmp = seriescoeff(L.dirichlet_coefficients_arithmetic[n], n + 1,
-                    "serieshtml", "dirichlethtml", 3)
+                tmp = seriescoeff(
+                    L.dirichlet_coefficients_arithmetic[n],
+                    n + 1,
+                    "serieshtml",
+                    "dirichlethtml",
+                    3)
             else:
                 tmp = seriescoeff(L.dirichlet_coefficients[n], n + 1,
-                    "serieshtml", "dirichlethtml", 3)
+                                  "serieshtml", "dirichlethtml", 3)
             if tmp != "":
                 nonzeroterms += 1
             ans = ans + " <span class='term'>" + tmp + "</span> "
-                # need a space between spans to allow line breaks. css stops a break within a span
+            # need a space between spans to allow line breaks. css stops a
+            # break within a span
 
             if nonzeroterms > maxcoeffs:
                 break
@@ -257,12 +274,13 @@ def lfuncDShtml(L, fmt):
 
         elif L.Ltype() == "dirichlet":
             ans = r"\begin{equation}\begin{aligned} L(s,\chi) = \sum_{n=1}^{\infty} \chi(n) n^{-s} \end{aligned}\end{equation}\]"
-            ans = ans + r"where $\chi$ is the character modulo " + str(L.charactermodulus)
+            ans = ans + r"where $\chi$ is the character modulo " + \
+                str(L.charactermodulus)
             ans = ans + ", number " + str(L.characternumber) + "."
 
         else:
             ans = (r"\[\begin{aligned}" + L.texname +
-                r" = \sum_{n=1}^{\infty} a(n) n^{-s} \end{aligned}\]")
+                   r" = \sum_{n=1}^{\infty} a(n) n^{-s} \end{aligned}\]")
     return(ans)
 
 
@@ -272,12 +290,14 @@ def lfuncEPtex(L, fmt):
         fmt could be any of the values: "abstract"
     """
     from .Lfunction import Lfunction_from_db
-    if ((L.Ltype() in ["genus2curveQ"] or isinstance(L, Lfunction_from_db))) and fmt == "arithmetic":
+    if ((L.Ltype() in ["genus2curveQ"] or isinstance(
+            L, Lfunction_from_db))) and fmt == "arithmetic":
         try:
             return lfuncEPhtml(L, fmt)
         except Exception:
             if L.Ltype() == "general" and False:
-                return ("For information concerning the Euler product, see other "
+                return (
+                    "For information concerning the Euler product, see other "
                     "instances of this L-function.")
             else:
                 raise
@@ -310,7 +330,7 @@ def lfuncEPtex(L, fmt):
                 ans += r"\displaystyle\prod_{p\ \mathrm{bad}} (1- a(p) p^{-s})^{-1}  \prod_{p\ \mathrm{good}} (1- a(p) p^{-s} + \overline{a(p)} p^{-2s} - p^{-3s})^{-1}"
             else:
                 ans += (r"\prod_p \ \prod_{j=1}^{" + str(L.degree) +
-                    r"} (1 - \alpha_{j,p}\,  p^{-s})^{-1}")
+                        r"} (1 - \alpha_{j,p}\,  p^{-s})^{-1}")
         elif L.Ltype() == "SymmetricPower":
             ans += lfuncEpSymPower(L)
 
@@ -318,10 +338,10 @@ def lfuncEPtex(L, fmt):
             if L.degree > 1:
                 if fmt == "arithmetic":
                     ans += (r"\displaystyle\prod_p \ \prod_{j=1}^{" + str(L.degree) +
-                        r"} (1 - \alpha_{j,p}\,    p^{" + str(L.motivic_weight) + "/2 - s})^{-1}")
+                            r"} (1 - \alpha_{j,p}\,    p^{" + str(L.motivic_weight) + "/2 - s})^{-1}")
                 else:
-                    ans += (r"\displaystyle\prod_p \ \prod_{j=1}^{" + str(L.degree) +
-                        r"} (1 - \alpha_{j,p}\,  p^{-s})^{-1}")
+                    ans += (r"\displaystyle\prod_p \ \prod_{j=1}^{" + str(
+                        L.degree) + r"} (1 - \alpha_{j,p}\,  p^{-s})^{-1}")
             else:
                 ans += r"\displaystyle\prod_p \  (1 - \alpha_{p}\,  p^{-s})^{-1}"
 
@@ -331,6 +351,7 @@ def lfuncEPtex(L, fmt):
         return(ans)
     else:
         return(r"No information is available about the Euler product.")
+
 
 def lfuncEPhtml(L, fmt):
     """
@@ -386,24 +407,29 @@ def lfuncEPhtml(L, fmt):
                 factors = r'\( %s \)' % pretty_poly(poly)
                 gal_groups = [[0, 0]]
             elif not display_galois:
-                factors = galois_pretty_factors(poly, galois=display_galois, p=p)
+                factors = galois_pretty_factors(
+                    poly, galois=display_galois, p=p)
                 factors = make_bigint(r'\( %s \)' % factors)
             else:
-                factors, gal_groups = galois_pretty_factors(poly, galois=display_galois, p=p)
+                factors, gal_groups = galois_pretty_factors(
+                    poly, galois=display_galois, p=p)
                 factors = make_bigint(r'\( %s \)' % factors)
-            out += "<tr" + trclass + "><td>" + goodorbad + "</td><td>" + str(p) + "</td>"
+            out += "<tr" + trclass + "><td>" + \
+                goodorbad + "</td><td>" + str(p) + "</td>"
             if display_galois:
                 out += "<td class='galois'>"
-                if gal_groups[0]==[0,0]:
+                if gal_groups[0] == [0, 0]:
                     pass   # do nothing, because the local factor is 1
                 else:
-                    out += r"$\times$".join( [transitive_group_display_knowl_C1_as_trivial(f"{n}T{k}") for n, k in gal_groups] )
+                    out += r"$\times$".join([transitive_group_display_knowl_C1_as_trivial(
+                        f"{n}T{k}") for n, k in gal_groups])
                 out += "</td>"
             out += "<td> %s </td>" % factors
             out += "</tr>"
 
         except IndexError:
-            out += "<tr><td></td><td>" + str(j) + "</td><td>" + "not available" + "</td></tr>"
+            out += "<tr><td></td><td>" + \
+                str(j) + "</td><td>" + "not available" + "</td></tr>"
         return out
     goodorbad = "bad"
     trclass = ""
@@ -435,7 +461,7 @@ def lfuncEPhtml(L, fmt):
 
     last_entry = ""
     if display_galois:
-        last_entry +="<td></td>"
+        last_entry += "<td></td>"
     last_entry += "<td></td>"
     eptable += last_entry
     eptable += "</tr>"
@@ -444,6 +470,7 @@ def lfuncEPhtml(L, fmt):
     eptable += "</tr></table></div>"
     ans += eptable
     return(ans)
+
 
 def lfuncEpSymPower(L):
     """ Helper function for lfuncEPtex to do the symmetric power L-functions
@@ -477,12 +504,13 @@ def lfuncEpSymPower(L):
                     poly_string += r"+%d\ %d^{-%d s}" % (poly[j], p, j)
             poly_string += ")^{-1}"
         ans += poly_string
-    ans += r'\prod_{p \nmid %d }\prod_{j=0}^{%d} ' % (L.E.conductor(),L.m)
+    ans += r'\prod_{p \nmid %d }\prod_{j=0}^{%d} ' % (L.E.conductor(), L.m)
     ans += r'\left(1- \frac{\alpha_p^j\beta_p^{%d-j}}' % L.m
     ans += r'{p^{s}} \right)^{-1}'
     return ans
 
-#---------
+# ---------
+
 
 def lfuncFEtex(L, fmt):
     """
@@ -656,6 +684,7 @@ def specialValueString(L, s, sLatex, normalization="analytic"):
 #                                               latex(round(val.real(), number_of_decimals)
 #                                                     + round(val.imag(), number_of_decimals) * I))
 
+
 def specialValueTriple(L, s, sLatex_analytic, sLatex_arithmetic):
     ''' Returns [L_arithmetic, L_analytic, L_val]
         Currently only used for genus 2 curves
@@ -664,7 +693,7 @@ def specialValueTriple(L, s, sLatex_analytic, sLatex_arithmetic):
     '''
     number_of_decimals = 10
     val = None
-    if L.fromDB: #getattr(L, 'fromDB', False):
+    if L.fromDB:  # getattr(L, 'fromDB', False):
         s_alg = s + L.analytic_normalization
         for x in L.values:
             # the numbers here are always half integers
@@ -677,14 +706,17 @@ def specialValueTriple(L, s, sLatex_analytic, sLatex_arithmetic):
             val = "not computed"
         else:
             val = L.sageLfunction.value(s)
-            logger.warning("a value of an L-function has been computed on the fly")
+            logger.warning(
+                "a value of an L-function has been computed on the fly")
 
     if sLatex_arithmetic:
-        lfunction_value_tex_arithmetic = L.texname_arithmetic.replace('s)', sLatex_arithmetic + ')')
+        lfunction_value_tex_arithmetic = L.texname_arithmetic.replace(
+            's)', sLatex_arithmetic + ')')
     else:
         lfunction_value_tex_arithmetic = ''
     if sLatex_analytic:
-        lfunction_value_tex_analytic = L.texname.replace('(s', '(' + sLatex_analytic)
+        lfunction_value_tex_analytic = L.texname.replace(
+            '(s', '(' + sLatex_analytic)
     else:
         lfunction_value_tex_analytic = ''
 
@@ -697,17 +729,18 @@ def specialValueTriple(L, s, sLatex_analytic, sLatex_arithmetic):
         if ccval.real().is_NaN():
             Lval = r"$\infty$"
         else:
-            Lval = display_complex(ccval.real(), ccval.imag(), number_of_decimals)
+            Lval = display_complex(
+                ccval.real(), ccval.imag(), number_of_decimals)
 
     return [lfunction_value_tex_analytic, lfunction_value_tex_arithmetic, Lval]
 
 
 ##################################################################
-#Function to help display Lvalues when scientific notation is used
+# Function to help display Lvalues when scientific notation is used
 ##################################################################
 
 def scientific_notation_helper(lval_string):
-    return(re.sub(r"[Ee](-?\d+)",r"\\times10^{\1}",lval_string))
+    return(re.sub(r"[Ee](-?\d+)", r"\\times10^{\1}", lval_string))
 
 
 ###############################################################
@@ -720,9 +753,11 @@ CF = ComplexField(NN)
 def compute_dirichlet_series(p_list, PREC):
     ''' computes the dirichlet series for a Lfunction_SMF2_scalar_valued
     '''
-    # p_list is a list of pairs (p,y) where p is a prime and y is the list of roots of the Euler factor at x
+    # p_list is a list of pairs (p,y) where p is a prime and y is the list of
+    # roots of the Euler factor at x
     LL = [0] * PREC
-    # create an empty list of the right size and now populate it with the powers of p
+    # create an empty list of the right size and now populate it with the
+    # powers of p
     for (p, y) in p_list:
         # FIXME p_prec is never used, but perhaps it should be?
         # p_prec = log(PREC) / log(p) + 1
@@ -769,15 +804,16 @@ def compute_local_roots_SMF2_scalar_valued(K, ev, k, embedding):
         R = PolynomialRing(K, 'x')
         x = R.gens()[0]
 
-        f = (1 - ev2[p][0] * x + (ev2[p][0] ** 2 - ev2[p][1] - p ** (
-            2 * k - 4)) * x ** 2 - ev2[p][0] * p ** (2 * k - 3) * x ** 3 + p ** (4 * k - 6) * x ** 4)
+        f = (1 - ev2[p][0] * x + (ev2[p][0] ** 2 - ev2[p][1] - p ** (2 * k - 4)) *
+             x ** 2 - ev2[p][0] * p ** (2 * k - 3) * x ** 3 + p ** (4 * k - 6) * x ** 4)
 
         Rnum = PolynomialRing(CF, 'y')
         x = Rnum.gens()[0]
         fnum = Rnum(0)
         if K != QQ:
             for i in range(int(f.degree()) + 1):
-                fnum = fnum + f[i].complex_embeddings(NN)[embedding] * (x / p ** (k - 1.5)) ** i
+                fnum = fnum + \
+                    f[i].complex_embeddings(NN)[embedding] * (x / p ** (k - 1.5)) ** i
         else:
             for i in range(int(f.degree()) + 1):
                 fnum = fnum + f[i] * (x / CF(p ** (k - 1.5))) ** i
@@ -810,21 +846,24 @@ def signOfEmfLfunction(level, weight, coefs, tol=10 ** (-7), num=1.3):
     sum1 = 0
     sum2 = 0
     for i in range(1, len(coefs)):
-        sum1 += coefs[i - 1] * math.exp(- 2 * math.pi * i * num / math.sqrt(level))
+        sum1 += coefs[i - 1] * \
+            math.exp(- 2 * math.pi * i * num / math.sqrt(level))
         logger.debug("Sum1: {0}".format(sum1))
-        sum2 += (coefs[i - 1].conjugate() * math.exp(- 2 * math.pi * i / num / math.sqrt(level)) /
-            num ** weight)
+        sum2 += (coefs[i - 1].conjugate() * math.exp(- 2 *
+                                                     math.pi * i / num / math.sqrt(level)) / num ** weight)
         logger.debug("Sum2: {0}".format(sum2))
     sign = sum1 / sum2
     if abs(abs(sign) - 1) > tol:
-        logger.critical("Not enough coefficients to compute the sign of the L-function.")
+        logger.critical(
+            "Not enough coefficients to compute the sign of the L-function.")
         sign = "Not able to compute."
-        sign = 1 # wrong, but we need some type of error handling here.
+        sign = 1  # wrong, but we need some type of error handling here.
     return sign
 
 ###############################################################
 # Functions for elliptic curves
 ###############################################################
+
 
 def getConductorIsogenyFromLabel(label):
     ''' Returns the pair (conductor, isogeny) where label is either
@@ -833,7 +872,7 @@ def getConductorIsogenyFromLabel(label):
     '''
     try:
         if '.' in label:
-            #LMFDB label
+            # LMFDB label
             cond, iso = label.split('.')
         else:
             # Cremona label
@@ -861,6 +900,8 @@ def get_bread(breads=[]):
     return bread
 
 # Convert  r0r0c1 to (0,0;1), for example
+
+
 def parse_codename(text):
 
     ans = text

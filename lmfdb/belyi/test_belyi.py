@@ -5,7 +5,8 @@ from lmfdb.tests import LmfdbTest
 class BelyiTest(LmfdbTest):
     def test_stats(self):
         L = self.tc.get("/Belyi/stats")
-        assert "Galois orbits of Belyi maps" in L.get_data(as_text=True) and "proportion" in L.get_data(as_text=True)
+        assert "Galois orbits of Belyi maps" in L.get_data(
+            as_text=True) and "proportion" in L.get_data(as_text=True)
 
     def test_random(self):
         self.check_args("/Belyi/random", "Monodromy group")
@@ -80,8 +81,12 @@ class BelyiTest(LmfdbTest):
         self.check_args("Belyi/?is_primitive=yes", "1T1-1_1_1-a")
 
     def test_primitivization_search(self):
-        self.check_args("/Belyi/?primitivization=2T1-2_2_1.1-a", "4T1-4_4_1.1.1.1-a")
-        self.not_check_args("/Belyi/?primitivization=2T1-2_2_1.1-a", "1T1-1_1_1-a")
+        self.check_args(
+            "/Belyi/?primitivization=2T1-2_2_1.1-a",
+            "4T1-4_4_1.1.1.1-a")
+        self.not_check_args(
+            "/Belyi/?primitivization=2T1-2_2_1.1-a",
+            "1T1-1_1_1-a")
 
     # downloads
 
@@ -125,7 +130,7 @@ class BelyiTest(LmfdbTest):
             follow_redirects=True,
         )
         assert (
-           "phi = (1/3125*(162*nu-81)*x^2+1/78125*(972*nu-486)*x+1/390625*(-1458*nu+729))/(x^6-9/25*x^5+27/125*x^4+1/3125*(-162*nu-54)*x^3+1/78125*(729*nu-486)*x^2+1/9765625*(-2187*nu+5832)*x+1/244140625*(-2187*nu-1458))*y+(1/3125*(-162*nu+81)*x^3+1/156250*(1458*nu-729)*x^2+1/9765625*(-2187*nu+10935)*x+1/488281250*(-4374*nu-76545))/(x^6-9/25*x^5+27/125*x^4+1/3125*(-162*nu-54)*x^3+1/78125*(729*nu-486)*x^2+1/9765625*(-2187*nu+5832)*x+1/244140625*(-2187*nu-1458))"
+            "phi = (1/3125*(162*nu-81)*x^2+1/78125*(972*nu-486)*x+1/390625*(-1458*nu+729))/(x^6-9/25*x^5+27/125*x^4+1/3125*(-162*nu-54)*x^3+1/78125*(729*nu-486)*x^2+1/9765625*(-2187*nu+5832)*x+1/244140625*(-2187*nu-1458))*y+(1/3125*(-162*nu+81)*x^3+1/156250*(1458*nu-729)*x^2+1/9765625*(-2187*nu+10935)*x+1/488281250*(-4374*nu-76545))/(x^6-9/25*x^5+27/125*x^4+1/3125*(-162*nu-54)*x^3+1/78125*(729*nu-486)*x^2+1/9765625*(-2187*nu+5832)*x+1/244140625*(-2187*nu-1458))"
             in page.get_data(as_text=True)
         )
         # genus 2 example
@@ -149,10 +154,16 @@ class BelyiTest(LmfdbTest):
         )
 
         # Underlying data link
-        data = self.tc.get("/Belyi/data/7T5-7_7_3.3.1", follow_redirects=True).get_data(as_text=True)
+        data = self.tc.get(
+            "/Belyi/data/7T5-7_7_3.3.1",
+            follow_redirects=True).get_data(
+            as_text=True)
         assert "maxdegbf" in data and "orbit_size" in data
 
-        data = self.tc.get("/Belyi/data/7T5-7_7_3.3.1-a", follow_redirects=True).get_data(as_text=True)
+        data = self.tc.get(
+            "/Belyi/data/7T5-7_7_3.3.1-a",
+            follow_redirects=True).get_data(
+            as_text=True)
         assert "friends" in data and "maxdegbf" in data and "portrait" in data
 
     # friends
@@ -171,6 +182,8 @@ class BelyiTest(LmfdbTest):
                     'Genus 2 curve 1728.b.442368.1',)
              )
         ]:
-            data = self.tc.get(url, follow_redirects=True).get_data(as_text=True)
+            data = self.tc.get(
+                url, follow_redirects=True).get_data(
+                as_text=True)
             for friend in friends:
                 assert friend in data

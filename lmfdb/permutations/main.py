@@ -45,10 +45,11 @@ def show():
         p = Permutation(data)
     except (TypeError, ValueError):
         logger.info("Impossible to create a permutation from input.")
-        flash_error("Ooops, impossible to create a permutation from given input!")
+        flash_error(
+            "Ooops, impossible to create a permutation from given input!")
         return redirect(url_for(".index"))
     return render_template("permutations.html", permutation=p,
-            rankbread=get_bread())
+                           rankbread=get_bread())
 
 
 @permutations_page.route("/")
@@ -59,4 +60,7 @@ def index():
     http://127.0.0.1:37777/Permutations/
     """
     bread = get_bread()
-    return render_template("permutations-index.html", title="Permutations", bread=bread)
+    return render_template(
+        "permutations-index.html",
+        title="Permutations",
+        bread=bread)

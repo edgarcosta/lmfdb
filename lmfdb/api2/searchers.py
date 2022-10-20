@@ -4,6 +4,7 @@ from . import utils
 searchers = {}
 singletons = {}
 
+
 class searcher:
 
     def get_name(self):
@@ -43,7 +44,15 @@ class searcher:
             return self._full_search(query, projection)
         return utils.simple_search(query, projection)
 
-    def __init__(self, human_name, desc, auto_search=None, full_info=None, full_inventory=None, full_search=None, inv=None):
+    def __init__(
+            self,
+            human_name,
+            desc,
+            auto_search=None,
+            full_info=None,
+            full_inventory=None,
+            full_search=None,
+            inv=None):
         self.human_name = human_name
         self.desc = desc
         self.auto = auto_search
@@ -55,7 +64,15 @@ class searcher:
         self._full_search = full_search
 
 
-def register_search_function(name, human_name, description, auto_search=None, full_info=None, full_inventory=None, full_search=None, inv=None):
+def register_search_function(
+        name,
+        human_name,
+        description,
+        auto_search=None,
+        full_info=None,
+        full_inventory=None,
+        full_search=None,
+        inv=None):
     """
     Register a search function with the contextual API system
 
@@ -74,10 +91,22 @@ def register_search_function(name, human_name, description, auto_search=None, fu
 
     """
     global searchers
-    searchers[name] = searcher(human_name, description, auto_search=auto_search, full_info=full_info, full_inventory=full_inventory, full_search=full_search, inv=inv)
+    searchers[name] = searcher(
+        human_name,
+        description,
+        auto_search=auto_search,
+        full_info=full_info,
+        full_inventory=full_inventory,
+        full_search=full_search,
+        inv=inv)
 
 
-def register_singleton(url, table, key=None, simple_search=None, full_search=None):
+def register_singleton(
+        url,
+        table,
+        key=None,
+        simple_search=None,
+        full_search=None):
     """
     Register an API singleton. This is a search that should find a single item
     from a label or similar key
@@ -91,5 +120,8 @@ def register_singleton(url, table, key=None, simple_search=None, full_search=Non
     """
 
     global singletons
-    singletons[url] = {'table':table, 'key':key,
-        'simple_search':simple_search, 'full_search':full_search}
+    singletons[url] = {
+        'table': table,
+        'key': key,
+        'simple_search': simple_search,
+        'full_search': full_search}
