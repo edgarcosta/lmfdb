@@ -26,23 +26,23 @@ class Genus2Test(LmfdbTest):
         )
         L = self.tc.get("/Genus2Curve/Q/1152.a.147456.1", follow_redirects=True)
         assert (
-            "non-isogenous elliptic curve" in L.get_data(as_text=True)
-            and "24.a" in L.get_data(as_text=True)
-            and "48.a" in L.get_data(as_text=True)
+            "non-isogenous elliptic curve" in L.get_data(as_text=True) and
+            "24.a" in L.get_data(as_text=True) and
+            "48.a" in L.get_data(as_text=True)
         )
         L = self.tc.get("/Genus2Curve/Q/15360.f.983040.2", follow_redirects=True)
         assert (
-            r"N(\mathrm{U}(1)\times\mathrm{SU}(2))" in L.get_data(as_text=True)
-            and "480.b" in L.get_data(as_text=True)
-            and "32.a" in L.get_data(as_text=True)
+            r"N(\mathrm{U}(1)\times\mathrm{SU}(2))" in L.get_data(as_text=True) and
+            "480.b" in L.get_data(as_text=True) and
+            "32.a" in L.get_data(as_text=True)
         )
 
     def test_isogeny_class_label(self):
         L = self.tc.get("/Genus2Curve/Q/1369/a/")
         assert (
-            "1369.1" in L.get_data(as_text=True)
-            and "50653.1" in L.get_data(as_text=True)
-            and r"\mathrm{SU}(2)\times\mathrm{SU}(2)" in L.get_data(as_text=True)
+            "1369.1" in L.get_data(as_text=True) and
+            "50653.1" in L.get_data(as_text=True) and
+            r"\mathrm{SU}(2)\times\mathrm{SU}(2)" in L.get_data(as_text=True)
         )
 
     def test_Lfunction_link(self):
@@ -91,18 +91,18 @@ class Genus2Test(LmfdbTest):
         # Square over a quadratic extension that is CM over one extension and
         # multiplication by a quaternion algebra ramifying at infinity over another
         assert (
-            "square of" in L.get_data(as_text=True)
-            and "2.2.8.1-64.1-a3" in L.get_data(as_text=True)
-            and r"\H" in L.get_data(as_text=True)
-            and "(CM)" in L.get_data(as_text=True)
+            "square of" in L.get_data(as_text=True) and
+            "2.2.8.1-64.1-a3" in L.get_data(as_text=True) and
+            r"\H" in L.get_data(as_text=True) and
+            "(CM)" in L.get_data(as_text=True)
         )
 
     def test_by_url_isogeny_class_discriminant(self):
         L = self.tc.get("/Genus2Curve/Q/15360/f/983040/")
         assert (
-            "15360.f.983040.1" in L.get_data(as_text=True)
-            and "15360.f.983040.2" in L.get_data(as_text=True)
-            and "15360.d.983040.1" not in L.get_data(as_text=True)
+            "15360.f.983040.1" in L.get_data(as_text=True) and
+            "15360.f.983040.2" in L.get_data(as_text=True) and
+            "15360.d.983040.1" not in L.get_data(as_text=True)
         )
 
     def test_random(self):

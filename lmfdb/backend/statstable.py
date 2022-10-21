@@ -590,8 +590,8 @@ class PostgresStatsTable(PostgresBase):
 
             def satisfies_constraint(val):
                 return all(val[i] == c for i, c in constraint_list) and not any(
-                    isinstance(val[i], dict)
-                    and all(
+                    isinstance(val[i], dict) and
+                    all(
                         isinstance(k, str) and k.startswith("$")
                         for k in val[i]
                     )
@@ -1354,13 +1354,13 @@ class PostgresStatsTable(PostgresBase):
             )
             if len(to_add) > 10000:
                 logging.warning(
-                    "{:d} rows were just inserted to".format(len(to_add))
-                    + " into {}, ".format(self.counts + suffix)
-                    + "all with cols = {}. ".format(jallcols)
-                    + "This might decrease the counts table performance "
-                    + "significantly! Consider clearing all the stats "
-                    + "db.{}.stats._clear_stats_counts()".format(self.search_table)
-                    + " and rebuilding the stats more carefully."
+                    "{:d} rows were just inserted to".format(len(to_add)) +
+                    " into {}, ".format(self.counts + suffix) +
+                    "all with cols = {}. ".format(jallcols) +
+                    "This might decrease the counts table performance " +
+                    "significantly! Consider clearing all the stats " +
+                    "db.{}.stats._clear_stats_counts()".format(self.search_table) +
+                    " and rebuilding the stats more carefully."
                 )
         self.logger.info("Added stats in %.3f secs" % (time.time() - now))
         return True
@@ -1385,9 +1385,9 @@ class PostgresStatsTable(PostgresBase):
             """SELECT v.{0}, (c.reltuples * freq)::int as estimate_ct
 FROM pg_stats s
 CROSS JOIN LATERAL
-   unnest(s.most_common_vals::text::"""
-            + self.table.col_type[col]
-            + """[]
+   unnest(s.most_common_vals::text::""" +
+            self.table.col_type[col] +
+            """[]
         , s.most_common_freqs) WITH ORDINALITY v ({0}, freq, ord)
 CROSS  JOIN (
    SELECT reltuples FROM pg_class
@@ -1760,9 +1760,9 @@ ORDER BY v.ord LIMIT %s"""
         for values, count in self._execute(selecter, values=selecter_values):
             values = [values[i] for i in positions]
             if any(
-                isinstance(val, dict)
-                and any(relkey in val for relkey in ["$lt", "$lte", "$gt", "$gte", "$exists"])
-                and cols[i] not in buckets
+                isinstance(val, dict) and
+                any(relkey in val for relkey in ["$lt", "$lte", "$gt", "$gte", "$exists"]) and
+                cols[i] not in buckets
                 for (i, val) in enumerate(values)
             ):
                 # For non-bucketed statistics, we don't want to include counts for range queries

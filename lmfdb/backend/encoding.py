@@ -163,9 +163,9 @@ class Json(pgJson):
                     "data": [[int(z.numerator()), int(z.denominator())] for z in obj],
                 }
             elif (
-                SAGE_MODE and obj
-                and all(isinstance(z, NumberFieldElement) for z in obj)
-                and all(z.parent() is obj[0].parent() for z in obj[1:])
+                SAGE_MODE and obj and
+                all(isinstance(z, NumberFieldElement) for z in obj) and
+                all(z.parent() is obj[0].parent() for z in obj[1:])
             ):
                 K = obj[0].parent()
                 base = cls.prep(K, escape_backslashes)
@@ -348,9 +348,9 @@ class Json(pgJson):
                 assert SAGE_MODE
                 return cls._extract(cls.extract(obj["parent"]), obj["data"])
             elif (
-                len(obj) == 3
-                and ("__NFRelative__" in obj or "__NFAbsolute__" in obj)
-                and "vname" in obj
+                len(obj) == 3 and
+                ("__NFRelative__" in obj or "__NFAbsolute__" in obj) and
+                "vname" in obj
             ):
                 assert SAGE_MODE
                 poly = cls.extract(obj["data"])
@@ -372,11 +372,11 @@ class Json(pgJson):
                 base = cls.extract(obj["base"])
                 return base[obj["vname"]]([cls._extract(base, c) for c in obj["data"]])
             elif (
-                len(obj) == 5
-                and "__PowerSeries__" in obj
-                and "vname" in obj
-                and "base" in obj
-                and "prec" in obj
+                len(obj) == 5 and
+                "__PowerSeries__" in obj and
+                "vname" in obj and
+                "base" in obj and
+                "prec" in obj
             ):
                 assert SAGE_MODE
                 base = cls.extract(obj["base"])

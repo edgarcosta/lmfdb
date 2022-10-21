@@ -349,10 +349,10 @@ class PostgresTable(PostgresBase):
 
         if self._relation_exists(name):  # this also works for constraints
             raise ValueError(
-                "{} name {} is invalid, ".format(kind, name)
-                + "a relation with that name already exists, "
-                + "e.g, index, constraint or table; "
-                + "try specifying a different name"
+                "{} name {} is invalid, ".format(kind, name) +
+                "a relation with that name already exists, " +
+                "e.g, index, constraint or table; " +
+                "try specifying a different name"
             )
 
         if kind == "Index":
@@ -371,10 +371,10 @@ class PostgresTable(PostgresBase):
         )
         if cur.rowcount > 0:
             raise ValueError(
-                "{} name {} is invalid, ".format(kind, name)
-                + "an {} with that name".format(kind.lower())
-                + "already exists in {}; ".format(meta)
-                + "try specifying a different name"
+                "{} name {} is invalid, ".format(kind, name) +
+                "an {} with that name".format(kind.lower()) +
+                "already exists in {}; ".format(meta) +
+                "try specifying a different name"
             )
 
     def create_index(self, columns, type="btree", modifiers=None, name=None, storage_params=None):
@@ -421,8 +421,8 @@ class PostgresTable(PostgresBase):
                 for mod in mods:
                     if (
                         mod.lower()
-                        not in ["asc", "desc", "nulls first", "nulls last"]
-                        + _operator_classes[type]
+                        not in ["asc", "desc", "nulls first", "nulls last"] +
+                        _operator_classes[type]
                     ):
                         raise ValueError("Invalid modifier %s" % (mod,))
         if storage_params is None:
@@ -982,8 +982,8 @@ class PostgresTable(PostgresBase):
                 # write headers
                 datafile.write(sep.join(data_cols) + u"\n")
                 datafile.write(
-                    sep.join(self.col_type.get(col) for col in data_cols)
-                    + u"\n\n"
+                    sep.join(self.col_type.get(col) for col in data_cols) +
+                    u"\n\n"
                 )
 
                 for rec in self.search(query, projection=projection, sort=[]):
@@ -992,8 +992,8 @@ class PostgresTable(PostgresBase):
                         sep.join(
                             tostr_func(processed.get(col), self.col_type[col])
                             for col in data_cols
-                        )
-                        + u"\n"
+                        ) +
+                        u"\n"
                     )
                     count += 1
                     if (count % progress_count) == 0:

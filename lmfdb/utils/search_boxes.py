@@ -77,11 +77,11 @@ class CheckboxSpacer(Spacer):
 
     def html(self, info=None):
         return (
-            self.td(self.colspan)
-            + self.checkbox._label(info)
-            + " "
-            + self.checkbox._input(info)
-            + "</td>"
+            self.td(self.colspan) +
+            self.checkbox._label(info) +
+            " " +
+            self.checkbox._input(info) +
+            "</td>"
         )
 
 
@@ -154,8 +154,8 @@ class SearchBox(TdElt):
     def example_html(self, info=None):
         if self.example_span:
             return (
-                self.td(self.example_span_colspan)
-                + '<span class="formexample">e.g. %s</span></td>' % self.example_span
+                self.td(self.example_span_colspan) +
+                '<span class="formexample">e.g. %s</span></td>' % self.example_span
             )
         elif self.example_col:
             return "<td></td>"
@@ -321,10 +321,10 @@ class SelectBox(SearchBox):
         opts = []
         for value, display in self.options:
             if (
-                info is None
-                and value == ""
-                or info is not None
-                and info.get(self.name, "") == value
+                info is None and
+                value == "" or
+                info is not None and
+                info.get(self.name, "") == value
             ):
                 selected = " selected"
             else:
@@ -342,8 +342,8 @@ class SelectBox(SearchBox):
 class NoEg(SearchBox):
     def example_html(self, info=None):
         return (
-            self.td(self.example_span_colspan)
-            + '<span class="formexample">%s</span></td>' % self.example_span
+            self.td(self.example_span_colspan) +
+            '<span class="formexample">%s</span></td>' % self.example_span
         )
 
 class TextBoxNoEg(NoEg, TextBox):
@@ -397,11 +397,11 @@ class TextBoxWithSelect(TextBox):
     def label_html(self, info=None):
         colspan = self.label_colspan if info is None else self.short_colspan
         return (
-                self.td(colspan, nowrap=True, style="text-align-last: justify;")
-            + self._label(info)
-            + '<span style="margin-left: 10px;"></span>'
-            + self.select_box._input(info)
-            + "</td>"
+                self.td(colspan, nowrap=True, style="text-align-last: justify;") +
+            self._label(info) +
+            '<span style="margin-left: 10px;"></span>' +
+            self.select_box._input(info) +
+            "</td>"
         )
 
 
@@ -415,10 +415,10 @@ class DoubleSelectBox(SearchBox):
 
     def _input(self, info):
         return (
-            '<div style="display: flex; justify-content: space-between;">'
-            + self.select_box1._input(info)
-            + self.select_box2._input(info)
-            + "</div>"
+            '<div style="display: flex; justify-content: space-between;">' +
+            self.select_box1._input(info) +
+            self.select_box2._input(info) +
+            "</div>"
         )
 
 class ExcludeOnlyBox(SelectBox):
@@ -615,13 +615,13 @@ class SearchButtonWithSelect(SearchButton):
 
     def label_html(self, info=None):
         colspan = self.label_colspan if info is None else self.short_colspan
-        return (self.td(colspan)
-                + '<div style="display: flex; justify-content: space-between;">'
-                + self._label(info)
-                + '<span style="margin-left: 5px;"></span>'
-                + self.select_box._input(info)
-                + "</div>"
-                + "</td>")
+        return (self.td(colspan) +
+                '<div style="display: flex; justify-content: space-between;">' +
+                self._label(info) +
+                '<span style="margin-left: 5px;"></span>' +
+                self.select_box._input(info) +
+                "</div>" +
+                "</td>")
 
 class SearchArray(UniqueRepresentation):
     """
@@ -719,9 +719,9 @@ class SearchArray(UniqueRepresentation):
                 lines.append("".join("\n      " + col for col in top_cols))
                 lines.append("".join("\n      " + col for col in bot_cols))
         return (
-            '  <table border="0">'
-            + "".join("\n    <tr>" + line + "\n    </tr>" for line in lines)
-            + "\n  </table>"
+            '  <table border="0">' +
+            "".join("\n    <tr>" + line + "\n    </tr>" for line in lines) +
+            "\n  </table>"
         )
 
     def _st(self, info):

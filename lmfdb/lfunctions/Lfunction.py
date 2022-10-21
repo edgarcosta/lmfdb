@@ -103,7 +103,7 @@ def constructor_logger(obj, args):
 
 # Compute Dirichlet coefficients from Euler factors.
 def an_from_data(euler_factors,upperbound=30):
-    if type(euler_factors[0][0]) is int:
+    if isinstance(euler_factors[0][0], int):
         R = ZZ
     else:
         R = euler_factors[0][0].parent()
@@ -329,7 +329,7 @@ def makeLfromdata(L):
 
     # Configure the data for the plot
     plot_delta = float(data['plot_delta'])
-    if type(data['plot_values'][0]) is str:
+    if isinstance(data['plot_values'][0], str):
         plot_values = [string2number(elt) for elt in data['plot_values']]
     else:
         plot_values = data['plot_values']
@@ -340,7 +340,7 @@ def makeLfromdata(L):
         neg_plot = [ [-1*pt[0], L.sign * pt[1]]
                      for pt in pos_plot ][1:]
     else:
-        if type(dual_L_data['plot_values'][0]) is str:
+        if isinstance(dual_L_data['plot_values'][0], str):
             dual_plot_values = [string2number(elt) for elt in dual_L_data['plot_values']]
         else:
             dual_plot_values = dual_L_data['plot_values']
@@ -764,9 +764,9 @@ class Lfunction_Maass(Lfunction):
                 try:
                     self.fricke = self.mf.fricke_eigenvalue
                 except Exception:
-                    raise KeyError('No Fricke information available for '
-                                   + 'Maass form so not able to compute '
-                                   + 'the L-function. ')
+                    raise KeyError('No Fricke information available for ' +
+                                   'Maass form so not able to compute ' +
+                                   'the L-function. ')
             else:  # no fricke for level 1
                 self.fricke = 1
             if self.symmetry == -1: # odd
@@ -821,13 +821,13 @@ class Lfunction_Maass(Lfunction):
         self.info['knowltype'] = "mf.maass"
         if self.degree > 2:
             R_commas = "(" + self.R.replace("_", ", ") + ")"
-            self.info['title'] = ("L-function of degree %s, " % (self.degree)
-                      + "conductor %s, and " % (self.level)
-                      + "spectral parameters %s" % (R_commas)
-                      + title_end)
+            self.info['title'] = ("L-function of degree %s, " % (self.degree) +
+                      "conductor %s, and " % (self.level) +
+                      "spectral parameters %s" % (R_commas) +
+                      title_end)
         else:
-            self.info['title'] = ("$L(s,f)$, where $f$ is a Maass cusp form with "
-                      + "level %s" % (self.level)) + title_end
+            self.info['title'] = ("$L(s,f)$, where $f$ is a Maass cusp form with " +
+                      "level %s" % (self.level)) + title_end
 
 
 class Lfunction_HMF(Lfunction):
@@ -918,13 +918,13 @@ class Lfunction_HMF(Lfunction):
         for l in range(len(hecke_eigenvalues)):
             if Fhmfprimes[l] in ppmidNN:
                 heckepols[ratl_primes.index(primes[l][1])] *= (
-                    1 - hecke_eigenvalues[l] / float(sqrt(primes[l][0]))
-                    * (T ** primes[l][2]))
+                    1 - hecke_eigenvalues[l] / float(sqrt(primes[l][0])) *
+                    (T ** primes[l][2]))
             else:
                 heckepols[ratl_primes.index(primes[l][1])] *= (
                     1 - hecke_eigenvalues[l] / float(
-                    sqrt(primes[l][0])) * (T ** primes[l][2])
-                    + (T ** (2 * primes[l][2])))
+                    sqrt(primes[l][0])) * (T ** primes[l][2]) +
+                    (T ** (2 * primes[l][2])))
 
         # Compute inverses up to given degree
         heckepolsinv = [heckepols[i].xgcd(T ** ceil(log(PP * 1.0) /
@@ -976,10 +976,10 @@ class Lfunction_HMF(Lfunction):
         # Initiate the dictionary info that contains the data for the webpage
         self.info = self.general_webpagedata()
         self.info['knowltype'] = "mf.hilbert"
-        self.info['title'] = ("$L(s,f)$, " + "where $f$ is a holomorphic Hilbert cusp form "
-                      + "over " + F.field_pretty()
-                      + " with parallel weight " + str(self.weight)
-                      + ", level norm " + str(f['level_norm']) )
+        self.info['title'] = ("$L(s,f)$, " + "where $f$ is a holomorphic Hilbert cusp form " +
+                      "over " + F.field_pretty() +
+                      " with parallel weight " + str(self.weight) +
+                      ", level norm " + str(f['level_norm']) )
         if self.character:
             self.info['title'] += ", and character " + str(self.character)
         else:

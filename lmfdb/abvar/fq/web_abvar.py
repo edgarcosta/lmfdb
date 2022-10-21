@@ -28,9 +28,9 @@ def av_data(label):
         wnf = WebNumberField(nf)
         if not wnf.is_null():
             inf += (
-                "Number field: "
-                + nf_display_knowl(nf, name=field_pretty(nf))
-                + "<br />"
+                "Number field: " +
+                nf_display_knowl(nf, name=field_pretty(nf)) +
+                "<br />"
             )
             inf += "Galois group: " + transitive_group_display_knowl(abvar["galois_groups"][0]) + "<br />"
     inf += "$p$-rank: " + str(abvar["p_rank"]) + "</div>"

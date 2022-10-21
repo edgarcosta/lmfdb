@@ -1048,8 +1048,8 @@ class G2CSearchArray(SearchArray):
             label="Sate-Tate identity component",
             short_label=r"\(\mathrm{ST}^0(X)\)",
             options=(
-                [("", "")]
-                + [
+                [("", "")] +
+                [
                     (elt, real_geom_end_alg_to_ST0_dict[elt])
                     for elt in real_geom_end_alg_list
                 ]
@@ -1070,8 +1070,8 @@ class G2CSearchArray(SearchArray):
             label=r"\(\overline{\Q}\)-automorphism group",
             short_label=r"\(\mathrm{Aut}(X_{\overline{\Q}})\)",
             options=(
-                [("", "")]
-                + [(elt, geom_aut_grp_dict[elt]) for elt in geom_aut_grp_list]
+                [("", "")] +
+                [(elt, geom_aut_grp_dict[elt]) for elt in geom_aut_grp_list]
             ),
         )
 
@@ -1089,8 +1089,8 @@ class G2CSearchArray(SearchArray):
             label=r"\(\overline{\Q}\)-endomorphism algebra",
             short_label=r"\(\overline{\Q}\)-end algebra",
             options=(
-                [("", "")]
-                + [(elt, geom_end_alg_dict[elt]) for elt in geom_end_alg_list]
+                [("", "")] +
+                [(elt, geom_end_alg_dict[elt]) for elt in geom_end_alg_list]
             ),
         )
 

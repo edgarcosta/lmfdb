@@ -267,17 +267,16 @@ def netloc_redirect():
         replaced = urlparts._replace(netloc="beta.lmfdb.org", scheme="https")
         return redirect(urlunparse(replaced), code=301)
     elif (
-        urlparts.netloc == "www.lmfdb.org"
-        and request.headers.get("X-Forwarded-Proto", "http") != "https"
-        and request.url.startswith("http://")
+        urlparts.netloc == "www.lmfdb.org" and
+        request.headers.get("X-Forwarded-Proto", "http") != "https" and
+        request.url.startswith("http://")
     ):
         url = request.url.replace("http://", "https://", 1)
         return redirect(url, code=301)
     elif (
-        urlparts.netloc == "www.lmfdb.org"
-        and
-        not white_listed(urlparts.path)
-        and valid_bread(urlparts.path)
+        urlparts.netloc == "www.lmfdb.org" and
+                not white_listed(urlparts.path) and
+        valid_bread(urlparts.path)
     ):
         replaced = urlparts._replace(netloc="beta.lmfdb.org", scheme="https")
         return redirect(urlunparse(replaced), code=302)
@@ -731,16 +730,16 @@ def sitemap():
     Listing all routes
     """
     return (
-        "<ul>"
-        + "\n".join(
+        "<ul>" +
+        "\n".join(
             [
                 '<li><a href="{0}">{1}</a></li>'.format(url, endpoint)
                 if url is not None
                 else "<li>{0}</li>".format(endpoint)
                 for url, endpoint in routes()
             ]
-        )
-        + "</ul>"
+        ) +
+        "</ul>"
     )
 
 
@@ -842,9 +841,9 @@ def white_listed(url):
     if not url:
         return True
     if (
-        any(url.startswith(elt) for elt in WhiteListedRoutes())
-        # check if is an allowed bread
-        or url in WhiteListedBreads()
+        any(url.startswith(elt) for elt in WhiteListedRoutes()) or
+ # check if is an allowed bread
+        url in WhiteListedBreads()
     ):
         return True
     # check if it starts with an L
@@ -878,8 +877,8 @@ def forcebetasitemap():
     Listing routes that are not allowed on www.lmfdb.org
     """
     return (
-        "<ul>"
-        + "\n".join(
+        "<ul>" +
+        "\n".join(
             [
                 '<li><a href="{0}">{1}</a></li>'.format(escape(url), escape(endpoint))
                 if url is not None
@@ -887,8 +886,8 @@ def forcebetasitemap():
                 for url, endpoint in routes()
                 if not white_listed(endpoint) and valid_bread(endpoint)
             ]
-        )
-        + "</ul>" + str(NotWhiteListedBreads())
+        ) +
+        "</ul>" + str(NotWhiteListedBreads())
     )
 
 
@@ -898,8 +897,8 @@ def whitelistedsitemap():
     Listing routes that are allowed on www.lmfdb.org
     """
     return (
-        "<ul>"
-        + "\n".join(
+        "<ul>" +
+        "\n".join(
             [
                 '<li><href="{0}">{1}</a></li>'.format(escape(url), escape(endpoint))
                 if url is not None
@@ -907,6 +906,6 @@ def whitelistedsitemap():
                 for url, endpoint in routes()
                 if white_listed(endpoint)
             ]
-        )
-        + "</ul>"
+        ) +
+        "</ul>"
     )

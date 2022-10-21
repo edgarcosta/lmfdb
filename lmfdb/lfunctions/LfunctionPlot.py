@@ -173,8 +173,8 @@ def getGroupHtml(group):
 # ============================================
 def getOneGraphHtml(gls):
     if len(gls) > 2:
-        ans = ("<h4>L-functions of conductor " + str(gls[1]) + " and sign "
-               + str(gls[2]) + "</h4>\n")
+        ans = ("<h4>L-functions of conductor " + str(gls[1]) + " and sign " +
+               str(gls[2]) + "</h4>\n")
     else:
         ans = ("<h4>L-functions of conductor " + str(gls[1]) + "</h4>\n")
     ans += "<div>The dots in the plot correspond to L-functions with \\((\\mu_1,\\mu_2)\\) "
@@ -332,8 +332,8 @@ def paintCS(width, height, xMax, yMax, xfactor, yfactor, ticlength):
     for i in range(5, xMax + 1, 5):
         xmlText = xmlText + ("<text x='" + str(i * xfactor - 6) + "' y='" +
                              str(height - 2 * ticlength) +
-                             "' style='fill:rgb(102,102,102);font-size:11px;'>"
-                             + str(i) + "</text>\n")
+                             "' style='fill:rgb(102,102,102);font-size:11px;'>" +
+                             str(i) + "</text>\n")
 
         xmlText = xmlText + ("<line y1='0' x1='" + str(i * xfactor) +
                              "' y2='" + str(height) + "' x2='" +
@@ -382,8 +382,8 @@ def paintCSNew(width, height, xMax, yMax, xfactor, yfactor, ticlength, xMin=5, y
     for i in srange(xMin, xMax, xsign * dashedx):
         xmlText = xmlText + ("<text x='" + str(i * xsign * xfactor - 6) + "' y='" +
                              str(xsign * height - 2 * ticlength) +
-                             "' style='fill:rgb(102,102,102);font-size:11px;'>"
-                             + "{:.5g}".format(i + xoffset) + "</text>\n")
+                             "' style='fill:rgb(102,102,102);font-size:11px;'>" +
+                             "{:.5g}".format(i + xoffset) + "</text>\n")
 
         xmlText = xmlText + ("<line y1='0' x1='" + str(i * xsign * xfactor) +
                              "' y2='" + str(ysign * height) + "' x2='" +
@@ -634,8 +634,8 @@ def paintSvgHolo(Nmin, Nmax, kmin, kmax):
 
                         ans += ("<text x='" + str(float(xbase) * xfactor)[0:7] + "' y='" +
                                 str(height - float(ybase) * yfactor)[0:7] +
-                                "' style='fill:" + thiscolour + ";font-size:14px;font-weight:bold;'>"
-                                + str(numberwithlabel) + "</text>\n")
+                                "' style='fill:" + thiscolour + ";font-size:14px;font-weight:bold;'>" +
+                                str(numberwithlabel) + "</text>\n")
                         ans += "</a>\n"
                         if self_dual < 0:
                             ybaseminus += 1.5 * ydotspacing
@@ -696,8 +696,8 @@ def paintCSHolo(width, height, xMax, yMax, xfactor, yfactor, ticlength):
             digitoffset = 3
         xmlText = xmlText + ("<text x='" + str(i * xfactor - digitoffset) + "' y='" +
                              str(height - 2 * ticlength) +
-                             "' style='fill:rgb(102,102,102);font-size:11px;'>"
-                             + str(i) + "</text>\n")
+                             "' style='fill:rgb(102,102,102);font-size:11px;'>" +
+                             str(i) + "</text>\n")
 
         xmlText = xmlText + ("<line y1='0' x1='" + str(i * xfactor) +
                              "' y2='" + str(height) + "' x2='" +
@@ -895,8 +895,8 @@ def paintCSHoloTMP(width, height, xMax, yMax, xfactor, yfactor, ticlength):
             digitoffset = 3
         xmlText = xmlText + ("<text x='" + str(i * xfactor - digitoffset) + "' y='" +
                              str(height - 2 * ticlength) +
-                             "' style='fill:rgb(102,102,102);font-size:11px;'>"
-                             + str(i) + "</text>\n")
+                             "' style='fill:rgb(102,102,102);font-size:11px;'>" +
+                             str(i) + "</text>\n")
 
         # xmlText = xmlText + ("<line y1='0' x1='" + str(i*xfactor) +
         #                 "' y2='" + str(height) + "' x2='" +
