@@ -1022,9 +1022,8 @@ def delete_false(D):
             del D[key]
 
 def dimension_space_postprocess(res, info, query):
-    if ((query.get('weight_parity') == -1 and query.get('char_parity') == 1)
-            or
-        (query.get('weight_parity') == 1 and query.get('char_parity') == -1)):
+    if ((query.get('weight_parity') == -1 and query.get('char_parity') == 1) or
+                    (query.get('weight_parity') == 1 and query.get('char_parity') == -1)):
         raise ValueError("Inconsistent parity for character and weight")
     urlgen_info = dict(info)
     urlgen_info['count'] = 50

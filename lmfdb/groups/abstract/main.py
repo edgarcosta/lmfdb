@@ -232,8 +232,8 @@ def get_group_prop_display(gp):
         "rational": display_knowl("group.rational_group", "rational"),
         "pgroup": f"a {display_knowl('group.pgroup', '$p$-group')}",
         "is_elementary": display_knowl("group.elementary", "elementary") + elementaryp,
-        "is_hyperelementary": display_knowl("group.hyperelementary", "hyperelementary")
-        + hyperelementaryp,
+        "is_hyperelementary": display_knowl("group.hyperelementary", "hyperelementary") +
+        hyperelementaryp,
     }
     # We display a few things differently for trivial groups
     if gp.order == 1:
@@ -1099,40 +1099,40 @@ def render_abstract_group(label, data=None):
             friends += [("As the automorphism of a genus 2 curve", g2c_url)]
             if db.hgcwa_passports.count({"group": gap_str}) > 0:
                 auto_url = (
-                    "/HigherGenus/C/Aut/?group=%5B"
-                    + str(gap_ints[0])
-                    + "%2C"
-                    + str(gap_ints[1])
-                    + "%5D"
+                    "/HigherGenus/C/Aut/?group=%5B" +
+                    str(gap_ints[0]) +
+                    "%2C" +
+                    str(gap_ints[1]) +
+                    "%5D"
                 )
             friends += [("... and of a higher genus curve", auto_url)]
         elif db.hgcwa_passports.count({"group": gap_str}) > 0:
             auto_url = (
-                "/HigherGenus/C/Aut/?group=%5B"
-                + str(gap_ints[0])
-                + "%2C"
-                + str(gap_ints[1])
-                + "%5D"
+                "/HigherGenus/C/Aut/?group=%5B" +
+                str(gap_ints[0]) +
+                "%2C" +
+                str(gap_ints[1]) +
+                "%5D"
             )
             friends += [("As the automorphism of a curve", auto_url)]
 
         if db.gps_transitive.count({"gapidfull": gap_str}) > 0:
             gal_gp_url = (
-                "/GaloisGroup/?gal=%5B"
-                + str(gap_ints[0])
-                + "%2C"
-                + str(gap_ints[1])
-                + "%5D"
+                "/GaloisGroup/?gal=%5B" +
+                str(gap_ints[0]) +
+                "%2C" +
+                str(gap_ints[1]) +
+                "%5D"
             )
             friends += [("As a transitive group", gal_gp_url)]
 
         if db.gps_st.count({"component_group": label}) > 0:
             st_url = (
-                "/SatoTateGroup/?hst=List&component_group=%5B"
-                + str(gap_ints[0])
-                + "%2C"
-                + str(gap_ints[1])
-                + "%5D&search_type=List"
+                "/SatoTateGroup/?hst=List&component_group=%5B" +
+                str(gap_ints[0]) +
+                "%2C" +
+                str(gap_ints[1]) +
+                "%5D&search_type=List"
             )
             friends += [("As the component group of a Sato-Tate group", st_url)]
 
@@ -1345,13 +1345,13 @@ def download_group(**args):
     s = com1 + "\n"
     s += com + " Group " + label + " downloaded from the LMFDB on %s.\n" % (mydate)
     s += (
-        com
-        + " If the group is solvable, G is the  polycyclic group  matching the one presented in LMFDB."
+        com +
+        " If the group is solvable, G is the  polycyclic group  matching the one presented in LMFDB."
     )
     s += com + " Generators will be stored as a, b, c,... to match LMFDB.  \n"
     s += (
-        com
-        + " If the group is nonsolvable, G is a permutation group giving with generators as in LMFDB."
+        com +
+        " If the group is nonsolvable, G is a permutation group giving with generators as in LMFDB."
     )
     s += com + " \n"
     s += "\n" + com2
@@ -1403,8 +1403,8 @@ def display_profile_line(data, ambient, aut):
     for label, tex in sorted(data, key=data.get, reverse=True):
         cnt = data[label, tex]
         l.append(
-            abstract_group_display_knowl(label, name=f"${tex}$", ambient=ambient, aut=aut)
-            + (" x " + str(cnt) if cnt > 1 else "")
+            abstract_group_display_knowl(label, name=f"${tex}$", ambient=ambient, aut=aut) +
+            (" x " + str(cnt) if cnt > 1 else "")
         )
     return ", ".join(l)
 

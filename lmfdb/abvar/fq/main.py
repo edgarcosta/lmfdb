@@ -331,8 +331,8 @@ class AbvarSearchArray(SearchArray):
             label=nbsp("nf.galois_group", "Galois group"),
             short_label=display_knowl("nf.galois_group", "Galois group"),
             example="4T3",
-            example_span="C4, or 8T12, a list of "
-            + display_knowl("nf.galois_group.name", "group names"),
+            example_span="C4, or 8T12, a list of " +
+            display_knowl("nf.galois_group.name", "group names"),
             colspan=(1, 3, 1),
             width=3*190 - 30,
             short_width=160,

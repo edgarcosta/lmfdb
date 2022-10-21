@@ -606,9 +606,9 @@ class PostgresBase():
                 end_command = SQL("DROP INDEX {0}")
             else:
                 raise ValueError(
-                    "Relation with name "
-                    + name + suffix
-                    + " already exists. And it is not an index or a constraint"
+                    "Relation with name " +
+                    name + suffix +
+                    " already exists. And it is not an index or a constraint"
                 )
 
             # Find a new name for the existing index
@@ -627,11 +627,11 @@ class PostgresBase():
             command = begin_command + end_command.format(Identifier(deprecated_name))
 
             logging.warning(
-                "{} with name {} ".format(kind, name + suffix)
-                + "already exists. "
-                + "It has been renamed to {} ".format(deprecated_name)
-                + "and it can be deleted with the following SQL command:\n"
-                + self._db.cursor().mogrify(command)
+                "{} with name {} ".format(kind, name + suffix) +
+                "already exists. " +
+                "It has been renamed to {} ".format(deprecated_name) +
+                "and it can be deleted with the following SQL command:\n" +
+                self._db.cursor().mogrify(command)
             )
 
     def _check_restricted_suffix(self, name, kind="Index", skip_dep=False):
@@ -656,9 +656,9 @@ class PostgresBase():
         for match, message in tests:
             if re.match(match, name):
                 raise ValueError(
-                    "{} name {} is invalid, ".format(kind, name)
-                    + "cannot end in {}, ".format(message)
-                    + "try specifying a different name"
+                    "{} name {} is invalid, ".format(kind, name) +
+                    "cannot end in {}, ".format(message) +
+                    "try specifying a different name"
                 )
 
     @staticmethod
@@ -999,8 +999,8 @@ class PostgresBase():
             original_name = name[:]
             if not name.endswith(source):
                 logging.warning(
-                    "{} of {} with name {}".format(kind, tablename, name)
-                    + " does not end with the suffix {}".format(source)
+                    "{} of {} with name {}".format(kind, tablename, name) +
+                    " does not end with the suffix {}".format(source)
                 )
 
             elif source != "":
@@ -1014,9 +1014,9 @@ class PostgresBase():
                 self._check_restricted_suffix(original_name, kind, skip_dep=True)
             except ValueError:
                 logging.warning(
-                    "{} of {} with name {}".format(kind, tablename, name)
-                    + " uses a restricted suffix. "
-                    + "The name will be extended with a _ in the swap"
+                    "{} of {} with name {}".format(kind, tablename, name) +
+                    " uses a restricted suffix. " +
+                    "The name will be extended with a _ in the swap"
                 )
                 target_name = original_name + "_" + target
             # assure that the rename will be successful

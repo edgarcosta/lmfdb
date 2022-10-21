@@ -554,8 +554,8 @@ class PostgresSearchTable(PostgresTable):
             if isinstance(cur, pg_cursor):
                 cur.close()
                 if (
-                    cur.withhold # to assure that it is a buffered cursor
-                    and self._db._nocommit_stack == 0 # and there is nothing to commit
+                    cur.withhold and # to assure that it is a buffered cursor
+                    self._db._nocommit_stack == 0 # and there is nothing to commit
                 ):
                     cur.connection.commit()
 

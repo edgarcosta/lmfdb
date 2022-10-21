@@ -57,7 +57,7 @@ def string2number(s):
                 return CDF(exp(2*pi*I*q))
         if 'I' in strs:
             return CDF(strs)
-        elif (type(s) is list or type(s) is tuple) and len(s) == 2:
+        elif (isinstance(s, list) or isinstance(s, tuple)) and len(s) == 2:
             return CDF(tuple(s))
         elif '/' in strs:
             return Rational(strs)
@@ -98,7 +98,7 @@ def seriescoeff(coeff, index, seriescoefftype, seriestype, digits):
                 coeff = CDF(-I)
             else:
                 coeff = string2number(coeff)
-        if type(coeff) == complex:
+        if isinstance(coeff, complex):
             rp = coeff.real
             ip = coeff.imag
         else:
@@ -535,11 +535,11 @@ def lfuncFEtex(L, fmt):
                         res += r" \, "
                     curr_exp = 1
                     res += (
-                        r"\Gamma_{"
-                        + field
-                        + "}(s"
-                        + seriescoeff(elt, 0, "signed", "", 3)
-                        + ")"
+                        r"\Gamma_{" +
+                        field +
+                        "}(s" +
+                        seriescoeff(elt, 0, "signed", "", 3) +
+                        ")"
                     )
             if curr_exp > 1:
                 res += "^{" + str(curr_exp) + "}"

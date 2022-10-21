@@ -1387,8 +1387,8 @@ def set_bread_and_friends(info, L, request):
                                                             label=L.origin_label,power=L.m))])
         else:
             info['bread'] = [('L-functions', url_for('.index')),
-                             ('Symmetric %s of Elliptic curve ' % ordinal(L.m)
-                              + str(L.origin_label),
+                             ('Symmetric %s of Elliptic curve ' % ordinal(L.m) +
+                              str(L.origin_label),
                               url_for('.l_function_ec_sym_page_label',
                                       label=L.origin_label,power=L.m))]
 

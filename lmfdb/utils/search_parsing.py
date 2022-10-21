@@ -301,7 +301,7 @@ def parse_multiset(inp, query, qfield):
 
 def parse_range(arg, parse_singleton=int, use_dollar_vars=True):
     # TODO: graceful errors
-    if type(arg) == parse_singleton:
+    if isinstance(arg, parse_singleton):
         return arg
     if "," in arg:
         if use_dollar_vars:
@@ -325,9 +325,9 @@ def parse_range(arg, parse_singleton=int, use_dollar_vars=True):
 def parse_range2(arg, key, parse_singleton=int, parse_endpoint=None, split_minus=True):
     if parse_endpoint is None:
         parse_endpoint = parse_singleton
-    if type(arg) == str:
+    if isinstance(arg, str):
         arg = arg.replace(" ", "")
-    if type(arg) == parse_singleton:
+    if isinstance(arg, parse_singleton):
         return [key, arg]
     if "," in arg:
         tmp = [
@@ -356,7 +356,7 @@ def parse_range2(arg, key, parse_singleton=int, parse_endpoint=None, split_minus
 # Like parse_range2, but to deal with strings which could be rational numbers
 # process is a function to apply to arguments after they have been parsed
 def parse_range2rat(arg, key, process):
-    if type(arg) == str:
+    if isinstance(arg, str):
         arg = arg.replace(" ", "")
     if QQ_DEC_RE.match(arg):
         return [key, process(arg)]
@@ -379,7 +379,7 @@ def parse_range2rat(arg, key, process):
 # We parse into a list of singletons and pairs, like [[-5,-2], 10, 11, [16,100]]
 # If split0, we split ranges [-a,b] that cross 0 into [-a, -1], [1, b]
 def parse_range3(arg, split0=False):
-    if type(arg) == str:
+    if isinstance(arg, str):
         arg = arg.replace(" ", "")
     if "," in arg:
         return sum([parse_range3(a, split0) for a in arg.split(",")], [])
@@ -705,7 +705,7 @@ def parse_signed_ints(inp, query, qfield, parse_one=None):
         # if there is only one part, we don't need an $or
         if len(parsed) == 1:
             parsed = parsed[0]
-            if type(parsed) == list:
+            if isinstance(parsed, list):
                 s0, d0 = parse_one(parsed[0])
                 s1, d1 = parse_one(parsed[1])
                 if s0 < 0:
@@ -720,7 +720,7 @@ def parse_signed_ints(inp, query, qfield, parse_one=None):
         else:
             iquery = []
             for x in parsed:
-                if type(x) == list:
+                if isinstance(x, list):
                     if len(x) == 1:
                         s0, abs_D = parse_one(x[0])
                     else:
@@ -862,10 +862,10 @@ def parse_bracketed_posints(
 ):
     myregex = BRACKETED_NN_RE if allow0 else BRACKETED_POSINT_RE
     if (
-        not myregex.match(inp)
-        or (maxlength is not None and inp.count(",") > maxlength - 1)
-        or (exactlength is not None and inp.count(",") != exactlength - 1)
-        or (exactlength is not None and inp == "[]" and exactlength > 0)
+        not myregex.match(inp) or
+        (maxlength is not None and inp.count(",") > maxlength - 1) or
+        (exactlength is not None and inp.count(",") != exactlength - 1) or
+        (exactlength is not None and inp == "[]" and exactlength > 0)
     ):
         if exactlength == 2:
             lstr = "pair of positive integers"
@@ -876,16 +876,16 @@ def parse_bracketed_posints(
         elif exactlength is not None:
             lstr = "list of %s positive integers" % exactlength
             example = (
-                str(list(range(2, exactlength + 2))).replace(" ", "")
-                + " or "
-                + str([3] * exactlength).replace(" ", "")
+                str(list(range(2, exactlength + 2))).replace(" ", "") +
+                " or " +
+                str([3] * exactlength).replace(" ", "")
             )
         elif maxlength is not None:
             lstr = "list of at most %s positive integers" % maxlength
             example = (
-                str(list(range(2, maxlength + 2))).replace(" ", "")
-                + " or "
-                + str([2] * max(1, maxlength - 2)).replace(" ", "")
+                str(list(range(2, maxlength + 2))).replace(" ", "") +
+                " or " +
+                str([2] * max(1, maxlength - 2)).replace(" ", "")
             )
         else:
             lstr = "list of positive integers"
@@ -924,11 +924,11 @@ def parse_bracketed_posints(
                     # value -1 is used to force empty search results
                     if isinstance(query[qf], dict):
                         if (
-                            ("$in" in query[qf] and v not in query[qf]["$in"])
-                            or ("$gt" in query[qf] and not v > query[qf]["$gt"])
-                            or ("$gte" in query[qf] and not v >= query[qf]["$gte"])
-                            or ("$lt" in query[qf] and not v < query[qf]["$lt"])
-                            or ("$lte" in query[qf] and not v <= query[qf]["$lte"])
+                            ("$in" in query[qf] and v not in query[qf]["$in"]) or
+                            ("$gt" in query[qf] and not v > query[qf]["$gt"]) or
+                            ("$gte" in query[qf] and not v >= query[qf]["$gte"]) or
+                            ("$lt" in query[qf] and not v < query[qf]["$lt"]) or
+                            ("$lte" in query[qf] and not v <= query[qf]["$lte"])
                         ):
                             query[qf] = -1
                         else:
@@ -960,11 +960,11 @@ def parse_bracketed_rats(
     extractor=None,
 ):
     if (
-        not BRACKETED_RAT_RE.match(inp)
-        or (maxlength is not None and inp.count(",") > maxlength - 1)
-        or (minlength is not None and inp.count(",") < minlength - 1)
-        or (exactlength is not None and inp.count(",") != exactlength - 1)
-        or (exactlength is not None and inp == "[]" and exactlength > 0)
+        not BRACKETED_RAT_RE.match(inp) or
+        (maxlength is not None and inp.count(",") > maxlength - 1) or
+        (minlength is not None and inp.count(",") < minlength - 1) or
+        (exactlength is not None and inp.count(",") != exactlength - 1) or
+        (exactlength is not None and inp == "[]" and exactlength > 0)
     ):
         if exactlength == 2:
             lstr = "pair of rational numbers"
@@ -975,30 +975,30 @@ def parse_bracketed_rats(
         elif exactlength is not None:
             lstr = "list of %s rational numbers" % exactlength
             example = (
-                str(list(range(2, exactlength + 2))).replace(", ", "/13,")
-                + " or "
-                + str([3] * exactlength).replace(", ", "/4,")
+                str(list(range(2, exactlength + 2))).replace(", ", "/13,") +
+                " or " +
+                str([3] * exactlength).replace(", ", "/4,")
             )
         elif minlength is not None and maxlength is not None:
             lstr = f"list of rational numbers with length between {minlength} and {maxlength}"
             example = (
-                str(list(range(2, minlength + 2))).replace(", ", "/13,")
-                + " or "
-                + str([2] * max(1, maxlength - 2)).replace(", ", "/41,")
+                str(list(range(2, minlength + 2))).replace(", ", "/13,") +
+                " or " +
+                str([2] * max(1, maxlength - 2)).replace(", ", "/41,")
             )
         elif minlength is not None:
             lstr = "list of at least %s rational numbers" % minlength
             example = (
-                str(list(range(2, minlength + 2))).replace(", ", "/13,")
-                + " or "
-                + str([2] * max(1, minlength - 2)).replace(", ", "/41,")
+                str(list(range(2, minlength + 2))).replace(", ", "/13,") +
+                " or " +
+                str([2] * max(1, minlength - 2)).replace(", ", "/41,")
             )
         elif maxlength is not None:
             lstr = "list of at most %s rational numbers" % maxlength
             example = (
-                str(list(range(2, maxlength + 2))).replace(", ", "/13,")
-                + " or "
-                + str([2] * max(1, maxlength - 2)).replace(", ", "/41,")
+                str(list(range(2, maxlength + 2))).replace(", ", "/13,") +
+                " or " +
+                str([2] * max(1, maxlength - 2)).replace(", ", "/41,")
             )
         else:
             lstr = "list of rational numbers"
@@ -1613,9 +1613,9 @@ def parse_list_start(inp, query, qfield, index_shift=0, parse_singleton=int):
             # asking for each value to be in the array
             if parse_singleton is str:
                 all_operand = [val for val in parsed_values
-                               if type(val) == parse_singleton and "-" not in val and "," not in val]
+                               if isinstance(val, parse_singleton) and "-" not in val and "," not in val]
             else:
-                all_operand = [val for val in parsed_values if type(val) == parse_singleton]
+                all_operand = [val for val in parsed_values if isinstance(val, parse_singleton)]
 
             if all_operand:
                 sub_query[qfield] = {"$all": all_operand}
@@ -1623,7 +1623,7 @@ def parse_list_start(inp, query, qfield, index_shift=0, parse_singleton=int):
             # if there are other condition, we can add the first of those
             # conditions the query, in the hope of reducing the search space
             elemMatch_operand = [val for val in parsed_values
-                                 if type(val) != parse_singleton and type(val) is dict]
+                                 if not isinstance(val, parse_singleton) and isinstance(val, dict)]
             if elemMatch_operand:
                 if qfield in sub_query:
                     sub_query[qfield]["$elemMatch"] = elemMatch_operand[0]

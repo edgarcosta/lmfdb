@@ -150,11 +150,11 @@ class PostgresDatabase(PostgresBase):
             privileges = ["INSERT", "UPDATE"]
             cur = self._execute(
                 SQL(
-                    "SELECT count(*) FROM information_schema.role_table_grants "
-                    + "WHERE grantee = %s AND table_schema = %s "
-                    + "AND privilege_type IN ("
-                    + ",".join(["%s"] * len(privileges))
-                    + ")"
+                    "SELECT count(*) FROM information_schema.role_table_grants " +
+                    "WHERE grantee = %s AND table_schema = %s " +
+                    "AND privilege_type IN (" +
+                    ",".join(["%s"] * len(privileges)) +
+                    ")"
                 ),
                 [self._user, "public"] + privileges,
             )
@@ -173,13 +173,13 @@ class PostgresDatabase(PostgresBase):
             knowls_tables = ["kwl_knowls"]
             cur = sorted(self._execute(
                 SQL(
-                    "SELECT table_name, privilege_type "
-                    + "FROM information_schema.role_table_grants "
-                    + "WHERE grantee = %s AND table_name IN ("
-                    + ",".join(["%s"] * len(knowls_tables))
-                    + ") AND privilege_type IN ("
-                    + ",".join(["%s"] * len(privileges))
-                    + ")"
+                    "SELECT table_name, privilege_type " +
+                    "FROM information_schema.role_table_grants " +
+                    "WHERE grantee = %s AND table_name IN (" +
+                    ",".join(["%s"] * len(knowls_tables)) +
+                    ") AND privilege_type IN (" +
+                    ",".join(["%s"] * len(privileges)) +
+                    ")"
                 ),
                 [self._user] + knowls_tables + privileges,
             ))
@@ -191,11 +191,11 @@ class PostgresDatabase(PostgresBase):
 
             cur = sorted(self._execute(
                 SQL(
-                    "SELECT privilege_type FROM information_schema.role_table_grants "
-                    + "WHERE grantee = %s AND table_schema = %s "
-                    + "AND table_name=%s AND privilege_type IN ("
-                    + ",".join(["%s"] * len(privileges))
-                    + ")"
+                    "SELECT privilege_type FROM information_schema.role_table_grants " +
+                    "WHERE grantee = %s AND table_schema = %s " +
+                    "AND table_name=%s AND privilege_type IN (" +
+                    ",".join(["%s"] * len(privileges)) +
+                    ")"
                 ),
                 [self._user, "userdb", "users"] + privileges,
             ))
@@ -1260,13 +1260,13 @@ SELECT table_name, row_estimate, total_bytes, index_bytes, toast_bytes,
             pidlen = max(len(str(pid)) for (name, locktype, pid, t) in locks) + 3
             for name, locktype, pid, t in locks:
                 print(
-                    name
-                    + " " * (namelen - len(name))
-                    + locktype
-                    + " " * (typelen - len(locktype))
-                    + "pid %s" % pid
-                    + " " * (pidlen - len(str(pid)))
-                    + "age %s" % t
+                    name +
+                    " " * (namelen - len(name)) +
+                    locktype +
+                    " " * (typelen - len(locktype)) +
+                    "pid %s" % pid +
+                    " " * (pidlen - len(str(pid))) +
+                    "age %s" % t
                 )
         else:
             print("No locks currently held")

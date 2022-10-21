@@ -1187,8 +1187,8 @@ class WebAbstractGroup(WebObj):
         # currently we always have rational_characters, but not always characters,
         # so we need to use cdim from rational_characters to find the set of complex dimensions
         return sorted(
-            set([rep.cdim for rep in self.rational_characters]
-                + [rep.qdim for rep in self.rational_characters]))
+            set([rep.cdim for rep in self.rational_characters] +
+                [rep.qdim for rep in self.rational_characters]))
 
     @lazy_attribute
     def irrep_stats(self):
