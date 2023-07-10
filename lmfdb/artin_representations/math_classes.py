@@ -570,8 +570,14 @@ class ArtinRepresentation():
             return self._from_conjugacy_class_index_to_polynomial_fn(index)
         except AttributeError:
             local_factors = self.local_factors_table()
-            field = ComplexField()
-            root_of_unity = exp((field.gen()) * 2 * field.pi() / int(self.character_field()))
+            n = int(self.character_field())
+            print(n)
+            if n in [1,2]:
+                root_of_unity = (-1)**n
+                field = QQ
+            else:
+                field = ComplexField()
+                root_of_unity = exp((field.gen()) * 2 * field.pi() / n)
             local_factor_processed_pols = [0]   # dummy to account for the shift in indices
             for pol in local_factors:
                 local_factor_processed_pols.append(
