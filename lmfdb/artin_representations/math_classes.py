@@ -571,7 +571,6 @@ class ArtinRepresentation():
         except AttributeError:
             local_factors = self.local_factors_table()
             n = int(self.character_field())
-            print(n)
             if n in [1,2]:
                 root_of_unity = (-1)**n
                 field = QQ
