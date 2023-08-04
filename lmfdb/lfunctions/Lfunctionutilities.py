@@ -13,6 +13,7 @@ from lmfdb.utils import (
     list_factored_to_factored_poly_otherorder)
 from lmfdb.galois_groups.transitive_group import transitive_group_display_knowl_C1_as_trivial
 from lmfdb.lfunctions import logger
+from lmfdb.app import is_debug_mode
 
 ###############################################################
 # Functions for displaying numbers in correct format etc.
@@ -676,6 +677,9 @@ def specialValueTriple(L, s, sLatex_analytic, sLatex_arithmetic):
         if L.fromDB:
             val = "not computed"
         else:
+            # this bound came from artin_representation/main.py
+            if not is_debug_mode() and L.level**L.degree > 729000000000000:
+                return "not computed"
             val = L.sageLfunction.value(s)
             logger.warning("a value of an L-function has been computed on the fly")
 

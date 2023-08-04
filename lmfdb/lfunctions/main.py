@@ -1649,6 +1649,9 @@ def getLfunctionPlot(request, *args):
         L = pythonL.sageLfunction
         if not hasattr(L, "hardy_z_function"):
             return None
+        # this bound came from artin_representation/main.py
+        if not is_debug_mode() and pyhonL.level**pythonL.degree > 729000000000000:
+            return None
         plotStep = .1
         if pythonL._Ltype not in ["riemann", "maass"]:
             plotrange = 12

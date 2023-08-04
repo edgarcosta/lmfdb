@@ -74,6 +74,12 @@ class Lfunction():
         # Do not pass 0 to either lower bound or step_size
         # Not dependent on time actually
         # Manual tuning required
+
+
+        # this bound came from artin_representation/main.py
+        if self.level**self.degree > 729000000000000:
+            return "not available"
+
         if (self.degree > 2 or self.Ltype() == "maass"
                 or self.Ltype() == "hgmQ"
                 or self.Ltype() == "artin"):
