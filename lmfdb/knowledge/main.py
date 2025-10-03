@@ -184,7 +184,7 @@ def ref_to_link(txt):
         elif ref.startswith("doi"):
             ref = ref.replace(":", "")  # could be doi:: or doi: or doi
             the_doi = ref[3:]    # remove the "doi"
-            this_link = '{{ LINK_EXT("' + the_doi + '","https://doi.org/' + the_doi + '")| safe }}'
+            this_link = '{{ LINK_EXT("' + 'DOI:' + the_doi + '","https://doi.org/' + the_doi + '")| safe }}'
         elif ref.lower().startswith("mr"):
             ref = ref.replace(":", "")
             the_mr = ref[2:]    # remove the "MR"
