@@ -185,3 +185,9 @@ class KnowlRenderTest(LmfdbTest):
             assert "zqxj" not in page.get_data(as_text=True)
         page = self.tc.post("/knowledge/render/nf.degree", data={"content": code, "footer": "0"})
         assert page.status_code == 405
+
+    def test_generated_title_is_escaped(self):
+        page = self.tc.get("/knowledge/render/columns.nf_fields.x%3Csvg%20onload=alert(1)%3E")
+        text = page.get_data(as_text=True)
+        assert "<svg" not in text
+        assert "&lt;svg" in text
