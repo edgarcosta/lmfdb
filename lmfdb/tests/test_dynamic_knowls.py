@@ -171,3 +171,17 @@ class DescriptionKnowlTest(LmfdbTest):
         # a table description that does not exist yet still gets the fallback
         kwl = self._set_table_description("nf_fields", "Number fields", None)
         assert kwl.title == "Table nf_fields"
+
+
+class KnowlRenderTest(LmfdbTest):
+    """
+    These tests check what the public knowl popup does with request data.
+    """
+
+    def test_request_data_is_not_template_code(self):
+        code = "{{ 'zq' ~ 'xj' }}"
+        for query in [{"content": code}, {"x": '") }}' + code}]:
+            page = self.tc.get("/knowledge/render/nf.degree", query_string=query)
+            assert "zqxj" not in page.get_data(as_text=True)
+        page = self.tc.post("/knowledge/render/nf.degree", data={"content": code, "footer": "0"})
+        assert page.status_code == 405
