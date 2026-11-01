@@ -759,6 +759,10 @@ def render_knowl(ID, footer=None, kwargs=None,
     if kwargs:
         permalink += '?' + urlencode(kwargs)
     header_title = Markup(k.title) if k.title else k.id
+    # The names the template sets win over query parameters of the same name;
+    # "source" is render_template_string's own argument, so it cannot be passed.
+    context = {key: val for key, val in kwargs.items() if key != 'source'}
+    context.update(k=k, knowl_permalink=permalink, knowl_header_title=header_title)
 
     # this is a very simple template based on no other template to render one single Knowl
     # for inserting into a website via AJAX or for server-side operations.
@@ -818,8 +822,7 @@ def render_knowl(ID, footer=None, kwargs=None,
     # TODO improve the error message
     # so that the user has a clue. Most likely, the {{ KNOWL('...') }} has the wrong syntax!
     try:
-        data = render_template_string(render_me, k=k, knowl_permalink=permalink,
-                                      knowl_header_title=header_title, **kwargs)
+        data = render_template_string(render_me, **context)
         if raw:
             # note, this is just internally for the .show method, raw rendering
             # doesn't exist right now and will wrap this into a make_reponse!

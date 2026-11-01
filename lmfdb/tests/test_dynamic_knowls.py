@@ -191,3 +191,10 @@ class KnowlRenderTest(LmfdbTest):
         text = page.get_data(as_text=True)
         assert "<svg" not in text
         assert "&lt;svg" in text
+
+    def test_parameters_named_like_template_variables(self):
+        names = ["k", "source", "knowl_permalink", "knowl_header_title"]
+        page = self.tc.get("/knowledge/render/nf.degree", query_string={n: "1" for n in names})
+        text = page.get_data(as_text=True)
+        assert "ERROR in the template" not in text
+        assert 'href="/knowledge/show/nf.degree?' in text
